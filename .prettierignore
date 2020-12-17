@@ -1,0 +1,8 @@
+# Ignore dependencies:
+node_modules
+
+# Ignore artifacts:
+build
+
+# Ignore all HTML files:
+*.html
