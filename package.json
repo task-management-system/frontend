@@ -23,6 +23,8 @@
     "eslint-plugin-prettier": "^3.3.0",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^4.3.6",
+    "lint-staged": "^10.5.3",
     "prettier": "^2.2.1"
   },
   "scripts": {
@@ -30,6 +32,16 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json,md}\""
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json,md}\"",
+    "lint-staged": "lint-staged"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.(js|jsx|ts|tsx)": "eslint --cache --fix",
+    "*.(json|css|md)": "prettier --write"
   }
 }

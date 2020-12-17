@@ -13,4 +13,11 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
   },
+  settings: {
+    'import/resolver': {
+      node: {
+        moduleDirectory: ['node_modules', '/src'],
+      },
+    },
+  },
 };
