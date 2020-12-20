@@ -1,0 +1,19 @@
+type MessageType = 'success' | 'error' | 'warning';
+
+interface Message {
+  type: MessageType;
+  text: string;
+}
+
+export type Response<T> = {
+  message: Message | null;
+  data: T;
+};
+
+export interface Payload {
+  [key: string]: Payload | string | number | boolean | null;
+}
+
+export interface Auth {
+  token: string;
+}
