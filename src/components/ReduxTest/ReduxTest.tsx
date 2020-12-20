@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card, CardContent, Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { TState, IMetaData } from 'redux/types';
 
@@ -8,10 +9,14 @@ interface IProps {
 
 const ReduxTest = (props: IProps) => {
   return (
-    <>
-      <mark>ReduxTest</mark> component
-      <pre>{JSON.stringify(props.metaData, null, 4)}</pre>
-    </>
+    <Card>
+      <CardContent>
+        <Typography variant="body1">
+          <mark>ReduxTest</mark> component
+        </Typography>
+        <pre>{JSON.stringify(props.metaData, null, 4)}</pre>
+      </CardContent>
+    </Card>
   );
 };
 
