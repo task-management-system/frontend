@@ -7,7 +7,7 @@ interface Message {
 
 export type Response<T> = {
   message: Message | null;
-  data: T;
+  data: T | null;
 };
 
 export interface Payload {

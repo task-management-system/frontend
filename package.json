@@ -7,10 +7,6 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/pickers": "^3.2.10",
-    "@testing-library/jest-dom": "^5.11.6",
-    "@testing-library/react": "^11.2.2",
-    "@testing-library/user-event": "^12.6.0",
-    "@types/jest": "^26.0.19",
     "@types/node": "^14.14.14",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
@@ -20,6 +16,7 @@
     "@types/redux-logger": "^3.0.8",
     "@types/redux-persist": "^4.3.1",
     "fontsource-roboto": "^3.1.5",
+    "formik": "^2.2.6",
     "localforage": "^1.9.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -50,6 +47,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,scss,json,md}\"",
     "lint-staged": "lint-staged"
   },
+  "proxy": "http://25.91.177.160:1212/",
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint-staged"

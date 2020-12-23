@@ -10,7 +10,7 @@ import { TStore } from './types';
 const persistConfig = {
   key: 'root',
   storage: localForage,
-  whitelist: [],
+  whitelist: ['metaData'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

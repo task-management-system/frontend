@@ -12,7 +12,7 @@ interface IProps {
 const ReduxTest = (props: IProps) => {
   React.useEffect(() => {
     token('test', 'password').then(async response => {
-      await localForage.setItem('token', response.data.token);
+      await localForage.setItem('token', response.data?.token);
 
       auth()
         .then(console.log)
