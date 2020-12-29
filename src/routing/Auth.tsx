@@ -4,10 +4,10 @@ import { Card, CardContent, CardActions, TextField, makeStyles } from '@material
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
 import { updateAuthorized } from 'redux/actions/metaData';
-import { TPayload } from 'redux/types';
+import { TDispatch, TPayload } from 'redux/types';
 
 interface IProps {
-  updateAuthorized: Function;
+  updateAuthorized: (payload: TPayload) => void;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -58,7 +58,7 @@ const Auth: React.FC<IProps> = props => {
   );
 };
 
-const mapDispatchToProps = (dispatch: (arg0: any) => void) => ({
+const mapDispatchToProps = (dispatch: TDispatch) => ({
   updateAuthorized: (payload: TPayload) => dispatch(updateAuthorized(payload)),
 });
 

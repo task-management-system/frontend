@@ -1,4 +1,4 @@
-import { CombinedState } from 'redux';
+import { Store, CombinedState } from 'redux';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
 
 export interface IMetaData {
@@ -14,7 +14,7 @@ export type TAction = {
   payload: any;
 };
 
-export type TStore = TState & PersistPartial;
+export type TPersistState = TState & PersistPartial;
 
 type TPrimitivePayload = string | number | boolean | null;
 interface TNestedPayload {
@@ -22,3 +22,7 @@ interface TNestedPayload {
 }
 
 export type TPayload = TNestedPayload | TPrimitivePayload;
+
+export type TDispatch = (payload: TAction) => TAction;
+
+export type TStore = Store<TPersistState, TAction> & { dispatch: TDispatch };

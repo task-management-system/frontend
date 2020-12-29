@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
 import rootReducer from './reducers';
-import { TStore } from './types';
+import { TStore, TPersistState, TAction } from './types';
 
 const persistConfig = {
   key: 'root',
@@ -15,7 +15,7 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = createStore<TStore, any, any, any>(
+const store: TStore = createStore<TPersistState, TAction, any, any>(
   persistedReducer,
   process.env.NODE_ENV === 'production' ? applyMiddleware(thunk) : applyMiddleware(thunk, logger)
 );
