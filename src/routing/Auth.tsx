@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardContent, CardActions, TextField, makeStyles } from '@material-ui/core';
+import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
 import { updateAuthorized } from 'redux/actions/metaData';
@@ -11,12 +12,6 @@ interface IProps {
 }
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   card: {
     width: 480,
     margin: theme.spacing(2),
@@ -39,7 +34,7 @@ const Auth: React.FC<IProps> = props => {
   };
 
   return (
-    <div className={classes.root}>
+    <FullPage>
       <Card className={classes.card}>
         <CardContent className={classes.body}>
           <TextField label="Имя пользователя" variant="outlined" />
@@ -54,7 +49,7 @@ const Auth: React.FC<IProps> = props => {
           </NormalButton>
         </CardActions>
       </Card>
-    </div>
+    </FullPage>
   );
 };
 
