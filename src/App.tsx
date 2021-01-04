@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { CssBaseline } from '@material-ui/core';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import NotificationViewer from 'components/NotificationViewer';
 import Auth from 'routing/Auth';
 import Home from 'routing/Home';
 import { TState } from 'redux/types';
@@ -13,6 +14,7 @@ interface IProps {
 const App: React.FC<IProps> = props => (
   <>
     <CssBaseline />
+    <NotificationViewer />
     <Router>
       <Switch>
         <Route

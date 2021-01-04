@@ -5,13 +5,16 @@ const initialState: IMetaData = {
   authorized: false,
 };
 
-const metaDataRecuder = (state: IMetaData = initialState, action: TAction): IMetaData => {
+const metaDataReducer = (state: IMetaData = initialState, action: TAction): IMetaData => {
   switch (action.type) {
     case UPDATE_AUTHORIZED:
-      return { ...state, authorized: true };
+      return {
+        ...state,
+        authorized: action.payload !== null,
+      };
     default:
       return state;
   }
 };
 
-export default metaDataRecuder;
+export default metaDataReducer;

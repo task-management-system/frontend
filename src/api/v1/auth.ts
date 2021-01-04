@@ -1,10 +1,8 @@
 import { get, post } from './core';
+import { withNotification } from '../utils';
 import { Auth } from '../types';
 
-export const token = (login: string, password: string) => {
-  return post<Auth>('/token', { login, password });
-};
+export const authentication = (credentials: { username: string; password: string }) =>
+  post<Auth>('/authentication', credentials);
 
-export const auth = () => {
-  return get('/auth');
-};
+export const getUsers = () => withNotification(get<{}>('/users'));

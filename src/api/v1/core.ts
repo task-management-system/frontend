@@ -15,19 +15,10 @@ const prepareHeaders = async (headers: Headers): Promise<void> => {
   }
 };
 
-// const fixResponse = <T>(response: Response<T>): Promise<Response<T>> =>
-//   new Promise(resolve => {
-//     if (response.data === null) {
-//       response.data = {} as T;
-//     }
-
-//     resolve(response);
-//   });
-
 export const get = async <T>(
   url: string = '/',
   headers: Headers = new Headers()
-): Promise<Response<T> | string> => {
+): Promise<Response<T>> => {
   await prepareHeaders(headers);
 
   return fetch(`${API_URL}${url}`, {

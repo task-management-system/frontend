@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormControlLabel, TextField, Typography, makeStyles, Checkbox } from '@material-ui/core';
+import { TextField, Typography, makeStyles, Checkbox } from '@material-ui/core';
 import FormControl from 'components/themed/FormControl';
 
 interface IUserProps {}

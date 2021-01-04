@@ -11,15 +11,15 @@ import '@fontsource/roboto/cyrillic.css';
 import './index.css';
 import App from './App';
 
+// TODO Вернуть React.StrictMode после обновления @material-ui до версии 5.
+
 ReactDOM.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <App />
-        </PersistGate>
-      </Provider>
-    </ThemeProvider>
-  </React.StrictMode>,
+  <ThemeProvider theme={theme}>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
+    </Provider>
+  </ThemeProvider>,
   document.getElementById('root')
 );
