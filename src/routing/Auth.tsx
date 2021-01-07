@@ -5,13 +5,13 @@ import { Formik } from 'formik';
 import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
-import { updateAuthorized, setClaims } from 'redux/actions/metaData';
+import { setUser, setClaims } from 'redux/actions/metaData';
 import { TDispatch, TPayload } from 'redux/types';
 import { authentication, getClaims } from 'api/v1';
 import { setToken } from 'api/utils';
 
 interface IAuthProps {
-  updateAuthorized: (payload: TPayload) => void;
+  setUser: (payload: TPayload) => void;
   setClaims: (payload: TPayload) => void;
 }
 
@@ -55,7 +55,7 @@ const Auth: React.FC<IAuthProps> = props => {
         props.setClaims(claimsResponse.data || []);
       }
 
-      props.updateAuthorized(token);
+      props.setUser(response.data?.user ?? null);
     });
   };
 
@@ -95,7 +95,7 @@ const Auth: React.FC<IAuthProps> = props => {
 };
 
 const mapDispatchToProps = (dispatch: TDispatch) => ({
-  updateAuthorized: (payload: TPayload) => dispatch(updateAuthorized(payload)),
+  setUser: (payload: TPayload) => dispatch(setUser(payload)),
   setClaims: (payload: TPayload) => dispatch(setClaims(payload)),
 });
 

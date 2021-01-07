@@ -1,3 +1,5 @@
+import { IUser } from 'types';
+
 type MessageType = 'success' | 'error' | 'warning';
 
 interface Message {
@@ -15,5 +17,6 @@ export interface Payload {
 }
 
 export interface Auth {
+  user: IUser | null;
   token: string;
 }

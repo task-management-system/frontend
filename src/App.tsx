@@ -29,7 +29,7 @@ const App: React.FC<IProps> = props => (
 );
 
 const mapStateToProps = (state: TState) => ({
-  authorized: state.metaData.authorized,
+  authorized: state.metaData.user !== null,
 });
 
 export default connect(mapStateToProps)(App);

@@ -1,8 +1,8 @@
-import { UPDATE_AUTHORIZED, SET_CLAIMS } from 'redux/actionTypes';
+import { SET_USER, SET_CLAIMS } from 'redux/actionTypes';
 import { TPayload } from 'redux/types';
 
-export const updateAuthorized = (payload: TPayload) => ({
-  type: UPDATE_AUTHORIZED,
+export const setUser = (payload: TPayload) => ({
+  type: SET_USER,
   payload,
 });
 

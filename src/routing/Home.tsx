@@ -4,8 +4,11 @@ import Main from './Main';
 import Role from './Role';
 import User from './User';
 import NoMatch from './NoMatch';
+import { getUsers } from 'api/v1';
 
 const Home: React.FC = props => {
+  getUsers().then(console.log);
+
   return (
     <Switch>
       <Route path="/" exact>

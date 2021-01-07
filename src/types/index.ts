@@ -1,3 +1,13 @@
+export interface IRole {}
+
+export interface IUser {
+  username: string;
+  // password?: string;
+  name: string;
+  email: string;
+  role: IRole | null;
+}
+
 export interface IClaim {
   name: string;
   power: number;

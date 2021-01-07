@@ -1,9 +1,9 @@
 import { Store, CombinedState } from 'redux';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
-import { IClaim, INotification } from 'types';
+import { IUser, IClaim, INotification } from 'types';
 
 export interface IMetaData {
-  authorized: boolean;
+  user: IUser | null;
   claims: IClaim[];
 }
 
@@ -24,7 +24,7 @@ interface TNestedPayload {
   [key: string]: TPrimitivePayload;
 }
 
-type TPayloadEntry = TNestedPayload | TPrimitivePayload | IClaim | INotification;
+type TPayloadEntry = TNestedPayload | TPrimitivePayload | IUser | IClaim | INotification;
 
 export type TPayload = TPayloadEntry | TPayloadEntry[];
 
