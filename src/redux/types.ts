@@ -1,16 +1,10 @@
 import { Store, CombinedState } from 'redux';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
+import { IClaim, INotification } from 'types';
 
 export interface IMetaData {
   authorized: boolean;
-}
-
-export type TNotificationType = 'success' | 'error' | 'warning';
-
-export interface INotification {
-  id: string;
-  type: TNotificationType;
-  text: string;
+  claims: IClaim[];
 }
 
 export type TState = CombinedState<{
@@ -30,7 +24,9 @@ interface TNestedPayload {
   [key: string]: TPrimitivePayload;
 }
 
-export type TPayload = TNestedPayload | TPrimitivePayload | INotification;
+type TPayloadEntry = TNestedPayload | TPrimitivePayload | IClaim | INotification;
+
+export type TPayload = TPayloadEntry | TPayloadEntry[];
 
 export type TDispatch = (payload: TAction) => TAction;
 

@@ -5,13 +5,14 @@ import { Formik } from 'formik';
 import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
-import { updateAuthorized } from 'redux/actions/metaData';
+import { updateAuthorized, setClaims } from 'redux/actions/metaData';
 import { TDispatch, TPayload } from 'redux/types';
-import { authentication, getUsers } from 'api/v1';
+import { authentication, getClaims } from 'api/v1';
 import { setToken } from 'api/utils';
 
 interface IAuthProps {
   updateAuthorized: (payload: TPayload) => void;
+  setClaims: (payload: TPayload) => void;
 }
 
 interface IAuthForm {
@@ -42,15 +43,18 @@ const initialValues: IAuthForm = {
 const Auth: React.FC<IAuthProps> = props => {
   const classes = useStyles();
 
-  React.useEffect(() => {
-    getUsers().then(console.log);
-  }, []);
-
   const handleSubmit = (values: IAuthForm): void => {
     authentication(values).then(async response => {
       const token = response.data?.token ?? null;
 
       await setToken(token);
+
+      if (token !== null) {
+        const claimsResponse = await getClaims();
+
+        props.setClaims(claimsResponse.data || []);
+      }
+
       props.updateAuthorized(token);
     });
   };
@@ -92,6 +96,7 @@ const Auth: React.FC<IAuthProps> = props => {
 
 const mapDispatchToProps = (dispatch: TDispatch) => ({
   updateAuthorized: (payload: TPayload) => dispatch(updateAuthorized(payload)),
+  setClaims: (payload: TPayload) => dispatch(setClaims(payload)),
 });
 
 export default connect(null, mapDispatchToProps)(Auth);

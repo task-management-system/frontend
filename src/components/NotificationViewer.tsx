@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { removeNotification } from 'redux/actions/notifications';
-import { TState, TDispatch, TPayload, INotification } from 'redux/types';
+import { TState, TDispatch, TPayload } from 'redux/types';
+import { INotification } from 'types';
 
 interface INotificationViewer {
   notifications: INotification[];
@@ -13,8 +14,10 @@ interface INotificationViewer {
 const NotificationViewer: React.FC<INotificationViewer> = props => {
   const [hideable, setHideable] = useState<string[]>([]);
 
-  const handleClose = (id: string) => {
-    setHideable(hideable => [id, ...hideable]);
+  const handleClose = (id: string, reason?: string) => {
+    if (reason === 'timeout' || reason === 'close') {
+      setHideable(hideable => [id, ...hideable]);
+    }
   };
 
   const handleRemove = (id: string) => {
@@ -23,23 +26,23 @@ const NotificationViewer: React.FC<INotificationViewer> = props => {
     setHideable(hideable => hideable.filter(entry => entry !== id));
   };
 
+  const notification = props.notifications[0];
+
   return (
     <>
-      {props.notifications.map(notification => {
-        const open = !hideable.includes(notification.id);
-
-        return (
-          <Snackbar
-            open={open}
-            autoHideDuration={4000}
-            onClose={() => handleClose(notification.id)}
-            onExited={() => handleRemove(notification.id)}
-            key={notification.id}
-          >
-            <Alert severity={notification.type}>{notification.text}</Alert>
-          </Snackbar>
-        );
-      })}
+      {props.notifications.length > 0 && (
+        <Snackbar
+          open={!hideable.includes(notification.id)}
+          autoHideDuration={3000}
+          onClose={(event, reason) => handleClose(notification.id, reason)}
+          onExited={() => handleRemove(notification.id)}
+          key={notification.id}
+        >
+          <Alert severity={notification.type} onClose={() => handleClose(notification.id, 'close')}>
+            {notification.text}
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 };

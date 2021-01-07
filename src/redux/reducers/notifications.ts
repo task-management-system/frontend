@@ -1,5 +1,6 @@
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from 'redux/actionTypes';
-import { TAction, INotification } from '../types';
+import { TAction } from '../types';
+import { INotification } from 'types';
 
 const initialState: INotification[] = [];
 

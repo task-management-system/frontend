@@ -15,13 +15,19 @@ export const setToken = async (token: string | null) => {
 };
 
 export const withNotification = <T>(handler: Promise<Response<T>>): Promise<Response<T>> => {
-  return handler.then(response => {
-    if (response.message !== null) {
-      store.dispatch(
-        addNotification(createNotification(response.message.type, response.message.text))
-      );
-    }
+  return handler
+    .then(response => {
+      if (response.message !== null) {
+        store.dispatch(
+          addNotification(createNotification(response.message.type, response.message.text))
+        );
+      }
 
-    return response;
-  });
+      return response;
+    })
+    .catch(error => {
+      store.dispatch(addNotification(createNotification('error', 'Кажется что-то пошло не так')));
+
+      return error;
+    });
 };

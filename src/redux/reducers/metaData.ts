@@ -1,8 +1,9 @@
-import { UPDATE_AUTHORIZED } from 'redux/actionTypes';
+import { UPDATE_AUTHORIZED, SET_CLAIMS } from 'redux/actionTypes';
 import { TAction, IMetaData } from '../types';
 
 const initialState: IMetaData = {
   authorized: false,
+  claims: [],
 };
 
 const metaDataReducer = (state: IMetaData = initialState, action: TAction): IMetaData => {
@@ -11,6 +12,11 @@ const metaDataReducer = (state: IMetaData = initialState, action: TAction): IMet
       return {
         ...state,
         authorized: action.payload !== null,
+      };
+    case SET_CLAIMS:
+      return {
+        ...state,
+        claims: action.payload,
       };
     default:
       return state;
