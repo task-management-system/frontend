@@ -1,4 +1,7 @@
-export interface IRole {}
+export interface IRole {
+  power: number;
+  text: string;
+}
 
 export interface IUser {
   username: string;

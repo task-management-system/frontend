@@ -1,4 +1,4 @@
 import { get } from './core';
-import { withNotification } from '../utils';
+import { withNotification, withAuthorization } from '../utils';
 
-export const getUsers = () => withNotification(get<{}>('/users'));
+export const getUsers = () => withNotification(withAuthorization(get<{}>('/users')));

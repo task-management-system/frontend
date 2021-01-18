@@ -1,8 +1,13 @@
 import localForage from 'localforage';
 import { store } from 'redux/store';
+import { reset } from 'redux/actions/common';
 import { addNotification } from 'redux/actions/notifications';
-import { Response } from './types';
+import { TCollectedResponse } from 'types/api';
 import { createNotification } from 'utils/notification';
+
+export const removeToken = async () => {
+  await localForage.removeItem('token');
+};
 
 export const getToken = async () => {
   const token = await localForage.getItem('token');
@@ -14,8 +19,21 @@ export const setToken = async (token: string | null) => {
   return await localForage.setItem('token', token);
 };
 
-export const withNotification = <T>(handler: Promise<Response<T>>): Promise<Response<T>> => {
-  return handler
+export const withAuthorization = <T>(
+  handler: Promise<TCollectedResponse<T>>
+): Promise<TCollectedResponse<T>> =>
+  handler.then(response => {
+    if (!response.details.ok && response.details.status === 401) {
+      store.dispatch(reset());
+    }
+
+    return response;
+  });
+
+export const withNotification = <T>(
+  handler: Promise<TCollectedResponse<T>>
+): Promise<TCollectedResponse<T>> =>
+  handler
     .then(response => {
       if (response.message !== null) {
         store.dispatch(
@@ -30,4 +48,3 @@ export const withNotification = <T>(handler: Promise<Response<T>>): Promise<Resp
 
       return error;
     });
-};
