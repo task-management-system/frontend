@@ -45,22 +45,6 @@ const NotificationViewer: React.FC<INotificationViewer> = props => {
       )}
     </>
   );
-
-  // {props.notifications.map(notification => {
-  //   const open = !hideable.includes(notification.id);
-
-  //   return (
-  //     <Snackbar
-  //       open={open}
-  //       autoHideDuration={4000}
-  //       onClose={() => handleClose(notification.id)}
-  //       onExited={() => handleRemove(notification.id)}
-  //       key={notification.id}
-  //     >
-  //       <Alert severity={notification.type}>{notification.text}</Alert>
-  //     </Snackbar>
-  //   );
-  // })}
 };
 
 const mapStateToProps = (state: TState) => ({

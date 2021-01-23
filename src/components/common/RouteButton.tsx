@@ -7,12 +7,15 @@ import { noop } from 'utils';
 interface IRouteButtonProps {
   to?: string;
   back?: boolean;
+  component?: React.ComponentType<ButtonProps>;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const RouteButton: React.FC<IRouteButtonProps & ButtonProps> = ({
   children,
   to = '/',
   back = false,
+  component: Component = NormalButton,
   onClick = noop,
   ...props
 }) => {
@@ -29,9 +32,9 @@ const RouteButton: React.FC<IRouteButtonProps & ButtonProps> = ({
   };
 
   return (
-    <NormalButton {...props} onClick={handleClick}>
+    <Component {...props} onClick={handleClick}>
       {children}
-    </NormalButton>
+    </Component>
   );
 };
 

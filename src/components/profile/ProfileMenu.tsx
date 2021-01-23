@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Popover } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
+import ThemedPopover from 'components/themed/ThemedPopover';
 import NormalButton from 'components/themed/NormalButton';
 import { removeToken } from 'api/utils';
 import { reset } from 'redux/actions/common';
@@ -11,7 +12,14 @@ interface IProfileMenuProps {
   reset: () => void;
 }
 
+const useStyles = makeStyles(theme => ({
+  button: {
+    justifyContent: 'flex-end',
+  },
+}));
+
 const ProfileMenu: React.FC<IProfileMenuProps> = ({ children, ...props }) => {
+  const classes = useStyles();
   const [anchor, setAnchor] = useState<HTMLButtonElement | null>(null);
   const open = anchor !== null;
 
@@ -27,7 +35,7 @@ const ProfileMenu: React.FC<IProfileMenuProps> = ({ children, ...props }) => {
   return (
     <>
       {children(handleOpen)}
-      <Popover
+      <ThemedPopover
         open={open}
         anchorEl={anchor}
         onClose={handleClose}
@@ -40,8 +48,10 @@ const ProfileMenu: React.FC<IProfileMenuProps> = ({ children, ...props }) => {
           horizontal: 'right',
         }}
       >
-        <NormalButton onClick={handleLogout}>Выйти</NormalButton>
-      </Popover>
+        <NormalButton className={classes.button} onClick={handleLogout}>
+          Выйти
+        </NormalButton>
+      </ThemedPopover>
     </>
   );
 };

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   root: {
-    minHeight: '100vh',
+    minHeight: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

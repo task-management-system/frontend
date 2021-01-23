@@ -1,29 +1,38 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { Layout } from 'components/layout';
 import Main from './Main';
 import Role from './Role';
-import User from './User';
 import NoMatch from './NoMatch';
+import Loading from 'components/Loading';
 import { getUsers } from 'api/v1';
 
+const Administration = React.lazy(() => import('./Administration'));
+
 const Home: React.FC = props => {
-  getUsers().then(console.log);
+  React.useEffect(() => {
+    getUsers().then(console.log);
+  }, []);
 
   return (
-    <Switch>
-      <Route path="/" exact>
-        <Main />
-      </Route>
-      <Route path="/role">
-        <Role />
-      </Route>
-      <Route path="/user/:id">
-        <User />
-      </Route>
-      <Route path="*">
-        <NoMatch />
-      </Route>
-    </Switch>
+    <Layout>
+      <Switch>
+        <Route path="/" exact>
+          <Main />
+        </Route>
+        <Route path="/administration">
+          <React.Suspense fallback={<Loading />}>
+            <Administration />
+          </React.Suspense>
+        </Route>
+        <Route path="/role">
+          <Role />
+        </Route>
+        <Route path="*">
+          <NoMatch />
+        </Route>
+      </Switch>
+    </Layout>
   );
 };
 

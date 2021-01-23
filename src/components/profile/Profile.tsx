@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Avatar, makeStyles } from '@material-ui/core';
 import ProfileMenu from './ProfileMenu';
-import NormalButton from '../themed/NormalButton';
+import FlatButton from '../themed/FlatButton';
 import { TState } from 'redux/types';
 
 interface IProfileProps {
@@ -25,20 +25,20 @@ const Profile: React.FC<IProfileProps> = props => {
   return (
     <ProfileMenu>
       {handleOpen => (
-        <NormalButton color="inherit" onClick={handleOpen}>
+        <FlatButton color="inherit" onClick={handleOpen}>
           <div className={classes.root}>
             <Avatar>{props.username[0]}</Avatar>
             {props.username} ({props.role})
           </div>
-        </NormalButton>
+        </FlatButton>
       )}
     </ProfileMenu>
   );
 };
 
 const mapStateToProps = (state: TState) => ({
-  username: state.metaData.user?.name || state.metaData.user?.username || '',
-  role: state.metaData.user?.role?.text || '',
+  username: state.metaData.user?.name || state.metaData.user?.username || 'Нет имени',
+  role: state.metaData.user?.role?.text || 'Нет роли',
 });
 
 export default connect(mapStateToProps)(Profile);
