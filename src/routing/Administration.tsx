@@ -11,11 +11,36 @@ const Roles = React.lazy(() => import('./administration/Roles'));
 
 interface IAdministrationProps {}
 
-const useStyles = makeStyles(theme => ({}));
+interface IRouteParams {
+  module: string | undefined;
+}
+
+const useStyles = makeStyles(theme => ({
+  toolbar: {
+    gap: theme.spacing(1),
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'max-content',
+  },
+}));
+
+const SubNavigationButton: React.FC<{ to: string }> = props => {
+  const { params } = useRouteMatch<IRouteParams>();
+  const isActive = props.to === params?.module || false;
+
+  return (
+    <RouteButton
+      to={`/administration/${props.to}`}
+      variant={isActive ? 'contained' : 'text'}
+      color={isActive ? 'secondary' : 'inherit'}
+    >
+      {props.children}
+    </RouteButton>
+  );
+};
 
 const Administration: React.FC<IAdministrationProps> = props => {
   const classes = useStyles();
-  const { path, url } = useRouteMatch();
 
   // TODO Сделать проверку на роль пользователя
   if (false) {
@@ -25,31 +50,25 @@ const Administration: React.FC<IAdministrationProps> = props => {
   return (
     <>
       <AppBar position="static">
-        <Toolbar variant="dense">
-          <RouteButton to={`${url}/users`} color="inherit">
-            Пользователи
-          </RouteButton>
-          <RouteButton to={`${url}/structure`} color="inherit">
-            Структура
-          </RouteButton>
-          <RouteButton to={`${url}/roles`} color="inherit">
-            Роли
-          </RouteButton>
+        <Toolbar className={classes.toolbar} variant="dense">
+          <SubNavigationButton to="users">Пользователи</SubNavigationButton>
+          <SubNavigationButton to="structure">Структура</SubNavigationButton>
+          <SubNavigationButton to="roles">Роли</SubNavigationButton>
         </Toolbar>
       </AppBar>
       <Container>
         <Switch>
-          <Route path={`${path}/users`}>
+          <Route path="/administration/users">
             <React.Suspense fallback={<Loading />}>
               <Users />
             </React.Suspense>
           </Route>
-          <Route path={`${path}/structure`}>
+          <Route path="/administration/structure">
             <React.Suspense fallback={<Loading />}>
               <Structure />
             </React.Suspense>
           </Route>
-          <Route path={`${path}/roles`}>
+          <Route path="/administration/roles">
             <React.Suspense fallback={<Loading />}>
               <Roles />
             </React.Suspense>

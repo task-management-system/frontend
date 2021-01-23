@@ -19,7 +19,7 @@ const Home: React.FC = props => {
         <Route path="/" exact>
           <Main />
         </Route>
-        <Route path="/administration">
+        <Route path="/administration/:module?">
           <React.Suspense fallback={<Loading />}>
             <Administration />
           </React.Suspense>
