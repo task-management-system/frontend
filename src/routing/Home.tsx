@@ -2,7 +2,6 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Layout } from 'components/layout';
 import Main from './Main';
-import Role from './Role';
 import NoMatch from './NoMatch';
 import Loading from 'components/Loading';
 import { getUsers } from 'api/v1';
@@ -24,9 +23,6 @@ const Home: React.FC = props => {
           <React.Suspense fallback={<Loading />}>
             <Administration />
           </React.Suspense>
-        </Route>
-        <Route path="/role">
-          <Role />
         </Route>
         <Route path="*">
           <NoMatch />

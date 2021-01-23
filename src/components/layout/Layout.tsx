@@ -8,10 +8,6 @@ const useStyles = makeStyles(theme => ({
     display: 'grid',
     gridTemplateRows: 'max-content 1fr',
   },
-  content: {
-    padding: theme.spacing(3),
-    overflow: 'auto',
-  },
 }));
 
 const Layout: React.FC = ({ children }) => {
@@ -20,7 +16,7 @@ const Layout: React.FC = ({ children }) => {
   return (
     <div className={classes.root}>
       <Navbar />
-      <main className={classes.content}>{children}</main>
+      <main>{children}</main>
     </div>
   );
 };
