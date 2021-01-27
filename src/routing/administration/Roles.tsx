@@ -1,8 +1,8 @@
 import React from 'react';
-import ClaimsList from 'components/ClaimsList';
+import PermissionsList from 'components/PermissionsList';
 
 const Main: React.FC = () => {
-  return <ClaimsList />;
+  return <PermissionsList />;
 };
 
 export default Main;

@@ -1,9 +1,9 @@
-import { SET_USER, SET_CLAIMS } from 'redux/actionTypes';
+import { SET_USER, SET_PERMISSIONS } from 'redux/actionTypes';
 import { TAction, IMetaData } from 'types/redux';
 
 const initialState: IMetaData = {
   user: null,
-  claims: [],
+  permissions: [],
 };
 
 const metaDataReducer = (state: IMetaData = initialState, action: TAction): IMetaData => {
@@ -13,10 +13,10 @@ const metaDataReducer = (state: IMetaData = initialState, action: TAction): IMet
         ...state,
         user: action.payload,
       };
-    case SET_CLAIMS:
+    case SET_PERMISSIONS:
       return {
         ...state,
-        claims: action.payload,
+        permissions: action.payload,
       };
     default:
       return state;

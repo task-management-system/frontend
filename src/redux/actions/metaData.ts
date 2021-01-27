@@ -1,4 +1,4 @@
-import { SET_USER, SET_CLAIMS } from 'redux/actionTypes';
+import { SET_USER, SET_PERMISSIONS } from 'redux/actionTypes';
 import { TPayload } from 'types/redux';
 
 export const setUser = (payload: TPayload) => ({
@@ -6,7 +6,7 @@ export const setUser = (payload: TPayload) => ({
   payload,
 });
 
-export const setClaims = (payload: TPayload) => ({
-  type: SET_CLAIMS,
+export const setPermissions = (payload: TPayload) => ({
+  type: SET_PERMISSIONS,
   payload,
 });

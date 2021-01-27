@@ -5,17 +5,22 @@ import { Typography } from '@material-ui/core';
 import AdministrationNavbar from 'components/layout/AdministrationNavbar';
 import Container from 'components/common/Container';
 import Loading from 'components/Loading';
+import { haveAnyPermission } from 'utils/permissions';
+import { ADMINISTRATION_PERMISSIONS } from 'constants/permissions';
 import { TState } from 'types/redux';
 
 const Users = React.lazy(() => import('./administration/Users'));
 const Structure = React.lazy(() => import('./administration/Structure'));
 const Roles = React.lazy(() => import('./administration/Roles'));
 
-interface IAdministrationProps {}
+interface IAdministrationProps {
+  permissions: {
+    administration: boolean;
+  };
+}
 
-const Administration: React.FC<IAdministrationProps> = props => {
-  // TODO Сделать проверку на роль пользователя
-  if (false) {
+const Administration: React.FC<IAdministrationProps> = ({ permissions }) => {
+  if (!permissions.administration) {
     return <Redirect to="/" />;
   }
 
@@ -48,6 +53,14 @@ const Administration: React.FC<IAdministrationProps> = props => {
   );
 };
 
-const mapStateToProps = (state: TState) => ({});
+const mapStateToProps = ({ metaData }: TState) => ({
+  permissions: {
+    administration: haveAnyPermission(
+      metaData.user?.role?.power,
+      ADMINISTRATION_PERMISSIONS,
+      metaData.permissions
+    ),
+  },
+});
 
 export default connect(mapStateToProps)(Administration);

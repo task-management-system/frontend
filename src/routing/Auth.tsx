@@ -5,15 +5,15 @@ import { Formik } from 'formik';
 import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
-import { setUser, setClaims } from 'redux/actions/metaData';
+import { setUser, setPermissions } from 'redux/actions/metaData';
 import { TDispatch, TPayload } from 'types/redux';
-import { authenticate, getClaims } from 'api/v1';
+import { authenticate, getPermissions } from 'api/v1';
 import { setToken } from 'api/utils';
 import { IAuthForm } from 'types/components/auth';
 
 interface IAuthProps {
   setUser: (payload: TPayload) => void;
-  setClaims: (payload: TPayload) => void;
+  setPermissions: (payload: TPayload) => void;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -45,8 +45,8 @@ const Auth: React.FC<IAuthProps> = props => {
       await setToken(token);
 
       if (token !== null) {
-        const claimsResponse = await getClaims();
-        props.setClaims(claimsResponse.data || []);
+        const permissionsResponse = await getPermissions();
+        props.setPermissions(permissionsResponse.data || []);
       }
 
       props.setUser(response.data?.user ?? null);
@@ -90,7 +90,7 @@ const Auth: React.FC<IAuthProps> = props => {
 
 const mapDispatchToProps = (dispatch: TDispatch) => ({
   setUser: (payload: TPayload) => dispatch(setUser(payload)),
-  setClaims: (payload: TPayload) => dispatch(setClaims(payload)),
+  setPermissions: (payload: TPayload) => dispatch(setPermissions(payload)),
 });
 
 export default connect(null, mapDispatchToProps)(Auth);

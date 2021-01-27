@@ -1,4 +1,4 @@
 import { get } from './core';
-import { IClaim } from 'types';
+import { IPermission } from 'types';
 
-export const getClaims = () => get<IClaim[]>('/permissions');
+export const getPermissions = () => get<IPermission[]>('/permissions');

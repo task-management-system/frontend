@@ -1,7 +1,7 @@
+import React from 'react';
 import { ButtonProps } from '@material-ui/core';
 import RouteButton from 'components/common/RouteButton';
 import FlatButton from 'components/themed/FlatButton';
-import React from 'react';
 
 interface INavigationButtonProps {
   to?: string;

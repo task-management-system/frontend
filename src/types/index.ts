@@ -11,10 +11,10 @@ export interface IUser {
   role: IRole | null;
 }
 
-export interface IClaim {
+export interface IPermission {
   name: string;
   power: number;
-  text: string;
+  description: string;
 }
 
 export type TNotificationType = 'success' | 'error' | 'warning';
