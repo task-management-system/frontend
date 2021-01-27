@@ -6,18 +6,14 @@ import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
 import { setUser, setClaims } from 'redux/actions/metaData';
-import { TDispatch, TPayload } from 'redux/types';
-import { authentication, getClaims } from 'api/v1';
+import { TDispatch, TPayload } from 'types/redux';
+import { authenticate, getClaims } from 'api/v1';
 import { setToken } from 'api/utils';
+import { IAuthForm } from 'types/components/auth';
 
 interface IAuthProps {
   setUser: (payload: TPayload) => void;
   setClaims: (payload: TPayload) => void;
-}
-
-interface IAuthForm {
-  username: string;
-  password: string;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -36,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const initialValues: IAuthForm = {
-  username: '',
+  usernameOrEmail: '',
   password: '',
 };
 
@@ -44,14 +40,12 @@ const Auth: React.FC<IAuthProps> = props => {
   const classes = useStyles();
 
   const handleSubmit = (values: IAuthForm): void => {
-    authentication(values).then(async response => {
+    authenticate(values).then(async response => {
       const token = response.data?.token ?? null;
-
       await setToken(token);
 
       if (token !== null) {
         const claimsResponse = await getClaims();
-
         props.setClaims(claimsResponse.data || []);
       }
 
@@ -68,8 +62,8 @@ const Auth: React.FC<IAuthProps> = props => {
               <CardContent className={classes.body}>
                 <TextField
                   label="Имя пользователя"
-                  name="username"
-                  value={values.username}
+                  name="usernameOrEmail"
+                  value={values.usernameOrEmail}
                   variant="outlined"
                   onChange={handleChange}
                 />

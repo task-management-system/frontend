@@ -1,6 +1,7 @@
 import { post } from './core';
 import { withNotification } from '../utils';
-import { Auth } from 'types/api/v1';
+import { IAuth } from 'types/api/v1';
+import { IAuthForm } from 'types/components/auth';
 
-export const authentication = (credentials: { username: string; password: string }) =>
-  withNotification(post<Auth>('/authentication', credentials));
+export const authenticate = (credentials: IAuthForm) =>
+  withNotification(post<IAuthForm, IAuth>('/authentication', credentials));

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Avatar, makeStyles } from '@material-ui/core';
 import ProfileMenu from './ProfileMenu';
 import FlatButton from '../themed/FlatButton';
-import { TState } from 'redux/types';
+import { TState } from 'types/redux';
 
 interface IProfileProps {
   username: string;

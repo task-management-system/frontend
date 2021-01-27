@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import metaData from './metaData';
 import notifications from './notifications';
-import { TState, TAction } from '../types';
+import { TState, TAction } from 'types/redux';
 import { RESET_STORE } from '../actionTypes';
 
 const appReducer = combineReducers({

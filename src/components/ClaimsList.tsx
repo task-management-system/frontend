@@ -8,7 +8,7 @@ import {
   Checkbox,
   Typography,
 } from '@material-ui/core';
-import { TState } from 'redux/types';
+import { TState } from 'types/redux';
 import { IClaim } from 'types';
 
 interface IClaimsListProps {

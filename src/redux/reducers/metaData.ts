@@ -1,5 +1,5 @@
 import { SET_USER, SET_CLAIMS } from 'redux/actionTypes';
-import { TAction, IMetaData } from '../types';
+import { TAction, IMetaData } from 'types/redux';
 
 const initialState: IMetaData = {
   user: null,

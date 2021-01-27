@@ -5,7 +5,7 @@ import ThemedPopover from 'components/themed/ThemedPopover';
 import NormalButton from 'components/themed/NormalButton';
 import { removeToken } from 'api/utils';
 import { reset } from 'redux/actions/common';
-import { TDispatch } from 'redux/types';
+import { TDispatch } from 'types/redux';
 
 interface IProfileMenuProps {
   children: (handleOpen: (event: React.MouseEvent<HTMLButtonElement>) => void) => React.ReactNode;

@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import NotificationViewer from 'components/NotificationViewer';
 import Auth from 'routing/Auth';
 import Home from 'routing/Home';
-import { TState } from 'redux/types';
+import { TState } from 'types/redux';
 
 interface IProps {
   authorized: boolean;

@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
 import rootReducer from './reducers';
-import { TStore, TPersistState, TAction } from './types';
+import { TStore, TPersistState, TAction } from 'types/redux';
 
 const persistConfig = {
   key: 'root',

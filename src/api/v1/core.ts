@@ -1,9 +1,9 @@
 import { getToken } from '../utils';
-import { TCollectedResponse, TResponse, IPayload } from 'types/api';
+import { TCollectedResponse, TResponse, IPagination } from 'types/api';
 
 const API_URL = '/api/v1';
 
-const prepareHeaders = async (headers: Headers): Promise<void> => {
+export const prepareHeaders = async (headers: Headers): Promise<void> => {
   const token = await getToken();
 
   if (token !== null) {
@@ -15,7 +15,7 @@ const prepareHeaders = async (headers: Headers): Promise<void> => {
   }
 };
 
-const collectResponse = async <T>(response: Response): Promise<TCollectedResponse<T>> => {
+export const collectResponse = async <T>(response: Response): Promise<TCollectedResponse<T>> => {
   const data = (await response.json()) as TResponse<T>;
   const { ok, status, statusText } = response;
 
@@ -27,6 +27,15 @@ const collectResponse = async <T>(response: Response): Promise<TCollectedRespons
       statusText,
     },
   };
+};
+
+export const collectPaginationParams = (pagination: IPagination): URLSearchParams => {
+  const params = new URLSearchParams();
+  params.set('page', (pagination.page || 1).toString());
+  params.set('size', (pagination.size || 25).toString());
+  params.set('order', pagination.order || 'ASC');
+
+  return params;
 };
 
 export const get = async <T>(
@@ -41,9 +50,9 @@ export const get = async <T>(
   }).then(response => collectResponse(response));
 };
 
-export const post = async <T>(
+export const post = async <P, T>(
   url: string = '/',
-  payload: IPayload = {},
+  payload: P,
   headers: Headers = new Headers()
 ): Promise<TCollectedResponse<T>> => {
   await prepareHeaders(headers);
@@ -55,9 +64,9 @@ export const post = async <T>(
   }).then(response => collectResponse(response));
 };
 
-export const put = async <T>(
+export const put = async <P, T>(
   url: string = '/',
-  payload: IPayload = {},
+  payload: P,
   headers: Headers = new Headers()
 ): Promise<TCollectedResponse<T>> => {
   await prepareHeaders(headers);

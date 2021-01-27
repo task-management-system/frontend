@@ -20,6 +20,7 @@ export type TAction = {
 export type TPersistState = TState & PersistPartial;
 
 type TPrimitivePayload = string | number | boolean | null;
+
 interface TNestedPayload {
   [key: string]: TPrimitivePayload;
 }

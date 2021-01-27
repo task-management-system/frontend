@@ -3,6 +3,7 @@ export type TMessageType = 'success' | 'error' | 'warning';
 export interface IMessage {
   type: TMessageType;
   text: string;
+  stackTrace: string | null;
 }
 
 export interface IDetails {
@@ -22,6 +23,8 @@ export type TResponse<T> = {
 
 export type TCollectedResponse<T> = TResponse<T> & TDetails;
 
-export interface IPayload {
-  [key: string]: IPayload | string | number | boolean | null;
+export interface IPagination {
+  page?: number;
+  size?: number;
+  order?: 'ASC' | 'DESC';
 }

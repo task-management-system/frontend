@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { removeNotification } from 'redux/actions/notifications';
-import { TState, TDispatch, TPayload } from 'redux/types';
+import { TState, TDispatch, TPayload } from 'types/redux';
 import { INotification } from 'types';
 
 interface INotificationViewer {
