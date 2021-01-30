@@ -76,7 +76,7 @@ const PermissionsList: React.FC<IPermissionsListProps> = ({ power, permissions }
 };
 
 const mapStateToProps = (state: TState) => ({
-  power: state.metaData.user?.role?.power || 0,
+  power: state.metaData.user?.role.power || 0,
   permissions: state.metaData.permissions || [],
 });
 

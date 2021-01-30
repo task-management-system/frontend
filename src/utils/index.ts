@@ -11,3 +11,16 @@ export const range = (count: number): number[] => {
 
   return [...sequence];
 };
+
+type Extractor<K, T> = (entry: T) => K;
+
+export const groupBy = <K, T>(collection: T[], extractor: Extractor<K, T>): Map<K, T[]> =>
+  collection.reduce((accumulator, entry) => {
+    const key = extractor(entry);
+    if (!accumulator.has(key)) {
+      accumulator.set(key, []);
+    }
+    accumulator.get(key)!.push(entry);
+
+    return accumulator;
+  }, new Map<K, T[]>());

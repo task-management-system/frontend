@@ -38,7 +38,7 @@ const Profile: React.FC<IProfileProps> = props => {
 
 const mapStateToProps = (state: TState) => ({
   username: state.metaData.user?.name || state.metaData.user?.username || 'Нет имени',
-  role: state.metaData.user?.role?.text || 'Нет роли',
+  role: state.metaData.user?.role.text || 'Нет роли',
 });
 
 export default connect(mapStateToProps)(Profile);

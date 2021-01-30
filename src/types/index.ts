@@ -1,14 +1,16 @@
 export interface IRole {
+  id: number;
   power: number;
   text: string;
 }
 
 export interface IUser {
+  id: number;
   username: string;
-  // password?: string;
   name: string;
   email: string;
-  role: IRole | null;
+  isActive: boolean;
+  role: IRole;
 }
 
 export interface IPermission {

@@ -4,9 +4,13 @@ import Navbar from './Navbar';
 
 const useStyles = makeStyles(theme => ({
   root: {
+    height: '100%',
     minHeight: '100vh',
     display: 'grid',
     gridTemplateRows: 'max-content 1fr',
+  },
+  content: {
+    overflow: 'auto',
   },
 }));
 
@@ -16,7 +20,7 @@ const Layout: React.FC = ({ children }) => {
   return (
     <div className={classes.root}>
       <Navbar />
-      <main>{children}</main>
+      <main className={classes.content}>{children}</main>
     </div>
   );
 };

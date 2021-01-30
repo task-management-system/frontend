@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Card, CardContent, CardActions, TextField, makeStyles } from '@material-ui/core';
+import { Card, CardContent, CardActions, TextField, makeStyles, fade } from '@material-ui/core';
 import { Formik } from 'formik';
 import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
@@ -17,6 +17,16 @@ interface IAuthProps {
 }
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    backgroundImage: `linear-gradient(40deg, transparent, ${fade(
+      theme.palette.primary.dark,
+      0.6
+    )}), radial-gradient(circle at 0% 80%, ${fade(
+      theme.palette.secondary.light,
+      0.6
+    )}, transparent)`,
+    backgroundColor: '#3f3f3f',
+  },
   card: {
     width: 480,
     margin: theme.spacing(2),
@@ -54,7 +64,7 @@ const Auth: React.FC<IAuthProps> = props => {
   };
 
   return (
-    <FullPage>
+    <FullPage className={classes.root}>
       <Card className={classes.card}>
         <Formik initialValues={initialValues} onSubmit={handleSubmit}>
           {({ values, handleChange, submitForm }) => (

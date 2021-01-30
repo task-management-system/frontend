@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import AdministrationNavbar from 'components/layout/AdministrationNavbar';
 import Container from 'components/common/Container';
 import Loading from 'components/Loading';
+import NoMatch from './NoMatch';
 import { haveAnyPermission } from 'utils/permissions';
 import { ADMINISTRATION_PERMISSIONS } from 'constants/permissions';
 import { TState } from 'types/redux';
@@ -21,7 +22,7 @@ interface IAdministrationProps {
 
 const Administration: React.FC<IAdministrationProps> = ({ permissions }) => {
   if (!permissions.administration) {
-    return <Redirect to="/" />;
+    return <NoMatch />;
   }
 
   return (
@@ -56,7 +57,7 @@ const Administration: React.FC<IAdministrationProps> = ({ permissions }) => {
 const mapStateToProps = ({ metaData }: TState) => ({
   permissions: {
     administration: haveAnyPermission(
-      metaData.user?.role?.power,
+      metaData.user?.role.power,
       ADMINISTRATION_PERMISSIONS,
       metaData.permissions
     ),

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { AppBar, Toolbar, Typography, makeStyles } from '@material-ui/core';
+import Logo from './Logo';
 import Profile from '../profile/Profile';
 import NavigationButton from './NavigationButton';
 import { haveAnyPermission } from 'utils/permissions';
@@ -30,7 +31,7 @@ const Navbar: React.FC<INavbarProps> = ({ permissions }) => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6">Task Management System</Typography>
+        <Logo />
         <div className={classes.wrapper}>
           <NavigationButton to="/">Задачи</NavigationButton>
           {permissions.administration && (
@@ -46,7 +47,7 @@ const Navbar: React.FC<INavbarProps> = ({ permissions }) => {
 const mapStateToProps = ({ metaData }: TState) => ({
   permissions: {
     administration: haveAnyPermission(
-      metaData.user?.role?.power,
+      metaData.user?.role.power,
       ADMINISTRATION_PERMISSIONS,
       metaData.permissions
     ),

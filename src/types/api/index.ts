@@ -1,7 +1,5 @@
-export type TMessageType = 'success' | 'error' | 'warning';
-
 export interface IMessage {
-  type: TMessageType;
+  type: 'success' | 'error' | 'warning';
   text: string;
   stackTrace: string | null;
 }
@@ -19,6 +17,11 @@ export type TDetails = {
 export type TResponse<T> = {
   message: IMessage | null;
   data: T | null;
+};
+
+export type TPaged<T> = {
+  total: number;
+  list: T;
 };
 
 export type TCollectedResponse<T> = TResponse<T> & TDetails;
