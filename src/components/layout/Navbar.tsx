@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { AppBar, Toolbar, Typography, makeStyles } from '@material-ui/core';
+import { AppBar, Toolbar, makeStyles } from '@material-ui/core';
 import Logo from './Logo';
 import Profile from '../profile/Profile';
 import NavigationButton from './NavigationButton';
@@ -15,6 +15,9 @@ interface INavbarProps {
 }
 
 const useStyles = makeStyles(theme => ({
+  appBar: {
+    zIndex: theme.zIndex.appBar + 1,
+  },
   wrapper: {
     padding: theme.spacing(0, 3),
     flexGrow: 1,
@@ -29,7 +32,7 @@ const Navbar: React.FC<INavbarProps> = ({ permissions }) => {
   const classes = useStyles();
 
   return (
-    <AppBar position="static">
+    <AppBar className={classes.appBar} position="static">
       <Toolbar>
         <Logo />
         <div className={classes.wrapper}>

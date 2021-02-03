@@ -1,4 +1,4 @@
-import { get } from './core';
+import { methods } from './core';
 import { IPermission } from 'types';
 
-export const getPermissions = () => get<IPermission[]>('/permissions');
+export const getPermissions = () => methods.get<IPermission[]>('/permissions');

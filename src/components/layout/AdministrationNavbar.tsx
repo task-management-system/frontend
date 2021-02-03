@@ -35,7 +35,7 @@ const AdministrationNavbar: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Toolbar className={classes.toolbar} variant="dense">
         <SubNavigationButton to="users">Пользователи</SubNavigationButton>
         <SubNavigationButton to="structure">Структура</SubNavigationButton>

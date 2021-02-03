@@ -5,16 +5,14 @@ import {
   CardHeader,
   CardContent,
   CardActions,
-  List,
-  ListItem,
-  ListItemText,
   Avatar,
+  Chip,
   Typography,
   makeStyles,
 } from '@material-ui/core';
+import ToggleLockButton from './ToggleLockButton';
 import { IUser, IPermission } from 'types';
 import { TState } from 'types/redux';
-import NormalButton from './themed/NormalButton';
 
 interface IUserCardProps {
   user: IUser;
@@ -27,7 +25,18 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
   },
   content: {
+    gap: theme.spacing(1),
     flexGrow: 1,
+    display: 'grid',
+    gridAutoRows: 'max-content',
+  },
+  chipList: {
+    margin: theme.spacing(-0.25),
+    display: 'flex',
+    flexWrap: 'wrap',
+    '& > *': {
+      margin: theme.spacing(0.25),
+    },
   },
 }));
 
@@ -51,21 +60,20 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissions }) => {
       />
       <CardContent className={classes.content}>
         <Typography variant="body2">
-          <strong>Права</strong>
+          <strong>{userPermissions.length > 0 ? 'Права' : 'У пользователя нет прав'}</strong>
         </Typography>
-        <List dense={true}>
-          {userPermissions.length > 0 ? (
-            userPermissions.map(permission => (
-              <ListItem key={permission.power}>
-                <ListItemText primary={permission.description} />
-              </ListItem>
-            ))
-          ) : (
-            <ListItem>
-              <ListItemText primary="У пользователя нет прав" />
-            </ListItem>
-          )}
-        </List>
+        {userPermissions.length > 0 && (
+          <div className={classes.chipList}>
+            {userPermissions.map(permission => (
+              <Chip
+                variant="outlined"
+                size="small"
+                label={permission.description}
+                key={permission.name}
+              />
+            ))}
+          </div>
+        )}
         {user.email !== null && (
           <Typography variant="body2">
             <strong>Почта</strong>: <a href={`mailto:${user.email}`}>{user.email}</a>
@@ -73,9 +81,7 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissions }) => {
         )}
       </CardContent>
       <CardActions>
-        <NormalButton variant="contained" color="primary">
-          {user.isActive ? 'Заблокировать' : 'Разблокировать'}
-        </NormalButton>
+        <ToggleLockButton id={user.id} isActive={user.isActive} />
       </CardActions>
     </Card>
   );

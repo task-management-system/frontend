@@ -38,7 +38,7 @@ export const collectPaginationParams = (pagination: IPagination): URLSearchParam
   return params;
 };
 
-export const get = async <T>(
+const getMethod = async <T>(
   url: string = '/',
   headers: Headers = new Headers()
 ): Promise<TCollectedResponse<T>> => {
@@ -50,7 +50,7 @@ export const get = async <T>(
   }).then(response => collectResponse(response));
 };
 
-export const post = async <P, T>(
+const postMethod = async <P, T>(
   url: string = '/',
   payload: P,
   headers: Headers = new Headers()
@@ -64,7 +64,7 @@ export const post = async <P, T>(
   }).then(response => collectResponse(response));
 };
 
-export const put = async <P, T>(
+const putMethod = async <P, T>(
   url: string = '/',
   payload: P,
   headers: Headers = new Headers()
@@ -76,4 +76,40 @@ export const put = async <P, T>(
     headers,
     body: JSON.stringify(payload),
   }).then(response => collectResponse(response));
+};
+
+const patchMethod = async <P, T>(
+  url: string = '/',
+  payload: P,
+  headers: Headers = new Headers()
+): Promise<TCollectedResponse<T>> => {
+  await prepareHeaders(headers);
+
+  return fetch(`${API_URL}${url}`, {
+    method: 'PATCH',
+    headers,
+    body: JSON.stringify(payload),
+  }).then(response => collectResponse(response));
+};
+
+const deleteMethod = async <P, T>(
+  url: string = '/',
+  payload: P,
+  headers: Headers = new Headers()
+): Promise<TCollectedResponse<T>> => {
+  await prepareHeaders(headers);
+
+  return fetch(`${API_URL}${url}`, {
+    method: 'DELETE',
+    headers,
+    body: JSON.stringify(payload),
+  }).then(response => collectResponse(response));
+};
+
+export const methods = {
+  get: getMethod,
+  post: postMethod,
+  put: putMethod,
+  patch: patchMethod,
+  delete: deleteMethod,
 };
