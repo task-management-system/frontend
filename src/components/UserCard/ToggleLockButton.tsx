@@ -6,19 +6,19 @@ import { lock, unlock } from 'api/v1';
 interface IToggleLockButtonProps {
   id: number;
   isActive: boolean;
+  onClick: () => Promise<void>;
 }
 
-const ToggleLockButton: React.FC<IToggleLockButtonProps> = ({ id, isActive }) => {
-  const [inProgress, toggleLock] = usePromiseTrack(isActive ? lock : unlock);
-
-  const handleClick = () => {
-    toggleLock(id).then(data => {
-      console.log(data);
-    });
+const ToggleLockButton: React.FC<IToggleLockButtonProps> = ({ id, isActive, onClick }) => {
+  const handleClick = async () => {
+    await (isActive ? lock : unlock)(id);
+    await onClick();
   };
 
+  const [inProgress, trackedHandleClick] = usePromiseTrack(handleClick);
+
   return (
-    <NormalButton color="primary" disabled={inProgress} onClick={handleClick}>
+    <NormalButton color="primary" disabled={inProgress} onClick={trackedHandleClick}>
       {isActive ? 'Заблокировать' : 'Разблокировать'}
     </NormalButton>
   );

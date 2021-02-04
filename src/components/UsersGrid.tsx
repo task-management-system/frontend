@@ -5,6 +5,7 @@ import { IUser } from 'types';
 
 interface IUsersGridProps {
   users: IUser[];
+  updateUsers: () => Promise<void>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -15,13 +16,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UsersGrid: React.FC<IUsersGridProps> = ({ users }) => {
+const UsersGrid: React.FC<IUsersGridProps> = ({ users, updateUsers }) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       {users.map(user => (
-        <UserCard user={user} key={user.id} />
+        <UserCard user={user} onChange={updateUsers} key={user.id} />
       ))}
     </div>
   );

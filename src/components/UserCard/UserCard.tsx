@@ -17,6 +17,7 @@ import { TState } from 'types/redux';
 interface IUserCardProps {
   user: IUser;
   permissions: IPermission[];
+  onChange: () => Promise<void>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserCard: React.FC<IUserCardProps> = ({ user, permissions }) => {
+const UserCard: React.FC<IUserCardProps> = ({ user, permissions, onChange }) => {
   const classes = useStyles();
 
   const userPermissions = permissions.reduce<IPermission[]>((accumulator, permission) => {
@@ -59,6 +60,9 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissions }) => {
         subheader={user.name}
       />
       <CardContent className={classes.content}>
+        <Typography variant="body2">
+          <strong>Роль</strong>: {user.role.text}
+        </Typography>
         <Typography variant="body2">
           <strong>{userPermissions.length > 0 ? 'Права' : 'У пользователя нет прав'}</strong>
         </Typography>
@@ -81,7 +85,7 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissions }) => {
         )}
       </CardContent>
       <CardActions>
-        <ToggleLockButton id={user.id} isActive={user.isActive} />
+        <ToggleLockButton id={user.id} isActive={user.isActive} onClick={onChange} />
       </CardActions>
     </Card>
   );

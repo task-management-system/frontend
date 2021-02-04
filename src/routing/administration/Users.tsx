@@ -1,23 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, makeStyles } from '@material-ui/core';
+import { Typography, Fade, makeStyles } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
+import Container from 'components/common/Container';
 import UsersGrid from 'components/UsersGrid';
+import LightSkeleton from 'components/themed/LightSkeleton';
 import TinyButton from 'components/themed/TinyButton';
 import usePromiseTrack from 'hooks/usePromiseTrack';
-import { groupBy } from 'utils';
+import { groupBy, range } from 'utils';
 import { getUsers } from 'api/v1';
 import { IUser } from 'types';
 
+type TChapterRefs = { [key: string]: React.RefObject<HTMLDivElement> };
+
 const useStyles = makeStyles(theme => ({
   root: {
-    gap: theme.spacing(3),
+    height: '100%',
     display: 'grid',
-    gridAutoRows: 'max-content',
+    gridTemplateRows: 'max-content 1fr',
+    overflow: 'hidden',
   },
   chapters: {
+    padding: theme.spacing(1, 2),
     gap: theme.spacing(0.5),
     display: 'grid',
     gridAutoFlow: 'column',
     gridAutoColumns: 'max-content',
+    background: '#333333',
+    color: theme.palette.common.white,
+  },
+  container: {
+    overflow: 'auto',
+  },
+  groups: {
+    gap: theme.spacing(3),
+    display: 'grid',
+    gridAutoRows: 'max-content',
   },
   group: {
     gap: theme.spacing(2),
@@ -37,16 +54,18 @@ const Users: React.FC = () => {
     });
   }, []);
 
+  const updateUsers = async () => {
+    const response = await getUsers();
+    setUsers(response.data?.list || []);
+  };
+
   const groups = groupBy(users, user => user.username[0].toUpperCase());
   const chapters = [...groups.keys()].sort((a, b) => a.localeCompare(b));
-  const references = chapters.reduce<{ [key: string]: React.RefObject<HTMLDivElement> }>(
-    (accumulator, chapter) => {
-      accumulator[chapter] = React.createRef();
+  const references = chapters.reduce<TChapterRefs>((accumulator, chapter) => {
+    accumulator[chapter] = React.createRef();
 
-      return accumulator;
-    },
-    {}
-  );
+    return accumulator;
+  }, {});
 
   const handleChapterClick = (chapter: string) => {
     references[chapter].current?.scrollIntoView({
@@ -56,20 +75,38 @@ const Users: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      {/* <pre>{JSON.stringify({ inProgress, users }, null, 4)}</pre> */}
       <div className={classes.chapters}>
-        {chapters.map(chapter => (
-          <TinyButton color="primary" onClick={() => handleChapterClick(chapter)} key={chapter}>
-            {chapter}
-          </TinyButton>
-        ))}
+        {chapters.length > 0 && !inProgress
+          ? chapters.map(chapter => (
+              <TinyButton color="inherit" onClick={() => handleChapterClick(chapter)} key={chapter}>
+                {chapter}
+              </TinyButton>
+            ))
+          : range(4).map(index => (
+              <LightSkeleton variant="rect" width={32} height={32} key={index} />
+            ))}
       </div>
-      {chapters.map(chapter => (
-        <div className={classes.group} ref={references[chapter]} key={chapter}>
-          <Typography variant="h4">{chapter}</Typography>
-          <UsersGrid users={groups.get(chapter)!} />
-        </div>
-      ))}
+      <div className={classes.container}>
+        <Container className={classes.groups}>
+          {chapters.length > 0 && !inProgress
+            ? chapters.map(chapter => (
+                <Fade in={true} key={chapter}>
+                  <div className={classes.group} ref={references[chapter]}>
+                    <Typography variant="h4">{chapter}</Typography>
+                    <UsersGrid users={groups.get(chapter)!} updateUsers={updateUsers} />
+                  </div>
+                </Fade>
+              ))
+            : range(2).map(index => (
+                <div className={classes.group} key={index}>
+                  <Typography variant="h4">
+                    <Skeleton width={100} />
+                  </Typography>
+                  <Skeleton variant="rect" height={240} />
+                </div>
+              ))}
+        </Container>
+      </div>
     </div>
   );
 };

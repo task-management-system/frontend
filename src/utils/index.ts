@@ -1,6 +1,8 @@
-export const noop: () => void = () => {};
+export const noop = () => {};
 
-export const salt: () => string = () => Math.random().toString(36).slice(2);
+export const sleep = (duration = 0) => new Promise(resolve => setTimeout(resolve, duration));
+
+export const salt = () => Math.random().toString(36).slice(2);
 
 export const range = (count: number): number[] => {
   const sequence = (function* () {

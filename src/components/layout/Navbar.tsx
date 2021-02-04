@@ -16,7 +16,7 @@ interface INavbarProps {
 
 const useStyles = makeStyles(theme => ({
   appBar: {
-    zIndex: theme.zIndex.appBar + 1,
+    zIndex: theme.zIndex.drawer + 1,
   },
   wrapper: {
     padding: theme.spacing(0, 3),

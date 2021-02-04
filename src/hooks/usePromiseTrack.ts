@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 function usePromiseTrack<X extends any[], T>(
-  promise: (...args: X) => Promise<T>
+  promise: (...args: X) => Promise<T>,
+  delay = 0
 ): [boolean, (...args: X) => Promise<T>] {
   const [inProgress, setInProgress] = useState(false);
 
@@ -13,7 +14,9 @@ function usePromiseTrack<X extends any[], T>(
         .then(resolve)
         .catch(reject)
         .finally(() => {
-          setInProgress(false);
+          setTimeout(() => {
+            setInProgress(false);
+          }, delay);
         });
     });
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
-import { Typography } from '@material-ui/core';
-import AdministrationNavbar from 'components/layout/AdministrationNavbar';
+import { Typography, makeStyles } from '@material-ui/core';
+import AdministrationMenu from 'components/layout/AdministrationMenu';
 import Container from 'components/common/Container';
 import Loading from 'components/Loading';
 import NoMatch from './NoMatch';
@@ -20,37 +20,47 @@ interface IAdministrationProps {
   };
 }
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    height: '100%',
+    display: 'grid',
+    gridTemplateColumns: 'max-content 1fr',
+  },
+}));
+
 const Administration: React.FC<IAdministrationProps> = ({ permissions }) => {
+  const classes = useStyles();
+
   if (!permissions.administration) {
     return <NoMatch />;
   }
 
   return (
-    <>
-      <AdministrationNavbar />
-      <Container>
-        <Switch>
-          <Route path="/administration/users">
-            <React.Suspense fallback={<Loading />}>
-              <Users />
-            </React.Suspense>
-          </Route>
-          <Route path="/administration/structure">
-            <React.Suspense fallback={<Loading />}>
-              <Structure />
-            </React.Suspense>
-          </Route>
-          <Route path="/administration/roles">
-            <React.Suspense fallback={<Loading />}>
-              <Roles />
-            </React.Suspense>
-          </Route>
-          <Route path="*">
+    <div className={classes.root}>
+      <AdministrationMenu />
+      <Switch>
+        <Route path="/administration/users">
+          <React.Suspense fallback={<Loading />}>
+            <Users />
+          </React.Suspense>
+        </Route>
+        <Route path="/administration/structure">
+          <React.Suspense fallback={<Loading />}>
+            <Structure />
+          </React.Suspense>
+        </Route>
+        <Route path="/administration/roles">
+          <React.Suspense fallback={<Loading />}>
+            <Roles />
+          </React.Suspense>
+        </Route>
+        <Route path="*">
+          <Container>
             <Typography variant="h3">Administration</Typography>
-          </Route>
-        </Switch>
-      </Container>
-    </>
+          </Container>
+        </Route>
+      </Switch>
+    </div>
   );
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import { AppBar, Toolbar, makeStyles } from '@material-ui/core';
+import { Toolbar, makeStyles } from '@material-ui/core';
+import MenuDrawer from 'components/themed/MenuDrawer';
 import RouteButton from 'components/common/RouteButton';
 
 interface IRouteParams {
@@ -23,26 +24,27 @@ const SubNavigationButton: React.FC<{ to: string }> = props => {
 };
 
 const useStyles = makeStyles(theme => ({
-  toolbar: {
+  container: {
+    padding: theme.spacing(1),
     gap: theme.spacing(1),
     display: 'grid',
-    gridAutoFlow: 'column',
-    gridAutoColumns: 'max-content',
+    gridAutoRows: 'max-content',
   },
 }));
 
-const AdministrationNavbar: React.FC = () => {
+const AdministrationMenu: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <AppBar position="sticky">
-      <Toolbar className={classes.toolbar} variant="dense">
+    <MenuDrawer variant="permanent">
+      <Toolbar />
+      <div className={classes.container}>
         <SubNavigationButton to="users">Пользователи</SubNavigationButton>
         <SubNavigationButton to="structure">Структура</SubNavigationButton>
         <SubNavigationButton to="roles">Роли</SubNavigationButton>
-      </Toolbar>
-    </AppBar>
+      </div>
+    </MenuDrawer>
   );
 };
 
-export default AdministrationNavbar;
+export default AdministrationMenu;
