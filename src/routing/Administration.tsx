@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { Typography, makeStyles } from '@material-ui/core';
-import AdministrationMenu from 'components/layout/AdministrationMenu';
+import AdministrationMenu from 'components/AdministrationMenu/AdministrationMenu';
 import Container from 'components/common/Container';
 import Loading from 'components/Loading';
 import NoMatch from './NoMatch';

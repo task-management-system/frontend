@@ -78,9 +78,11 @@ const Users: React.FC = () => {
       <div className={classes.chapters}>
         {chapters.length > 0 && !inProgress
           ? chapters.map(chapter => (
-              <TinyButton color="inherit" onClick={() => handleChapterClick(chapter)} key={chapter}>
-                {chapter}
-              </TinyButton>
+              <Fade in={true} key={chapter}>
+                <TinyButton color="inherit" onClick={() => handleChapterClick(chapter)}>
+                  {chapter}
+                </TinyButton>
+              </Fade>
             ))
           : range(4).map(index => (
               <LightSkeleton variant="rect" width={32} height={32} key={index} />

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 function useScreenWidthCompare(comparator: (width: number) => boolean) {
-  const [value, setValue] = useState(false);
+  const [value, setValue] = useState(comparator(window.innerWidth));
 
   const handler = () => setValue(comparator(window.innerWidth));
 
