@@ -5,6 +5,7 @@ import Main from './Main';
 import NoMatch from './NoMatch';
 import Loading from 'components/Loading';
 
+const Profile = React.lazy(() => import('./Profile'));
 const User = React.lazy(() => import('./User'));
 const Administration = React.lazy(() => import('./Administration'));
 
@@ -13,6 +14,11 @@ const Home: React.FC = () => (
     <Switch>
       <Route path="/" exact>
         <Main />
+      </Route>
+      <Route path="/profile">
+        <React.Suspense fallback={<Loading />}>
+          <Profile />
+        </React.Suspense>
       </Route>
       <Route path="/user/:id">
         <React.Suspense fallback={<Loading />}>

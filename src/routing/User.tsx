@@ -1,103 +1,34 @@
 import React from 'react';
-import Container from 'components/common/Container';
-import { makeStyles } from '@material-ui/core';
-import { Skeleton } from '@material-ui/lab';
+import { connect } from 'react-redux';
+import { useRouteMatch } from 'react-router-dom';
+import UserInfo from 'components/UserInfo';
+import NoMatch from './NoMatch';
+import { haveAnyPermission } from 'utils/permissions';
+import { TState } from 'types/redux';
 
-const useStyles = makeStyles(theme => ({
-  profile: {
-    gap: theme.spacing(2),
-    display: 'grid',
-    gridTemplateColumns: 'max-content 1fr',
-  },
-  columns: {
-    gap: theme.spacing(2),
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    alignItems: 'center',
-  },
-  rows: {
-    gap: theme.spacing(2),
-    display: 'grid',
-    gridAutoRows: 'max-content',
-  },
-  control: {
-    gap: theme.spacing(0.5),
-    display: 'grid',
-    gridAutoRows: 'max-content',
-  },
-  actions: {
-    gap: theme.spacing(2),
-    display: 'grid',
-    gridAutoFlow: 'column',
-    gridAutoColumns: 'max-content',
-    justifyContent: 'end',
-    alignItems: 'center',
-  },
-}));
+interface IUserProps {
+  permissions: {
+    view: boolean;
+  };
+}
+interface IRouteParams {
+  id: string;
+}
 
-const User: React.FC = () => {
-  const classes = useStyles();
+const User: React.FC<IUserProps> = ({ permissions }) => {
+  const { params } = useRouteMatch<IRouteParams>();
 
-  return (
-    <Container>
-      {/* <div className={classes.rows}>
-        <div className={classes.profile}>
-          <Skeleton variant="rect" width={128} height={128} />
-          <div className={classes.columns}>
-            <div className={classes.rows}>
-              <Skeleton variant="rect" height={48} />
-              <Skeleton variant="rect" height={48} />
-            </div>
-            <div className={classes.rows}>
-              <Skeleton variant="rect" height={48} />
-              <Skeleton variant="rect" height={48} />
-            </div>
-          </div>
-        </div>
-        <div className={classes.columns}>
-          <div className={classes.control}>
-            <Skeleton width={128} />
-            <Skeleton variant="rect" height={48} />
-          </div>
-          <div className={classes.control}>
-            <Skeleton width={128} />
-            <Skeleton variant="rect" height={48} />
-          </div>
-        </div>
-        <div className={classes.actions}>
-          <Skeleton variant="rect" width={256} height={48} />
-        </div>
-      </div> */}
-      <div className={classes.profile}>
-        <Skeleton variant="rect" width={128} height={128} />
-        <div className={classes.rows}>
-          <div className={classes.columns}>
-            <div className={classes.rows}>
-              <Skeleton variant="rect" height={48} />
-              <Skeleton variant="rect" height={48} />
-            </div>
-            <div className={classes.rows}>
-              <Skeleton variant="rect" height={48} />
-              <Skeleton variant="rect" height={48} />
-            </div>
-          </div>
-          <div className={classes.columns}>
-            <div className={classes.control}>
-              <Skeleton width={128} />
-              <Skeleton variant="rect" height={48} />
-            </div>
-            <div className={classes.control}>
-              <Skeleton width={128} />
-              <Skeleton variant="rect" height={48} />
-            </div>
-          </div>
-          <div className={classes.actions}>
-            <Skeleton variant="rect" width={256} height={48} />
-          </div>
-        </div>
-      </div>
-    </Container>
-  );
+  if (!permissions.view) {
+    return <NoMatch />;
+  }
+
+  return <UserInfo id={Number(params.id)} />;
 };
 
-export default User;
+const mapStateToProps = ({ metaData }: TState) => ({
+  permissions: {
+    view: haveAnyPermission(metaData.user?.role.power, ['ViewUser'], metaData.permissions),
+  },
+});
+
+export default connect(mapStateToProps)(User);

@@ -10,6 +10,16 @@ const useStyles = makeStyles(theme => ({
     gridAutoRows: 'max-content',
     justifyItems: 'start',
   },
+  buttons: {
+    gap: theme.spacing(2),
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'max-content',
+    justifyContent: 'space-between',
+  },
+  button: {
+    minWidth: 120,
+  },
 }));
 
 const NoMatch: React.FC = () => {
@@ -20,9 +30,14 @@ const NoMatch: React.FC = () => {
       <div className={classes.root}>
         <Typography variant="h3">Страница не найдена</Typography>
         <Typography variant="body1">Мы не смогли найти Вашу страницу 🙁</Typography>
-        <RouteButton to="/" variant="contained" color="primary">
-          Перейти на главную
-        </RouteButton>
+        <div className={classes.buttons}>
+          <RouteButton className={classes.button} back variant="contained" color="primary">
+            Назад
+          </RouteButton>
+          <RouteButton className={classes.button} to="/" variant="contained" color="primary">
+            На главную
+          </RouteButton>
+        </div>
       </div>
     </FullPage>
   );

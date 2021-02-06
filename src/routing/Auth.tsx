@@ -10,6 +10,7 @@ import { TDispatch, TPayload } from 'types/redux';
 import { authenticate, getPermissions } from 'api/v1';
 import { setToken } from 'api/utils';
 import { IAuthForm } from 'types/components/auth';
+import usePromiseTrack from 'hooks/usePromiseTrack';
 
 interface IAuthProps {
   setUser: (payload: TPayload) => void;
@@ -49,18 +50,23 @@ const initialValues: IAuthForm = {
 const Auth: React.FC<IAuthProps> = props => {
   const classes = useStyles();
 
-  const handleSubmit = (values: IAuthForm): void => {
-    authenticate(values).then(async response => {
-      const token = response.data?.token ?? null;
-      await setToken(token);
+  const sendData = async (values: IAuthForm) => {
+    const response = await authenticate(values);
+    const token = response.data?.token ?? null;
+    await setToken(token);
 
-      if (token !== null) {
-        const permissionsResponse = await getPermissions();
-        props.setPermissions(permissionsResponse.data || []);
-      }
+    if (token !== null) {
+      const permissionsResponse = await getPermissions();
+      props.setPermissions(permissionsResponse.data || []);
+    }
 
-      props.setUser(response.data?.user ?? null);
-    });
+    props.setUser(response.data?.user ?? null);
+  };
+
+  const [inProgress, trackedSendData] = usePromiseTrack(sendData);
+
+  const handleSubmit = async (values: IAuthForm) => {
+    await trackedSendData(values);
   };
 
   return (
@@ -86,7 +92,12 @@ const Auth: React.FC<IAuthProps> = props => {
                 />
               </CardContent>
               <CardActions className={classes.actions}>
-                <NormalButton color="primary" variant="contained" onClick={submitForm}>
+                <NormalButton
+                  color="primary"
+                  variant="contained"
+                  disabled={inProgress}
+                  onClick={submitForm}
+                >
                   Войти
                 </NormalButton>
               </CardActions>
