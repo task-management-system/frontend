@@ -11,6 +11,7 @@ import { ADMINISTRATION_PERMISSIONS } from 'constants/permissions';
 import { TState } from 'types/redux';
 
 const Users = React.lazy(() => import('./administration/Users'));
+const AddUser = React.lazy(() => import('./administration/AddUser'));
 const Structure = React.lazy(() => import('./administration/Structure'));
 const Roles = React.lazy(() => import('./administration/Roles'));
 
@@ -39,9 +40,19 @@ const Administration: React.FC<IAdministrationProps> = ({ permissions }) => {
     <div className={classes.root}>
       <AdministrationMenu />
       <Switch>
+        <Route path="/administration" exact>
+          <Container>
+            <Typography variant="h3">Administration</Typography>
+          </Container>
+        </Route>
         <Route path="/administration/users">
           <React.Suspense fallback={<Loading />}>
             <Users />
+          </React.Suspense>
+        </Route>
+        <Route path="/administration/add-user">
+          <React.Suspense fallback={<Loading />}>
+            <AddUser />
           </React.Suspense>
         </Route>
         <Route path="/administration/structure">
@@ -55,9 +66,7 @@ const Administration: React.FC<IAdministrationProps> = ({ permissions }) => {
           </React.Suspense>
         </Route>
         <Route path="*">
-          <Container>
-            <Typography variant="h3">Administration</Typography>
-          </Container>
+          <NoMatch />
         </Route>
       </Switch>
     </div>

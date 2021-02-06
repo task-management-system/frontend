@@ -1,52 +1,103 @@
-import React, { useState } from 'react';
-import { TextField, Typography, makeStyles, Checkbox } from '@material-ui/core';
-import FormControl from 'components/themed/FormControl';
-
-interface IUserProps {}
+import React from 'react';
+import Container from 'components/common/Container';
+import { makeStyles } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  profile: {
     gap: theme.spacing(2),
     display: 'grid',
-    gridAutoRows: 'max-content',
+    gridTemplateColumns: 'max-content 1fr',
   },
   columns: {
     gap: theme.spacing(2),
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
+    alignItems: 'center',
+  },
+  rows: {
+    gap: theme.spacing(2),
+    display: 'grid',
+    gridAutoRows: 'max-content',
+  },
+  control: {
+    gap: theme.spacing(0.5),
+    display: 'grid',
+    gridAutoRows: 'max-content',
+  },
+  actions: {
+    gap: theme.spacing(2),
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'max-content',
+    justifyContent: 'end',
+    alignItems: 'center',
   },
 }));
 
-const User: React.FC<IUserProps> = () => {
+const User: React.FC = () => {
   const classes = useStyles();
-  const [editing, setEditing] = useState(false);
 
   return (
-    <div className={classes.root}>
-      <Typography variant="h6">Профиль пользователя {_props.username}</Typography>
-      <div className={classes.columns}>
-        <FormControl label="Логин">
-          <TextField variant="outlined" />
-        </FormControl>
-        <FormControl label="Почта">
-          <TextField variant="outlined" />
-        </FormControl>
-        <FormControl label="Пароль">
-          <TextField variant="outlined" />
-        </FormControl>
-        <FormControl label="Имя">
-          <TextField variant="outlined" />
-        </FormControl>
-        <FormControl label="Активен" flow="row">
-          <Checkbox />
-        </FormControl>
+    <Container>
+      {/* <div className={classes.rows}>
+        <div className={classes.profile}>
+          <Skeleton variant="rect" width={128} height={128} />
+          <div className={classes.columns}>
+            <div className={classes.rows}>
+              <Skeleton variant="rect" height={48} />
+              <Skeleton variant="rect" height={48} />
+            </div>
+            <div className={classes.rows}>
+              <Skeleton variant="rect" height={48} />
+              <Skeleton variant="rect" height={48} />
+            </div>
+          </div>
+        </div>
+        <div className={classes.columns}>
+          <div className={classes.control}>
+            <Skeleton width={128} />
+            <Skeleton variant="rect" height={48} />
+          </div>
+          <div className={classes.control}>
+            <Skeleton width={128} />
+            <Skeleton variant="rect" height={48} />
+          </div>
+        </div>
+        <div className={classes.actions}>
+          <Skeleton variant="rect" width={256} height={48} />
+        </div>
+      </div> */}
+      <div className={classes.profile}>
+        <Skeleton variant="rect" width={128} height={128} />
+        <div className={classes.rows}>
+          <div className={classes.columns}>
+            <div className={classes.rows}>
+              <Skeleton variant="rect" height={48} />
+              <Skeleton variant="rect" height={48} />
+            </div>
+            <div className={classes.rows}>
+              <Skeleton variant="rect" height={48} />
+              <Skeleton variant="rect" height={48} />
+            </div>
+          </div>
+          <div className={classes.columns}>
+            <div className={classes.control}>
+              <Skeleton width={128} />
+              <Skeleton variant="rect" height={48} />
+            </div>
+            <div className={classes.control}>
+              <Skeleton width={128} />
+              <Skeleton variant="rect" height={48} />
+            </div>
+          </div>
+          <div className={classes.actions}>
+            <Skeleton variant="rect" width={256} height={48} />
+          </div>
+        </div>
       </div>
-    </div>
+    </Container>
   );
 };
 
 export default User;
-
-const _props = {
-  username: 'John',
-};
