@@ -6,11 +6,12 @@ import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
 import { setUser, setPermissions } from 'redux/actions/metaData';
-import { TDispatch, TPayload } from 'types/redux';
+import usePromiseTrack from 'hooks/usePromiseTrack';
 import { authenticate, getPermissions } from 'api/v1';
 import { setToken } from 'api/utils';
+import { sleep } from 'utils';
+import { TDispatch, TPayload } from 'types/redux';
 import { IAuthForm } from 'types/components/auth';
-import usePromiseTrack from 'hooks/usePromiseTrack';
 
 interface IAuthProps {
   setUser: (payload: TPayload) => void;
@@ -67,6 +68,7 @@ const Auth: React.FC<IAuthProps> = props => {
 
   const handleSubmit = async (values: IAuthForm) => {
     await trackedSendData(values);
+    await sleep(100);
   };
 
   return (

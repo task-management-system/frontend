@@ -85,7 +85,7 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissions, onChange }) => 
         )}
       </CardContent>
       <CardActions>
-        <ToggleLockButton id={user.id} isActive={user.isActive} onClick={onChange} />
+        <ToggleLockButton userId={user.id} isActive={user.isActive} onClick={onChange} />
       </CardActions>
     </Card>
   );
