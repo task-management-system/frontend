@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import UserInfo from 'components/UserInfo';
+import UserInfo from 'components/user/UserInfo';
 import NoMatch from './NoMatch';
 import { TState } from 'types/redux';
 
@@ -13,7 +13,8 @@ const Profile: React.FC<IProfileProps> = ({ id }) => {
     return <NoMatch />;
   }
 
-  return <UserInfo id={id} />;
+  // return <UserInfo id={id} />;
+  return <>{id}</>;
 };
 
 const mapStateToProps = (state: TState) => ({

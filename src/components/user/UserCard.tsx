@@ -13,6 +13,7 @@ import {
 import ToggleLockButton from './ToggleLockButton';
 import { IUser, IPermission } from 'types';
 import { TState } from 'types/redux';
+import RouteButton from 'components/common/RouteButton';
 
 interface IUserCardProps {
   user: IUser;
@@ -86,6 +87,9 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissions, onChange }) => 
       </CardContent>
       <CardActions>
         <ToggleLockButton userId={user.id} isActive={user.isActive} onClick={onChange} />
+        <RouteButton to={`/administration/user/${user.id}`} color="primary">
+          Профиль
+        </RouteButton>
       </CardActions>
     </Card>
   );

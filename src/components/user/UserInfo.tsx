@@ -1,11 +1,16 @@
 import React from 'react';
 import clsx from 'clsx';
-import { Typography, Fade, makeStyles } from '@material-ui/core';
+import { Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import { FormikProps } from 'formik';
 import { IUser } from 'types';
+import { TUndefinableUserForm } from 'types/components/user';
+import ParamView from 'components/common/ParamView';
 
 interface IUserInfoProps {
   user: IUser | null;
+  form: FormikProps<TUndefinableUserForm>;
+  editing: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -43,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
+const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
   const classes = useStyles();
 
   return (
@@ -54,20 +59,26 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
           <div className={classes.rows}>
             {user !== null ? (
               <Fade in={true}>
-                <div>
-                  <Typography variant="subtitle2">Имя пользователя</Typography>
-                  <Typography variant="body2">{user.username}</Typography>
-                </div>
+                <ParamView
+                  label="Имя пользователя"
+                  name="username"
+                  value={editing ? form.values.username : user.username}
+                  editing={editing}
+                  onChange={form.handleChange}
+                />
               </Fade>
             ) : (
               <Skeleton variant="rect" height={48} />
             )}
             {user !== null ? (
               <Fade in={true}>
-                <div>
-                  <Typography variant="subtitle2">Имя профиля</Typography>
-                  <Typography variant="body2">{user.name || '-'}</Typography>
-                </div>
+                <ParamView
+                  label="Имя профиля"
+                  name="name"
+                  value={editing ? form.values.name : user.name}
+                  editing={editing}
+                  onChange={form.handleChange}
+                />
               </Fade>
             ) : (
               <Skeleton variant="rect" height={48} />
@@ -76,22 +87,27 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user }) => {
           <div className={classes.rows}>
             {user !== null ? (
               <Fade in={true}>
-                <div>
-                  <Typography variant="subtitle2">Почта</Typography>
-                  <Typography variant="body2">
-                    {user.email ? <a href={`mailto:${user.email}`}>{user.email}</a> : '-'}
-                  </Typography>
-                </div>
+                <ParamView
+                  label="Почта"
+                  name="email"
+                  value={editing ? form.values.email : user.email}
+                  editing={editing}
+                  onChange={form.handleChange}
+                  render={value => (value ? <a href={`mailto:${value}`}>{value}</a> : value)}
+                />
               </Fade>
             ) : (
               <Skeleton variant="rect" height={48} />
             )}
             {user !== null ? (
               <Fade in={true}>
-                <div>
-                  <Typography variant="subtitle2">Роль</Typography>
-                  <Typography variant="body2">{user.role.text}</Typography>
-                </div>
+                <ParamView
+                  label="Роль"
+                  name="role"
+                  value={editing ? form.values.role?.text : user.role.text}
+                  editing={editing}
+                  onChange={form.handleChange}
+                />
               </Fade>
             ) : (
               <Skeleton variant="rect" height={48} />

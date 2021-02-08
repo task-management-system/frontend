@@ -7,6 +7,7 @@ import Loading from 'components/Loading';
 import NoMatch from './NoMatch';
 
 const Users = React.lazy(() => import('./administration/Users'));
+const User = React.lazy(() => import('./User'));
 const AddUser = React.lazy(() => import('./administration/AddUser'));
 const Structure = React.lazy(() => import('./administration/Structure'));
 const Roles = React.lazy(() => import('./administration/Roles'));
@@ -34,6 +35,11 @@ const Administration: React.FC = () => {
         <Route path="/administration/users">
           <React.Suspense fallback={<Loading />}>
             <Users />
+          </React.Suspense>
+        </Route>
+        <Route path="/administration/user/:id">
+          <React.Suspense fallback={<Loading />}>
+            <User />
           </React.Suspense>
         </Route>
         <Route path="/administration/add-user">

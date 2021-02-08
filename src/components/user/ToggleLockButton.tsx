@@ -24,7 +24,12 @@ const ToggleLockButton: React.FC<IToggleLockButtonProps & ButtonProps> = ({
   const [inProgress, trackedHandleClick] = usePromiseTrack(handleClick);
 
   return (
-    <NormalButton {...props} color="primary" disabled={inProgress} onClick={trackedHandleClick}>
+    <NormalButton
+      {...props}
+      color="primary"
+      disabled={props.disabled || inProgress}
+      onClick={trackedHandleClick}
+    >
       {isActive ? 'Заблокировать' : 'Разблокировать'}
     </NormalButton>
   );
