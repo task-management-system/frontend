@@ -1,7 +1,8 @@
 import React from 'react';
-import { TextField, Typography, makeStyles } from '@material-ui/core';
+import { TextField, Typography } from '@material-ui/core';
+import useStyles from './styles';
 
-interface IParamViewProps {
+interface ITextParamViewProps {
   label: string;
   name: string;
   value?: string;
@@ -10,16 +11,7 @@ interface IParamViewProps {
   onChange: (event: React.ChangeEvent<any>) => void;
 }
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    height: 40,
-  },
-  text: {
-    fontSize: 13.5,
-  },
-}));
-
-const ParamView: React.FC<IParamViewProps> = ({
+const TextParamView: React.FC<ITextParamViewProps> = ({
   label,
   name,
   value,
@@ -52,4 +44,4 @@ const ParamView: React.FC<IParamViewProps> = ({
   }
 };
 
-export default ParamView;
+export default TextParamView;

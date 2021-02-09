@@ -58,14 +58,13 @@ const User: React.FC = () => {
           name: values.name || null,
           email: values.email || null,
           isActive: user.isActive,
-          roleId: user.role.id,
+          roleId: values.role?.id || user.role.id,
         }).then(response => {
           if (response.details.ok) {
             handleLoadUser();
           }
         });
       }
-      console.log('values', values);
     },
   });
 

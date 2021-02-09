@@ -2,10 +2,11 @@ import React from 'react';
 import clsx from 'clsx';
 import { Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import TextParamView from 'components/param-view/TextParamView';
+import RoleParamView from 'components/param-view/RoleParamView';
 import { FormikProps } from 'formik';
 import { IUser } from 'types';
 import { TUndefinableUserForm } from 'types/components/user';
-import ParamView from 'components/common/ParamView';
 
 interface IUserInfoProps {
   user: IUser | null;
@@ -59,7 +60,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
           <div className={classes.rows}>
             {user !== null ? (
               <Fade in={true}>
-                <ParamView
+                <TextParamView
                   label="Имя пользователя"
                   name="username"
                   value={editing ? form.values.username : user.username}
@@ -72,7 +73,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
             )}
             {user !== null ? (
               <Fade in={true}>
-                <ParamView
+                <TextParamView
                   label="Имя профиля"
                   name="name"
                   value={editing ? form.values.name : user.name}
@@ -87,7 +88,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
           <div className={classes.rows}>
             {user !== null ? (
               <Fade in={true}>
-                <ParamView
+                <TextParamView
                   label="Почта"
                   name="email"
                   value={editing ? form.values.email : user.email}
@@ -101,12 +102,12 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
             )}
             {user !== null ? (
               <Fade in={true}>
-                <ParamView
+                <RoleParamView
                   label="Роль"
                   name="role"
-                  value={editing ? form.values.role?.text : user.role.text}
+                  value={editing ? form.values.role || null : user.role}
                   editing={editing}
-                  onChange={form.handleChange}
+                  onChange={form.setFieldValue}
                 />
               </Fade>
             ) : (
