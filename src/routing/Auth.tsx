@@ -9,7 +9,6 @@ import { setUser, setPermissions } from 'redux/actions/metaData';
 import usePromiseTrack from 'hooks/usePromiseTrack';
 import { authenticate, getPermissions } from 'api/v1';
 import { setToken } from 'api/utils';
-import { sleep } from 'utils';
 import { TDispatch, TPayload } from 'types/redux';
 import { IAuthForm } from 'types/components/auth';
 
@@ -66,15 +65,10 @@ const Auth: React.FC<IAuthProps> = props => {
 
   const [inProgress, trackedSendData] = usePromiseTrack(sendData);
 
-  const handleSubmit = async (values: IAuthForm) => {
-    await trackedSendData(values);
-    await sleep(100);
-  };
-
   return (
     <FullPage className={classes.root}>
       <Card className={classes.card}>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        <Formik initialValues={initialValues} onSubmit={trackedSendData}>
           {({ values, handleChange, submitForm }) => (
             <>
               <CardContent className={classes.body}>

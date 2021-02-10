@@ -25,6 +25,8 @@ export const withAuthorization = <T>(
   handler.then(response => {
     if (!response.details.ok && response.details.status === 401) {
       store.dispatch(reset());
+
+      return Promise.reject(response);
     }
 
     return response;
@@ -41,10 +43,10 @@ export const withNotification = <T>(
         );
       }
 
-      return response;
+      return Promise.resolve(response);
     })
     .catch(error => {
       store.dispatch(addNotification(createNotification('error', 'Кажется что-то пошло не так')));
 
-      return error;
+      return Promise.reject(error);
     });
