@@ -61,7 +61,14 @@ const User: React.FC = () => {
           roleId: values.role?.id || user.role.id,
         }).then(response => {
           if (response.details.ok) {
-            handleLoadUser();
+            setUser({
+              ...user,
+              username: values.username || user.username,
+              name: values.name || null,
+              email: values.email || null,
+              isActive: user.isActive,
+              role: values.role || user.role,
+            });
           }
         });
       }
@@ -72,8 +79,8 @@ const User: React.FC = () => {
     formik.resetForm({
       values: {
         username: user?.username,
-        name: user?.name,
-        email: user?.email,
+        name: user?.name || undefined,
+        email: user?.email || undefined,
         role: user?.role,
       },
     });

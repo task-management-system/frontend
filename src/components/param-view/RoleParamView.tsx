@@ -15,10 +15,12 @@ const RoleParamView: React.FC<IRoleParamView> = props => {
   const [options, setOptions] = useState<IRole[]>([]);
 
   useEffect(() => {
-    getRoles().then(response => {
-      setOptions(response.data || []);
-    });
-  }, []);
+    if (options.length === 0 && props.editing) {
+      getRoles().then(response => {
+        setOptions(response.data || []);
+      });
+    }
+  }, [props.editing]);
 
   return (
     <AutocompleteParamView

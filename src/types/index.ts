@@ -7,8 +7,8 @@ export interface IRole {
 export interface IUser {
   id: number;
   username: string;
-  name: string;
-  email: string;
+  name: string | null;
+  email: string | null;
   isActive: boolean;
   role: IRole;
 }

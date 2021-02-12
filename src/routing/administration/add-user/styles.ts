@@ -15,21 +15,33 @@ const useStyles = makeStyles(theme => ({
     gap: theme.spacing(2),
     display: 'grid',
     gridAutoRows: 64,
-  },
-  container: {
-    gap: theme.spacing(2),
-    display: 'grid',
-    gridTemplateColumns: '1fr 2fr',
+    [theme.breakpoints.down('md')]: {
+      padding: theme.spacing(2),
+      gridAutoRows: 'max-content',
+    },
   },
   actions: {
     padding: 0,
     display: 'flex',
     alignItems: 'stretch',
   },
+  container: {
+    gap: theme.spacing(2),
+    display: 'grid',
+    gridTemplateColumns: '1fr 2fr',
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: '1fr',
+      gridTemplateRows: '1fr',
+    },
+  },
   wrapper: {
     gap: theme.spacing(2),
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: '1fr',
+      gridTemplateRows: 'max-content',
+    },
   },
   buttons: {
     gap: theme.spacing(2),

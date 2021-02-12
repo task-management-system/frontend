@@ -76,7 +76,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
                 <TextParamView
                   label="Имя профиля"
                   name="name"
-                  value={editing ? form.values.name : user.name}
+                  value={editing ? form.values.name : user.name || ''}
                   editing={editing}
                   onChange={form.handleChange}
                 />
@@ -91,7 +91,7 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
                 <TextParamView
                   label="Почта"
                   name="email"
-                  value={editing ? form.values.email : user.email}
+                  value={editing ? form.values.email : user.email || ''}
                   editing={editing}
                   onChange={form.handleChange}
                   render={value => (value ? <a href={`mailto:${value}`}>{value}</a> : value)}
