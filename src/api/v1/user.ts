@@ -1,7 +1,7 @@
 import { methods } from './core';
 import { withNotification, withAuthorization } from '../utils';
 import { IUser } from 'types';
-import { IUpdateUser } from 'types/api/v1';
+import { ITransferUser } from 'types/api/v1';
 
 const API_BASE = '/user';
 
@@ -11,7 +11,7 @@ export const lock = (id: number) => {
   });
 
   return withNotification(
-    withAuthorization(methods.patch<null, {}>(`${API_BASE}/lock?${params}`, null))
+    withAuthorization(methods.patch<null, null>(`${API_BASE}/lock?${params}`, null))
   );
 };
 
@@ -21,7 +21,7 @@ export const unlock = (id: number) => {
   });
 
   return withNotification(
-    withAuthorization(methods.patch<null, {}>(`${API_BASE}/unlock?${params}`, null))
+    withAuthorization(methods.patch<null, null>(`${API_BASE}/unlock?${params}`, null))
   );
 };
 
@@ -33,12 +33,12 @@ export const getUser = (id: number) => {
   return withNotification(withAuthorization(methods.get<IUser>(`${API_BASE}?${params}`)));
 };
 
-export const updateUser = (id: number, data: IUpdateUser) => {
+export const updateUser = (id: number, data: ITransferUser) => {
   const params = new URLSearchParams({
     id: id.toString(),
   });
 
   return withNotification(
-    withAuthorization(methods.patch<IUpdateUser, {}>(`${API_BASE}?${params}`, data))
+    withAuthorization(methods.patch<ITransferUser, null>(`${API_BASE}?${params}`, data))
   );
 };

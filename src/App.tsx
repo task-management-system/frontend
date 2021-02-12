@@ -7,11 +7,11 @@ import Auth from 'routing/Auth';
 import Home from 'routing/Home';
 import { TState } from 'types/redux';
 
-interface IProps {
+interface IAppProps {
   authorized: boolean;
 }
 
-const App: React.FC<IProps> = props => (
+const App: React.FC<IAppProps> = props => (
   <>
     <CssBaseline />
     <NotificationViewer />

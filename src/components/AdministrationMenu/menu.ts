@@ -31,7 +31,7 @@ class MenuItem implements TMenuItem {
 const menu = [
   new Menu('Пользователи', [
     new MenuItem('Список пользователей', '/administration/users'),
-    new MenuItem('Добавить пользователя', '/administration/add-user'),
+    new MenuItem('Добавить пользователей', '/administration/add-user'),
   ]).addIcon(People),
   new MenuItem('Структура', '/administration/structure').addIcon(Apartment),
   new MenuItem('Роли', '/administration/roles').addIcon(AccountBox),

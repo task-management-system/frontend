@@ -5,7 +5,7 @@ export interface IAuth {
   token: string;
 }
 
-export interface IUpdateUser {
+export interface ITransferUser {
   username: string;
   password: string;
   name: string | null;

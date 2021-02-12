@@ -1,23 +1,17 @@
-// import { get, collectPaginationParams } from './core';
-import { methods } from './core';
+import { methods, collectPaginationParams } from './core';
 import { withNotification, withAuthorization } from '../utils';
 import { IUser } from 'types';
 import { IPagination, TPaged } from 'types/api';
-
-// export const getUsers = (pagination: IPagination = {}) => {
-//   const paginationParams = collectPaginationParams(pagination);
-
-//   return withNotification(withAuthorization(get<IUser[]>(`/users?${paginationParams}`)));
-// };
+import { ITransferUser } from 'types/api/v1';
 
 export const getUsers = (pagination: IPagination = {}) => {
+  const paginationParams = collectPaginationParams(pagination);
+
   return withNotification(
-    withAuthorization(
-      methods.post<IPagination, TPaged<IUser[]>>('/users', {
-        page: pagination.page || 1,
-        size: pagination.size || 25,
-        order: pagination.order || 'ASC',
-      })
-    )
+    withAuthorization(methods.get<TPaged<IUser[]>>(`/users?${paginationParams}`))
   );
+};
+
+export const createUsers = (users: ITransferUser[]) => {
+  return withNotification(withAuthorization(methods.put<ITransferUser[], null>('/users', users)));
 };

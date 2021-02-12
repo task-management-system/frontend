@@ -13,6 +13,10 @@ export interface IUser {
   role: IRole;
 }
 
+export interface IUserWithPassword extends IUser {
+  password: string;
+}
+
 export interface IPermission {
   name: string;
   power: number;

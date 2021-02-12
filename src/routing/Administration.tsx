@@ -6,9 +6,9 @@ import Container from 'components/common/Container';
 import Loading from 'components/Loading';
 import NoMatch from './NoMatch';
 
-const Users = React.lazy(() => import('./administration/Users'));
 const User = React.lazy(() => import('./User'));
-const AddUser = React.lazy(() => import('./administration/AddUser'));
+const Users = React.lazy(() => import('./administration/Users'));
+const AddUser = React.lazy(() => import('./administration/add-user/AddUser'));
 const Structure = React.lazy(() => import('./administration/Structure'));
 const Roles = React.lazy(() => import('./administration/Roles'));
 

@@ -1,18 +1,11 @@
 import React from 'react';
-import { TextField, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import useStyles from './styles';
-import { Autocomplete } from '@material-ui/lab';
+import AutocompleteField, { IAutocompleteFieldProps } from 'components/common/AutocompleteField';
 
 interface IAutocompleteParamViewProps<T> {
-  label: string;
-  name: string;
-  value: T | null;
-  options?: T[];
-  getOptionLabel: (option: T) => string;
-  getOptionSelected: (option: T, value: T) => boolean;
   editing: boolean;
   render?: (value: T | null) => React.ReactNode;
-  onChange: (name: string, value: T | null) => void;
 }
 
 const AutocompleteParamView = <T,>({
@@ -25,20 +18,19 @@ const AutocompleteParamView = <T,>({
   editing,
   render = value => value,
   onChange,
-}: React.PropsWithChildren<IAutocompleteParamViewProps<T>>) => {
+}: React.PropsWithChildren<IAutocompleteParamViewProps<T> & IAutocompleteFieldProps<T>>) => {
   const classes = useStyles();
 
   if (editing) {
     return (
-      <Autocomplete
+      <AutocompleteField
+        label={label}
+        name={name}
         value={value}
         options={options}
         getOptionLabel={getOptionLabel}
         getOptionSelected={getOptionSelected}
-        renderInput={params => (
-          <TextField {...params} label={label} variant="outlined" size="small" />
-        )}
-        onChange={(event, value) => onChange(name, value)}
+        onChange={onChange}
       />
     );
   } else {
