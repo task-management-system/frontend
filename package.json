@@ -50,11 +50,6 @@
     "postinstall": "husky install"
   },
   "proxy": "http://25.91.177.160:1212/",
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint-staged"
-    }
-  },
   "lint-staged": {
     "*.(js|jsx|ts|tsx)": "eslint --cache --fix",
     "*.(json|css|md)": "prettier --write"

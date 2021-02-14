@@ -5,11 +5,22 @@
 - React и React DOM
 - React Router DOM
 - Create React App
+- Redux
 - Formik
+- Yup
+- Local Forage
 - Material UI
+- FontSource Roboto
 - TypeScript
 - HTML
 - CSS
+- Husky
+- Lint Staged
+
+## Необходимое окружение
+
+- Node v15+
+- Npm v7+
 
 ## Доступные скрипты
 
