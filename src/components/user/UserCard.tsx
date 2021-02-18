@@ -5,19 +5,26 @@ import {
   CardHeader,
   CardContent,
   CardActions,
+  IconButton,
   Avatar,
   Chip,
   Typography,
   makeStyles,
 } from '@material-ui/core';
+import { Edit } from '@material-ui/icons';
 import ToggleLockButton from './ToggleLockButton';
 import { IUser, IPermission } from 'types';
 import { TState } from 'types/redux';
 import RouteButton from 'components/common/RouteButton';
+import { haveAnyPermission } from 'utils/permissions';
+import UserEdit from 'components/dialogs/UserEdit';
 
 interface IUserCardProps {
   user: IUser;
-  permissions: IPermission[];
+  permissionsList: IPermission[];
+  permissions: {
+    update: boolean;
+  };
   onChange: () => Promise<void>;
 }
 
@@ -42,10 +49,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserCard: React.FC<IUserCardProps> = ({ user, permissions, onChange }) => {
+const UserCard: React.FC<IUserCardProps> = ({ user, permissionsList, permissions, onChange }) => {
   const classes = useStyles();
 
-  const userPermissions = permissions.reduce<IPermission[]>((accumulator, permission) => {
+  const userPermissionsList = permissionsList.reduce<IPermission[]>((accumulator, permission) => {
     if ((user.role.power & permission.power) > 0) {
       accumulator.push(permission);
     }
@@ -59,17 +66,28 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissions, onChange }) => 
         avatar={<Avatar>{user.username[0]}</Avatar>}
         title={user.username}
         subheader={user.name}
+        action={
+          permissions.update && (
+            <UserEdit id={user.id} onChange={onChange}>
+              {({ handleOpen }) => (
+                <IconButton color="primary" onClick={handleOpen}>
+                  <Edit />
+                </IconButton>
+              )}
+            </UserEdit>
+          )
+        }
       />
       <CardContent className={classes.content}>
         <Typography variant="body2">
           <strong>Роль</strong>: {user.role.text}
         </Typography>
         <Typography variant="body2">
-          <strong>{userPermissions.length > 0 ? 'Права' : 'У пользователя нет прав'}</strong>
+          <strong>{userPermissionsList.length > 0 ? 'Права' : 'У пользователя нет прав'}</strong>
         </Typography>
-        {userPermissions.length > 0 && (
+        {userPermissionsList.length > 0 && (
           <div className={classes.chipList}>
-            {userPermissions.map(permission => (
+            {userPermissionsList.map(permission => (
               <Chip
                 variant="outlined"
                 size="small"
@@ -95,8 +113,11 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissions, onChange }) => 
   );
 };
 
-const mapStateToProps = (state: TState) => ({
-  permissions: state.metaData.permissions,
+const mapStateToProps = ({ metaData }: TState) => ({
+  permissionsList: metaData.permissions,
+  permissions: {
+    update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
+  },
 });
 
 export default connect(mapStateToProps)(UserCard);
