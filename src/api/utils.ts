@@ -45,8 +45,12 @@ export const withNotification = <T>(
 
       return Promise.resolve(response);
     })
-    .catch(error => {
-      store.dispatch(addNotification(createNotification('error', 'Кажется что-то пошло не так')));
+    .catch((error: TCollectedResponse<T> | any) => {
+      if ('type' in error.message && 'text' in error.message) {
+        store.dispatch(addNotification(createNotification(error.message.type, error.message.text)));
+      } else {
+        store.dispatch(addNotification(createNotification('error', 'Кажется что-то пошло не так')));
+      }
 
       return Promise.reject(error);
     });
