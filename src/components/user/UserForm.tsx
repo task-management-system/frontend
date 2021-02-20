@@ -58,7 +58,6 @@ const UserForm: React.FC<IUserForm> = ({ id, permissions }) => {
       if (user !== null) {
         updateUser(user.id, {
           username: values.username || user.username,
-          password: '12345',
           name: values.name || null,
           email: values.email || null,
           isActive: user.isActive,
