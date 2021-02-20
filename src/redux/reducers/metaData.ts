@@ -6,7 +6,7 @@ const initialState: IMetaData = {
   permissions: [],
 };
 
-const metaDataReducer = (state: IMetaData = initialState, action: TAction): IMetaData => {
+const metaDataReducer = (state: IMetaData = initialState, action: TAction<any>): IMetaData => {
   switch (action.type) {
     case SET_USER:
       return {

@@ -7,14 +7,23 @@ export interface IMetaData {
   permissions: IPermission[];
 }
 
+export interface ICache {
+  [key: string]: {
+    timestamp: number;
+    duration: number;
+    data: any;
+  } | null;
+}
+
 export type TState = CombinedState<{
   metaData: IMetaData;
   notifications: INotification[];
+  cache: ICache;
 }>;
 
-export type TAction = {
+export type TAction<T extends any> = {
   type: Symbol | string;
-  payload: any;
+  payload: T;
 };
 
 export type TPersistState = TState & PersistPartial;
@@ -29,6 +38,6 @@ type TPayloadEntry = TNestedPayload | TPrimitivePayload | IUser | IPermission | 
 
 export type TPayload = TPayloadEntry | TPayloadEntry[];
 
-export type TDispatch = (payload: TAction) => TAction;
+export type TDispatch = (payload: TAction<any>) => TAction<any>;
 
-export type TStore = Store<TPersistState, TAction> & { dispatch: TDispatch };
+export type TStore = Store<TPersistState, TAction<any>> & { dispatch: TDispatch };

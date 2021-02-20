@@ -52,7 +52,7 @@ const mapStateToProps = (state: TState) => ({
 });
 
 const mapDispatchToProps = (dispatch: TDispatch) => ({
-  removeNotification: (payload: TPayload) => dispatch(removeNotification(payload)),
+  removeNotification: (payload: any) => dispatch(removeNotification(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationViewer);

@@ -6,7 +6,7 @@ const initialState: INotification[] = [];
 
 const metaDataReducer = (
   state: INotification[] = initialState,
-  action: TAction
+  action: TAction<any>
 ): INotification[] => {
   switch (action.type) {
     case ADD_NOTIFICATION:

@@ -10,12 +10,12 @@ import { TStore, TPersistState, TAction } from 'types/redux';
 const persistConfig = {
   key: 'root',
   storage: localForage,
-  whitelist: ['metaData'],
+  whitelist: ['metaData', 'cache'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store: TStore = createStore<TPersistState, TAction, any, any>(
+const store: TStore = createStore<TPersistState, TAction<any>, any, any>(
   persistedReducer,
   process.env.NODE_ENV === 'production' ? applyMiddleware(thunk) : applyMiddleware(thunk, logger)
 );

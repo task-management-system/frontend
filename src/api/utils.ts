@@ -4,6 +4,7 @@ import { reset } from 'redux/actions/common';
 import { addNotification } from 'redux/actions/notifications';
 import { TCollectedResponse } from 'types/api';
 import { createNotification } from 'utils/notification';
+import { setCache } from 'redux/actions/cache';
 
 export const removeToken = async () => {
   await localForage.removeItem('token');
@@ -54,3 +55,37 @@ export const withNotification = <T>(
 
       return Promise.reject(error);
     });
+
+export const withCache = <X extends any[], T>(
+  name: string,
+  duration: number,
+  handler: (...args: X) => Promise<TCollectedResponse<T>>
+) => {
+  return (...args: X): Promise<TCollectedResponse<T>> => {
+    const { cache } = store.getState();
+    const isCached = name in cache;
+    const isExpired = (cache[name]?.timestamp || 0) + (cache[name]?.duration || 0) < Date.now();
+
+    if (isCached && !isExpired) {
+      return new Promise(resolve =>
+        resolve({
+          data: cache[name]!.data,
+          details: {
+            ok: true,
+            status: 0,
+            statusText: 'Restored from cache',
+          },
+          message: null,
+        })
+      );
+    } else {
+      return handler(...args).then(response => {
+        if (response.details.ok) {
+          store.dispatch(setCache(name, duration, response.data));
+        }
+
+        return Promise.resolve(response);
+      });
+    }
+  };
+};

@@ -1,7 +1,7 @@
 import { methods } from './core';
-import { withAuthorization } from '../utils';
+import { withAuthorization, withCache } from '../utils';
 import { IRole } from 'types';
 
-export const getRoles = () => {
-  return withAuthorization(methods.get<IRole[]>('/roles'));
-};
+export const getRoles = withCache('roles', 30 * 60 * 1000, () =>
+  withAuthorization(methods.get<IRole[]>('/roles'))
+);
