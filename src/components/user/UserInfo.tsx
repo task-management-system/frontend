@@ -1,19 +1,26 @@
 import React from 'react';
 import clsx from 'clsx';
+import { connect } from 'react-redux';
 import { Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import TextParamView from 'components/param-view/TextParamView';
 import RoleParamView from 'components/param-view/RoleParamView';
 import NormalButton from 'components/themed/NormalButton';
 import { FormikProps } from 'formik';
-import { IUser } from 'types';
 import { TUndefinableUserForm } from 'types/components/user';
 import ChangePassword from 'components/dialogs/ChangePassword';
+import { haveAnyPermission } from 'utils/permissions';
+import { IUser } from 'types';
+import { TState } from 'types/redux';
 
 interface IUserInfoProps {
   user: IUser | null;
   form: FormikProps<TUndefinableUserForm>;
-  editing: boolean;
+  self?: boolean;
+  editing?: boolean;
+  permissions: {
+    update: boolean;
+  };
 }
 
 const useStyles = makeStyles(theme => ({
@@ -52,7 +59,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
+const UserInfo: React.FC<IUserInfoProps> = ({
+  user,
+  form,
+  self = false,
+  editing = false,
+  permissions,
+}) => {
   const classes = useStyles();
 
   return (
@@ -118,18 +131,32 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
             )}
           </div>
         </div>
-        <div className={classes.wrapper}>
-          <ChangePassword>
-            {({ handleOpen }) => (
-              <NormalButton color="primary" variant="contained" onClick={handleOpen}>
-                Изменить пароль
-              </NormalButton>
+        {(permissions.update || self) && (
+          <div className={classes.wrapper}>
+            {user !== null ? (
+              <ChangePassword>
+                {({ handleOpen }) => (
+                  <Fade in={true}>
+                    <NormalButton color="primary" variant="contained" onClick={handleOpen}>
+                      Изменить пароль
+                    </NormalButton>
+                  </Fade>
+                )}
+              </ChangePassword>
+            ) : (
+              <Skeleton variant="rect" width={160} height={32} />
             )}
-          </ChangePassword>
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default UserInfo;
+const mapStateToProps = ({ metaData }: TState) => ({
+  permissions: {
+    update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
+  },
+});
+
+export default connect(mapStateToProps)(UserInfo);

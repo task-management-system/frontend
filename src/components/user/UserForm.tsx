@@ -16,6 +16,7 @@ import { TUndefinableUserForm } from 'types/components/user';
 
 interface IUserForm {
   id: number;
+  self?: boolean;
   permissions: {
     update: boolean;
   };
@@ -36,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserForm: React.FC<IUserForm> = ({ id, permissions }) => {
+const UserForm: React.FC<IUserForm> = ({ id, self, permissions }) => {
   const classes = useStyles();
   const [user, setUser] = useState<IUser | null>(null);
   const [editing, setEditing] = useState(false);
@@ -107,19 +108,21 @@ const UserForm: React.FC<IUserForm> = ({ id, permissions }) => {
 
   return (
     <Container className={classes.root}>
-      <UserInfo user={user} editing={editing} form={formik} />
-      {permissions.update && (
+      <UserInfo user={user} editing={editing} form={formik} self={self} />
+      {(permissions.update || self) && (
         <div className={classes.buttons}>
           {user !== null ? (
             <>
-              <Fade in={true}>
-                <ToggleLockButton
-                  userId={user.id}
-                  isActive={user.isActive}
-                  disabled={editing}
-                  onClick={handleLoadUser}
-                />
-              </Fade>
+              {permissions.update && (
+                <Fade in={true}>
+                  <ToggleLockButton
+                    userId={user.id}
+                    isActive={user.isActive}
+                    disabled={editing}
+                    onClick={handleLoadUser}
+                  />
+                </Fade>
+              )}
               <Fade in={true}>
                 <NormalButton color="primary" disabled={inProgress} onClick={handleEditingClick}>
                   {editing ? 'Сохранить' : 'Редактировать'}

@@ -13,7 +13,7 @@ const Profile: React.FC<IProfileProps> = ({ id }) => {
     return <NoMatch />;
   }
 
-  return <UserForm id={id} />;
+  return <UserForm id={id} self={true} />;
 };
 
 const mapStateToProps = (state: TState) => ({
