@@ -68,7 +68,7 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissionsList, permissions
         subheader={user.name}
         action={
           permissions.update && (
-            <UserEdit id={user.id} onChange={onChange}>
+            <UserEdit user={user} onChange={onChange}>
               {({ handleOpen }) => (
                 <IconButton color="primary" onClick={handleOpen}>
                   <Edit />
@@ -104,7 +104,9 @@ const UserCard: React.FC<IUserCardProps> = ({ user, permissionsList, permissions
         )}
       </CardContent>
       <CardActions>
-        <ToggleLockButton userId={user.id} isActive={user.isActive} onClick={onChange} />
+        {permissions.update && (
+          <ToggleLockButton userId={user.id} isActive={user.isActive} onClick={onChange} />
+        )}
         <RouteButton to={`/administration/user/${user.id}`} color="primary">
           Профиль
         </RouteButton>

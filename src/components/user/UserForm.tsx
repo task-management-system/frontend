@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { useFormik } from 'formik';
 import { Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
@@ -7,12 +8,17 @@ import UserInfo from 'components/user/UserInfo';
 import NormalButton from 'components/themed/NormalButton';
 import ToggleLockButton from 'components/user/ToggleLockButton';
 import usePromiseTrack from 'hooks/usePromiseTrack';
+import { haveAnyPermission } from 'utils/permissions';
 import { getUser, updateUser } from 'api/v1';
 import { IUser } from 'types';
+import { TState } from 'types/redux';
 import { TUndefinableUserForm } from 'types/components/user';
 
 interface IUserForm {
   id: number;
+  permissions: {
+    update: boolean;
+  };
 }
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserForm: React.FC<IUserForm> = ({ id }) => {
+const UserForm: React.FC<IUserForm> = ({ id, permissions }) => {
   const classes = useStyles();
   const [user, setUser] = useState<IUser | null>(null);
   const [editing, setEditing] = useState(false);
@@ -103,32 +109,40 @@ const UserForm: React.FC<IUserForm> = ({ id }) => {
   return (
     <Container className={classes.root}>
       <UserInfo user={user} editing={editing} form={formik} />
-      <div className={classes.buttons}>
-        {user !== null ? (
-          <>
-            <Fade in={true}>
-              <ToggleLockButton
-                userId={user.id}
-                isActive={user.isActive}
-                disabled={editing}
-                onClick={handleLoadUser}
-              />
-            </Fade>
-            <Fade in={true}>
-              <NormalButton color="primary" disabled={inProgress} onClick={handleEditingClick}>
-                {editing ? 'Сохранить' : 'Редактировать'}
-              </NormalButton>
-            </Fade>
-          </>
-        ) : (
-          <>
-            <Skeleton variant="rect" width={128} height={32} />
-            <Skeleton variant="rect" width={128} height={32} />
-          </>
-        )}
-      </div>
+      {permissions.update && (
+        <div className={classes.buttons}>
+          {user !== null ? (
+            <>
+              <Fade in={true}>
+                <ToggleLockButton
+                  userId={user.id}
+                  isActive={user.isActive}
+                  disabled={editing}
+                  onClick={handleLoadUser}
+                />
+              </Fade>
+              <Fade in={true}>
+                <NormalButton color="primary" disabled={inProgress} onClick={handleEditingClick}>
+                  {editing ? 'Сохранить' : 'Редактировать'}
+                </NormalButton>
+              </Fade>
+            </>
+          ) : (
+            <>
+              <Skeleton variant="rect" width={128} height={32} />
+              <Skeleton variant="rect" width={128} height={32} />
+            </>
+          )}
+        </div>
+      )}
     </Container>
   );
 };
 
-export default UserForm;
+const mapStateToProps = ({ metaData }: TState) => ({
+  permissions: {
+    update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
+  },
+});
+
+export default connect(mapStateToProps)(UserForm);

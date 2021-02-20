@@ -4,8 +4,7 @@ import { DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import WideDialog from 'components/themed/WideDialog';
 import NormalButton from 'components/themed/NormalButton';
 import UserInfo from 'components/user/UserInfo';
-import usePromiseTrack from 'hooks/usePromiseTrack';
-import { getUser, updateUser } from 'api/v1';
+import { updateUser } from 'api/v1';
 import { IUser } from 'types';
 import { TUndefinableUserForm } from 'types/components/user';
 
@@ -15,24 +14,17 @@ interface IChildrenHelpers {
 }
 
 interface IUserEditProps {
-  id: number;
+  user: IUser;
   onChange: () => Promise<void>;
   children: (helpers: IChildrenHelpers) => React.ReactNode;
 }
 
-const UserEdit: React.FC<IUserEditProps> = ({ children, id, onChange }) => {
+const UserEdit: React.FC<IUserEditProps> = ({ children, user, onChange }) => {
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState<IUser | null>(null);
-  const [inProgress, trackedGetUser] = usePromiseTrack(getUser);
 
   const handleOpen = () => setOpen(true);
 
   const handleClose = () => setOpen(false);
-
-  const handleLoadUser = async () => {
-    const response = await trackedGetUser(id);
-    setUser(response.data || null);
-  };
 
   const formik = useFormik<TUndefinableUserForm>({
     initialValues: {
@@ -73,12 +65,6 @@ const UserEdit: React.FC<IUserEditProps> = ({ children, id, onChange }) => {
     resetForm();
   }, [user]);
 
-  useEffect(() => {
-    if (open) {
-      handleLoadUser();
-    }
-  }, [open, id]);
-
   return (
     <>
       {children({ handleOpen, handleClose })}
@@ -91,7 +77,7 @@ const UserEdit: React.FC<IUserEditProps> = ({ children, id, onChange }) => {
           <NormalButton color="primary" onClick={handleClose}>
             Отмена
           </NormalButton>
-          <NormalButton color="primary" disabled={inProgress} onClick={formik.submitForm}>
+          <NormalButton color="primary" onClick={formik.submitForm}>
             Сохранить
           </NormalButton>
         </DialogActions>

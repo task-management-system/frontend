@@ -8,13 +8,15 @@ const AutocompleteFormField = <U, T>({
   label,
   name,
   value,
-  errors,
+  errors = {},
+  touched,
   onChange,
   ...props
 }: React.PropsWithChildren<
   IFieldProps<U> & IAutocompleteFieldProps<T> & Omit<TextFieldProps, 'onChange'>
 >) => {
   const error = getIn(errors, name);
+  const isTouched = touched !== undefined ? getIn(touched, name) !== undefined : true;
 
   return (
     <AutocompleteField
@@ -23,8 +25,8 @@ const AutocompleteFormField = <U, T>({
       value={value}
       variant="outlined"
       size="small"
-      error={error !== undefined}
-      helperText={error || null}
+      error={isTouched && error !== undefined}
+      helperText={isTouched ? error || null : null}
       onChange={onChange}
       {...props}
     />

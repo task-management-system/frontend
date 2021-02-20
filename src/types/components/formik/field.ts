@@ -1,6 +1,7 @@
-import { FormikErrors } from 'formik';
+import { FormikErrors, FormikTouched } from 'formik';
 
 export interface IFieldProps<T> {
   name: string;
-  errors: FormikErrors<T>;
+  errors?: FormikErrors<T>;
+  touched?: FormikTouched<T>;
 }

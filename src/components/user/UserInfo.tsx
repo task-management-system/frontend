@@ -4,9 +4,11 @@ import { Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import TextParamView from 'components/param-view/TextParamView';
 import RoleParamView from 'components/param-view/RoleParamView';
+import NormalButton from 'components/themed/NormalButton';
 import { FormikProps } from 'formik';
 import { IUser } from 'types';
 import { TUndefinableUserForm } from 'types/components/user';
+import ChangePassword from 'components/dialogs/ChangePassword';
 
 interface IUserInfoProps {
   user: IUser | null;
@@ -34,10 +36,11 @@ const useStyles = makeStyles(theme => ({
   info: {
     height: 128,
   },
-  control: {
+  wrapper: {
     gap: theme.spacing(0.5),
     display: 'grid',
-    gridAutoRows: 'max-content',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'max-content',
   },
   actions: {
     gap: theme.spacing(2),
@@ -115,15 +118,14 @@ const UserInfo: React.FC<IUserInfoProps> = ({ user, form, editing }) => {
             )}
           </div>
         </div>
-        <div className={classes.columns}>
-          <div className={classes.control}>
-            <Skeleton width={128} />
-            <Skeleton variant="rect" height={48} />
-          </div>
-          <div className={classes.control}>
-            <Skeleton width={128} />
-            <Skeleton variant="rect" height={48} />
-          </div>
+        <div className={classes.wrapper}>
+          <ChangePassword>
+            {({ handleOpen }) => (
+              <NormalButton color="primary" variant="contained" onClick={handleOpen}>
+                Изменить пароль
+              </NormalButton>
+            )}
+          </ChangePassword>
         </div>
       </div>
     </div>

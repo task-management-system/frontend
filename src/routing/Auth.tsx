@@ -77,6 +77,7 @@ const Auth: React.FC<IAuthProps> = props => {
                   name="usernameOrEmail"
                   value={values.usernameOrEmail}
                   variant="outlined"
+                  disabled={inProgress}
                   onChange={handleChange}
                 />
                 <PasswordField
@@ -84,6 +85,7 @@ const Auth: React.FC<IAuthProps> = props => {
                   name="password"
                   value={values.password}
                   variant="outlined"
+                  disabled={inProgress}
                   onChange={handleChange}
                 />
               </CardContent>

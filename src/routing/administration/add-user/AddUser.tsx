@@ -140,7 +140,7 @@ const AddUser: React.FC = () => {
                     disabled={isSubmitting}
                     onClick={() => arrayHelpers.push(createUserTemplate())}
                   >
-                    Добавить
+                    Добавить ещё
                   </Button>
                   <AcceptButton
                     color="primary"
@@ -152,7 +152,7 @@ const AddUser: React.FC = () => {
                     }
                     onClick={submitForm}
                   >
-                    Создать
+                    {values.users.length === 1 ? 'Создать пользователя' : 'Создать пользователей'}
                   </AcceptButton>
                 </div>
               </div>
