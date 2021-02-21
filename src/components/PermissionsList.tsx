@@ -9,14 +9,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import { TState } from 'types/redux';
-import { IPermission } from 'types';
 
-interface IPermissionsListProps {
-  power: number;
-  permissions: IPermission[];
-}
+interface IPermissionsListProps {}
 
-const PermissionsList: React.FC<IPermissionsListProps> = ({ power, permissions }) => {
+const PermissionsList: React.FC<IPermissionsListProps & TPermissionsListState> = ({
+  power,
+  permissions,
+}) => {
   const [checked, setChecked] = useState<string[]>([]);
 
   useEffect(() => {
@@ -79,5 +78,7 @@ const mapStateToProps = (state: TState) => ({
   power: state.metaData.user?.role.power || 0,
   permissions: state.metaData.permissions || [],
 });
+
+type TPermissionsListState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(PermissionsList);

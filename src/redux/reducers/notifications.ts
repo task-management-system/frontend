@@ -1,13 +1,12 @@
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from 'redux/actionTypes';
-import { TAction } from 'types/redux';
-import { INotification } from 'types';
+import { TNotifications, TNotificationsAction } from 'types/redux/reducers';
 
-const initialState: INotification[] = [];
+const initialState: TNotifications = [];
 
 const metaDataReducer = (
-  state: INotification[] = initialState,
-  action: TAction<any>
-): INotification[] => {
+  state: TNotifications = initialState,
+  action: TNotificationsAction
+): TNotifications => {
   switch (action.type) {
     case ADD_NOTIFICATION:
       return [action.payload, ...state];

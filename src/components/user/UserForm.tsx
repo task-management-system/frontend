@@ -14,12 +14,9 @@ import { IUser } from 'types';
 import { TState } from 'types/redux';
 import { TUndefinableUserForm } from 'types/components/user';
 
-interface IUserForm {
+interface IUserFormProps {
   id: number;
   self?: boolean;
-  permissions: {
-    update: boolean;
-  };
 }
 
 const useStyles = makeStyles(theme => ({
@@ -37,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserForm: React.FC<IUserForm> = ({ id, self, permissions }) => {
+const UserForm: React.FC<IUserFormProps & TUserFormState> = ({ id, self, permissions }) => {
   const classes = useStyles();
   const [user, setUser] = useState<IUser | null>(null);
   const [editing, setEditing] = useState(false);
@@ -146,5 +143,7 @@ const mapStateToProps = ({ metaData }: TState) => ({
     update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
   },
 });
+
+type TUserFormState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(UserForm);

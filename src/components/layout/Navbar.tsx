@@ -8,11 +8,7 @@ import { haveAnyPermission } from 'utils/permissions';
 import { ADMINISTRATION_PERMISSIONS } from 'constants/permissions';
 import { TState } from 'types/redux';
 
-interface INavbarProps {
-  permissions: {
-    administration: boolean;
-  };
-}
+interface INavbarProps {}
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -28,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Navbar: React.FC<INavbarProps> = ({ permissions }) => {
+const Navbar: React.FC<INavbarProps & TNavbarState> = ({ permissions }) => {
   const classes = useStyles();
 
   return (
@@ -56,5 +52,7 @@ const mapStateToProps = ({ metaData }: TState) => ({
     ),
   },
 });
+
+type TNavbarState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(Navbar);

@@ -7,22 +7,16 @@ import Auth from 'routing/Auth';
 import Home from 'routing/Home';
 import { TState } from 'types/redux';
 
-interface IAppProps {
-  authorized: boolean;
-}
+interface IAppProps {}
 
-const App: React.FC<IAppProps> = props => (
+const App: React.FC<IAppProps & TAppState> = ({ authorized }) => (
   <>
     <CssBaseline />
     <NotificationViewer />
     <Router>
       <Switch>
-        <Route
-          exact
-          path="/auth"
-          render={() => (props.authorized ? <Redirect to="/" /> : <Auth />)}
-        />
-        <Route path="*" render={() => (!props.authorized ? <Redirect to="/auth" /> : <Home />)} />
+        <Route exact path="/auth" render={() => (authorized ? <Redirect to="/" /> : <Auth />)} />
+        <Route path="*" render={() => (!authorized ? <Redirect to="/auth" /> : <Home />)} />
       </Switch>
     </Router>
   </>
@@ -31,5 +25,7 @@ const App: React.FC<IAppProps> = props => (
 const mapStateToProps = (state: TState) => ({
   authorized: state.metaData.user !== null,
 });
+
+type TAppState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(App);

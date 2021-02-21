@@ -5,18 +5,15 @@ import NoMatch from 'routing/NoMatch';
 import { haveAnyPermission, haveEveryPermission } from 'utils/permissions';
 import { RequireOnlyOne } from 'types/common';
 import { TState } from 'types/redux';
-import { IPermission } from 'types';
 
 interface IPermittedRouteBase {
   any?: string[];
   every?: string[];
-  power: number;
-  permissions: IPermission[];
 }
 
-type IPermittedRoute = RequireOnlyOne<IPermittedRouteBase, 'any' | 'every'>;
+type IPermittedRouteProps = RequireOnlyOne<IPermittedRouteBase, 'any' | 'every'>;
 
-const PermittedRoute: React.FC<IPermittedRoute & RouteProps> = ({
+const PermittedRoute: React.FC<IPermittedRouteProps & TPermittedRouteState & RouteProps> = ({
   any,
   every,
   power,
@@ -38,5 +35,7 @@ const mapStateToProps = (state: TState) => ({
   power: state.metaData.user?.role.power || 0,
   permissions: state.metaData.permissions || [],
 });
+
+type TPermittedRouteState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(PermittedRoute);

@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import metaData from './metaData';
 import notifications from './notifications';
 import cache from './cache';
-import { TState, TAction } from 'types/redux';
+import { TState, IAction } from 'types/redux';
 import { RESET_STORE } from '../actionTypes';
 
 const appReducer = combineReducers({
@@ -11,12 +11,12 @@ const appReducer = combineReducers({
   cache,
 });
 
-const rootReducer = (state: TState | undefined, action: TAction<any>) => {
-  if (action.type === RESET_STORE) {
+const rootReducer = (state: TState | undefined, action: any) => {
+  if ((action as IAction<null>).type === RESET_STORE) {
     state = undefined;
   }
 
-  return appReducer(state, action);
+  return appReducer(state, action as any);
 };
 
 export default rootReducer;

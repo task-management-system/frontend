@@ -3,9 +3,8 @@ import { persistStore, persistReducer } from 'redux-persist';
 import localForage from 'localforage';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-
 import rootReducer from './reducers';
-import { TStore, TPersistState, TAction } from 'types/redux';
+import { TStore, TPersistState, IAction } from 'types/redux';
 
 const persistConfig = {
   key: 'root',
@@ -13,10 +12,8 @@ const persistConfig = {
   whitelist: ['metaData', 'cache'],
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-const store: TStore = createStore<TPersistState, TAction<any>, any, any>(
-  persistedReducer,
+const store: TStore = createStore<TPersistState, IAction<any>, any, any>(
+  persistReducer(persistConfig, rootReducer),
   process.env.NODE_ENV === 'production' ? applyMiddleware(thunk) : applyMiddleware(thunk, logger)
 );
 

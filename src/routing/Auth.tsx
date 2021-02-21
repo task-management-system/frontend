@@ -1,21 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardContent, CardActions, TextField, makeStyles, fade } from '@material-ui/core';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
 import { setUser, setPermissions } from 'redux/actions/metaData';
-import usePromiseTrack from 'hooks/usePromiseTrack';
 import { authenticate, getPermissions } from 'api/v1';
 import { setToken } from 'api/utils';
-import { TDispatch, TPayload } from 'types/redux';
+import { IUser, IPermission } from 'types';
+import { TDispatch } from 'types/redux';
 import { IAuthForm } from 'types/components/auth';
 
-interface IAuthProps {
-  setUser: (payload: TPayload) => void;
-  setPermissions: (payload: TPayload) => void;
-}
+interface IAuthProps {}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,29 +44,31 @@ const initialValues: IAuthForm = {
   password: '',
 };
 
-const Auth: React.FC<IAuthProps> = props => {
+const Auth: React.FC<IAuthProps & IAuthDispatch> = ({ setUser, setPermissions }) => {
   const classes = useStyles();
 
-  const sendData = async (values: IAuthForm) => {
+  const sendData = async (values: IAuthForm, helpers: FormikHelpers<IAuthForm>) => {
+    helpers.setSubmitting(true);
+
     const response = await authenticate(values);
     const token = response.data?.token ?? null;
     await setToken(token);
 
     if (token !== null) {
       const permissionsResponse = await getPermissions();
-      props.setPermissions(permissionsResponse.data || []);
+      setPermissions(permissionsResponse.data || []);
     }
 
-    props.setUser(response.data?.user ?? null);
-  };
+    helpers.setSubmitting(false);
 
-  const [inProgress, trackedSendData] = usePromiseTrack(sendData);
+    setUser(response.data?.user ?? null);
+  };
 
   return (
     <FullPage className={classes.root}>
       <Card className={classes.card}>
-        <Formik initialValues={initialValues} onSubmit={trackedSendData}>
-          {({ values, handleChange, submitForm }) => (
+        <Formik initialValues={initialValues} onSubmit={sendData}>
+          {({ values, isSubmitting, handleChange, submitForm }) => (
             <>
               <CardContent className={classes.body}>
                 <TextField
@@ -77,7 +76,7 @@ const Auth: React.FC<IAuthProps> = props => {
                   name="usernameOrEmail"
                   value={values.usernameOrEmail}
                   variant="outlined"
-                  disabled={inProgress}
+                  disabled={isSubmitting}
                   onChange={handleChange}
                 />
                 <PasswordField
@@ -85,7 +84,7 @@ const Auth: React.FC<IAuthProps> = props => {
                   name="password"
                   value={values.password}
                   variant="outlined"
-                  disabled={inProgress}
+                  disabled={isSubmitting}
                   onChange={handleChange}
                 />
               </CardContent>
@@ -93,7 +92,7 @@ const Auth: React.FC<IAuthProps> = props => {
                 <NormalButton
                   color="primary"
                   variant="contained"
-                  disabled={inProgress}
+                  disabled={isSubmitting}
                   onClick={submitForm}
                 >
                   Войти
@@ -108,8 +107,10 @@ const Auth: React.FC<IAuthProps> = props => {
 };
 
 const mapDispatchToProps = (dispatch: TDispatch) => ({
-  setUser: (payload: TPayload) => dispatch(setUser(payload)),
-  setPermissions: (payload: TPayload) => dispatch(setPermissions(payload)),
+  setUser: (payload: IUser | null) => dispatch(setUser(payload)),
+  setPermissions: (payload: IPermission[]) => dispatch(setPermissions(payload)),
 });
+
+type IAuthDispatch = ReturnType<typeof mapDispatchToProps>;
 
 export default connect(null, mapDispatchToProps)(Auth);

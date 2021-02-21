@@ -18,9 +18,6 @@ interface IUserInfoProps {
   form: FormikProps<TUndefinableUserForm>;
   self?: boolean;
   editing?: boolean;
-  permissions: {
-    update: boolean;
-  };
 }
 
 const useStyles = makeStyles(theme => ({
@@ -59,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserInfo: React.FC<IUserInfoProps> = ({
+const UserInfo: React.FC<IUserInfoProps & TUserInfoState> = ({
   user,
   form,
   self = false,
@@ -158,5 +155,7 @@ const mapStateToProps = ({ metaData }: TState) => ({
     update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
   },
 });
+
+type TUserInfoState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(UserInfo);

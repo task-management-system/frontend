@@ -21,10 +21,6 @@ import UserEdit from 'components/dialogs/UserEdit';
 
 interface IUserCardProps {
   user: IUser;
-  permissionsList: IPermission[];
-  permissions: {
-    update: boolean;
-  };
   onChange: () => Promise<void>;
 }
 
@@ -49,7 +45,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserCard: React.FC<IUserCardProps> = ({ user, permissionsList, permissions, onChange }) => {
+const UserCard: React.FC<IUserCardProps & TUserCardState> = ({
+  user,
+  permissionsList,
+  permissions,
+  onChange,
+}) => {
   const classes = useStyles();
 
   const userPermissionsList = permissionsList.reduce<IPermission[]>((accumulator, permission) => {
@@ -121,5 +122,7 @@ const mapStateToProps = ({ metaData }: TState) => ({
     update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
   },
 });
+
+type TUserCardState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(UserCard);
