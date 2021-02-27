@@ -6,16 +6,16 @@ import { TState } from 'types/redux';
 
 interface IProfileProps {}
 
-const Profile: React.FC<IProfileProps & TProfileState> = ({ id }) => {
-  if (id === undefined) {
+const Profile: React.FC<IProfileProps & TProfileState> = ({ hasUser }) => {
+  if (!hasUser) {
     return <NoMatch />;
   }
 
-  return <UserForm id={id} self={true} />;
+  return <UserForm self={true} />;
 };
 
 const mapStateToProps = (state: TState) => ({
-  id: state.metaData.user?.id,
+  hasUser: state.metaData.user !== null,
 });
 
 type TProfileState = ReturnType<typeof mapStateToProps>;

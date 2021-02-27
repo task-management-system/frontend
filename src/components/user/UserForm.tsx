@@ -7,17 +7,19 @@ import Container from 'components/common/Container';
 import UserInfo from 'components/user/UserInfo';
 import NormalButton from 'components/themed/NormalButton';
 import ToggleLockButton from 'components/user/ToggleLockButton';
-import usePromiseTrack from 'hooks/usePromiseTrack';
 import { haveAnyPermission } from 'utils/permissions';
-import { getUser, updateUser } from 'api/v1';
+import { getUser, getCurrentUser, updateUser } from 'api/v1';
 import { IUser } from 'types';
 import { TState } from 'types/redux';
+import { RequireOnlyOne } from 'types/common';
 import { TUndefinableUserForm } from 'types/components/user';
 
-interface IUserFormProps {
+interface IUserFormBase {
   id: number;
-  self?: boolean;
+  self: boolean;
 }
+
+type TUserFormProps = RequireOnlyOne<IUserFormBase, 'id' | 'self'>;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,14 +36,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserForm: React.FC<IUserFormProps & TUserFormState> = ({ id, self, permissions }) => {
+const UserForm: React.FC<TUserFormProps & TUserFormState> = ({ id, self, permissions }) => {
   const classes = useStyles();
   const [user, setUser] = useState<IUser | null>(null);
   const [editing, setEditing] = useState(false);
-  const [inProgress, trackedGetUser] = usePromiseTrack(getUser);
+  const inProgress = user === null;
 
   const handleLoadUser = async () => {
-    const response = await trackedGetUser(id);
+    const response = await (id === undefined ? getCurrentUser() : getUser(id));
     setUser(response.data || null);
   };
 
@@ -58,7 +60,6 @@ const UserForm: React.FC<IUserFormProps & TUserFormState> = ({ id, self, permiss
           username: values.username || user.username,
           name: values.name || null,
           email: values.email || null,
-          isActive: user.isActive,
           roleId: values.role?.id || user.role.id,
         }).then(response => {
           if (response.details.ok) {
@@ -67,7 +68,6 @@ const UserForm: React.FC<IUserFormProps & TUserFormState> = ({ id, self, permiss
               username: values.username || user.username,
               name: values.name || null,
               email: values.email || null,
-              isActive: user.isActive,
               role: values.role || user.role,
             });
           }

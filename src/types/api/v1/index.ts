@@ -9,6 +9,5 @@ export interface ITransferUser {
   username: string;
   name: string | null;
   email: string | null;
-  isActive: boolean;
   roleId: number;
 }

@@ -39,7 +39,6 @@ const UserEdit: React.FC<IUserEditProps> = ({ children, user, onChange }) => {
           username: values.username || user.username,
           name: values.name || null,
           email: values.email || null,
-          isActive: user.isActive,
           roleId: values.role?.id || user.role.id,
         }).then(() => {
           onChange();
