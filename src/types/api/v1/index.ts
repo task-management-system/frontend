@@ -11,3 +11,8 @@ export interface ITransferUser {
   email: string | null;
   roleId: number;
 }
+
+export interface IChangePassword {
+  currentPassword: string;
+  newPassword: string;
+}

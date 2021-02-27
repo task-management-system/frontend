@@ -1,7 +1,7 @@
 import { methods } from './core';
 import { withNotification, withAuthorization } from '../utils';
 import { IUser } from 'types';
-import { ITransferUser } from 'types/api/v1';
+import { ITransferUser, IChangePassword } from 'types/api/v1';
 
 const API_BASE = '/user';
 
@@ -42,3 +42,10 @@ export const updateUser = (id: number, data: ITransferUser) => {
     withAuthorization(methods.patch<ITransferUser, null>(`${API_BASE}?${params}`, data))
   );
 };
+
+export const changePassword = (data: IChangePassword) =>
+  withNotification(
+    withAuthorization(methods.post<IChangePassword, null>(`${API_BASE}/change-password`, data))
+  );
+
+export const getCurrentUser = () => withAuthorization(methods.get<IUser>(`${API_BASE}/current`));

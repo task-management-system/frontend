@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import FormField from 'components/formik/FormField';
 import NormalButton from 'components/themed/NormalButton';
+import { changePassword } from 'api/v1';
 
 interface IChildrenHelpers {
   handleOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
@@ -51,6 +52,16 @@ const ChangePassword: React.FC<IChangePasswordProps> = ({ children, ...props }) 
     validateOnBlur: true,
     onSubmit: values => {
       formik.setSubmitting(true);
+      changePassword({
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+      }).then(response => {
+        formik.setSubmitting(false);
+
+        if (response.details.ok) {
+          handleClose();
+        }
+      });
     },
   });
 
