@@ -12,6 +12,7 @@ interface IChildrenHelpers {
 }
 
 interface IChangePasswordProps {
+  userId: number;
   children: (helpers: IChildrenHelpers) => React.ReactNode;
 }
 
@@ -34,7 +35,7 @@ const validationSchema = yup.object().shape({
     .required('Является обязательным'),
 });
 
-const ChangePassword: React.FC<IChangePasswordProps> = ({ children, ...props }) => {
+const ChangePassword: React.FC<IChangePasswordProps> = ({ children, userId }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -52,7 +53,7 @@ const ChangePassword: React.FC<IChangePasswordProps> = ({ children, ...props }) 
     validateOnBlur: true,
     onSubmit: values => {
       formik.setSubmitting(true);
-      changePassword({
+      changePassword(userId, {
         currentPassword: values.currentPassword,
         newPassword: values.newPassword,
       }).then(response => {

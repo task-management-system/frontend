@@ -43,9 +43,16 @@ export const updateUser = (id: number, data: ITransferUser) => {
   );
 };
 
-export const changePassword = (data: IChangePassword) =>
+export const changePassword = (id: number, data: IChangePassword) => {
+  const params = new URLSearchParams({
+    id: id.toString(),
+  });
+
   withNotification(
-    withAuthorization(methods.post<IChangePassword, null>(`${API_BASE}/change-password`, data))
+    withAuthorization(
+      methods.post<IChangePassword, null>(`${API_BASE}/change-password?${params}`, data)
+    )
   );
+};
 
 export const getCurrentUser = () => withAuthorization(methods.get<IUser>(`${API_BASE}/current`));

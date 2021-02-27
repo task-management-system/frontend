@@ -131,7 +131,7 @@ const UserInfo: React.FC<IUserInfoProps & TUserInfoState> = ({
         {(permissions.update || self) && (
           <div className={classes.wrapper}>
             {user !== null ? (
-              <ChangePassword>
+              <ChangePassword userId={user.id}>
                 {({ handleOpen }) => (
                   <Fade in={true}>
                     <NormalButton color="primary" variant="contained" onClick={handleOpen}>
