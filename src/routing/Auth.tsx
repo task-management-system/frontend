@@ -5,10 +5,10 @@ import { Formik, FormikHelpers } from 'formik';
 import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
-import { setUser, setPermissions } from 'redux/actions/metaData';
-import { authenticate, getPermissions } from 'api/v1';
+import { setUser, setPermissions, setStatuses } from 'redux/actions/metaData';
+import { authenticate, getPermissions, getStatuses } from 'api/v1';
 import { setToken } from 'api/utils';
-import { IUser, IPermission } from 'types';
+import { IUser, IPermission, IStatus } from 'types';
 import { TDispatch } from 'types/redux';
 import { IAuthForm } from 'types/components/auth';
 
@@ -44,7 +44,7 @@ const initialValues: IAuthForm = {
   password: '',
 };
 
-const Auth: React.FC<IAuthProps & IAuthDispatch> = ({ setUser, setPermissions }) => {
+const Auth: React.FC<IAuthProps & IAuthDispatch> = ({ setUser, setPermissions, setStatuses }) => {
   const classes = useStyles();
 
   const sendData = async (values: IAuthForm, helpers: FormikHelpers<IAuthForm>) => {
@@ -55,8 +55,10 @@ const Auth: React.FC<IAuthProps & IAuthDispatch> = ({ setUser, setPermissions })
     await setToken(token);
 
     if (token !== null) {
-      const permissionsResponse = await getPermissions();
-      setPermissions(permissionsResponse.data || []);
+      const [permissions, statuses] = await Promise.all([getPermissions(), getStatuses()]);
+
+      setPermissions(permissions.data || []);
+      setStatuses(statuses.data || []);
     }
 
     helpers.setSubmitting(false);
@@ -109,6 +111,7 @@ const Auth: React.FC<IAuthProps & IAuthDispatch> = ({ setUser, setPermissions })
 const mapDispatchToProps = (dispatch: TDispatch) => ({
   setUser: (payload: IUser | null) => dispatch(setUser(payload)),
   setPermissions: (payload: IPermission[]) => dispatch(setPermissions(payload)),
+  setStatuses: (payload: IStatus[]) => dispatch(setStatuses(payload)),
 });
 
 type IAuthDispatch = ReturnType<typeof mapDispatchToProps>;

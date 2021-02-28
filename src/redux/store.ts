@@ -9,7 +9,7 @@ import { TStore, TPersistState, IAction } from 'types/redux';
 const persistConfig = {
   key: 'root',
   storage: localForage,
-  whitelist: ['metaData', 'cache'],
+  whitelist: ['metaData', 'cache', 'tabs'],
 };
 
 const store: TStore = createStore<TPersistState, IAction<any>, any, any>(

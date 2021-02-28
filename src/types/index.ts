@@ -30,3 +30,8 @@ export interface INotification {
   type: TNotificationType;
   text: string;
 }
+
+export interface IStatus {
+  id: number;
+  name: string;
+}

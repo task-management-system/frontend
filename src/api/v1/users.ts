@@ -1,4 +1,4 @@
-import { methods } from './core';
+import { methods } from '../core';
 import { withNotification, withAuthorization } from '../utils';
 import { IUser } from 'types';
 import { TPaged } from 'types/api';

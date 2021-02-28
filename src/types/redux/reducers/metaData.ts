@@ -1,9 +1,10 @@
-import { IUser, IPermission } from 'types';
-import { ISetPermissionsAction, ISetUserAction } from '../actions/metaData';
+import { IUser, IPermission, IStatus } from 'types';
+import { ISetUserAction, ISetPermissionsAction, ISetStatusesAction } from '../actions/metaData';
 
 export interface IMetaData {
   user: IUser | null;
   permissions: IPermission[];
+  statuses: IStatus[];
 }
 
-export type TMetaDataAction = ISetUserAction | ISetPermissionsAction;
+export type TMetaDataAction = ISetUserAction | ISetPermissionsAction | ISetStatusesAction;

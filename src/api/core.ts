@@ -1,4 +1,4 @@
-import { getToken } from '../utils';
+import { getToken } from './utils';
 import { TCollectedResponse, TResponse, IPagination } from 'types/api';
 
 const API_URL = '/api/v1';
