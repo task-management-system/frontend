@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 function usePromiseTrack<X extends any[], T>(
   promise: (...args: X) => Promise<T>,

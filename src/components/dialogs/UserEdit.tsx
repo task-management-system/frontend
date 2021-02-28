@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
-import { DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { DialogTitle, DialogContent, DialogActions, makeStyles } from '@material-ui/core';
 import WideDialog from 'components/themed/WideDialog';
 import NormalButton from 'components/themed/NormalButton';
 import UserInfo from 'components/user/UserInfo';
@@ -19,7 +19,14 @@ interface IUserEditProps {
   children: (helpers: IChildrenHelpers) => React.ReactNode;
 }
 
+const useStyles = makeStyles(theme => ({
+  content: {
+    overflowY: 'unset',
+  },
+}));
+
 const UserEdit: React.FC<IUserEditProps> = ({ children, user, onChange }) => {
+  const classes = useStyles();
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -68,7 +75,7 @@ const UserEdit: React.FC<IUserEditProps> = ({ children, user, onChange }) => {
       {children({ handleOpen, handleClose })}
       <WideDialog open={open} onClose={handleClose}>
         <DialogTitle>{user?.username}</DialogTitle>
-        <DialogContent>
+        <DialogContent className={classes.content}>
           <UserInfo user={user} form={formik} editing={true} />
         </DialogContent>
         <DialogActions>
