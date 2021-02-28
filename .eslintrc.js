@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['react-app', 'prettier', 'prettier/react'],
+  extends: ['react-app', 'prettier'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -7,7 +7,7 @@ module.exports = {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
-  plugins: ['react', 'react-hooks', 'prettier'],
+  plugins: ['react', 'react-hooks', 'prettier', 'import'],
   rules: {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
