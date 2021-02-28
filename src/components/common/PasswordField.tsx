@@ -17,6 +17,8 @@ const PasswordField: React.FC<TextFieldProps> = props => {
           <InputAdornment position="end">
             <IconButton
               color="primary"
+              edge="end"
+              size={props.size || 'medium'}
               aria-label="Переключить видимость пароля"
               onClick={togglePassword}
             >

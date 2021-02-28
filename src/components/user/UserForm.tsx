@@ -99,6 +99,11 @@ const UserForm: React.FC<TUserFormProps & TUserFormState> = ({ id, self, permiss
     setEditing(editing => !editing);
   };
 
+  const handleCancelClick = () => {
+    setEditing(false);
+    resetForm();
+  };
+
   useEffect(() => {
     handleLoadUser();
   }, [id]);
@@ -119,6 +124,11 @@ const UserForm: React.FC<TUserFormProps & TUserFormState> = ({ id, self, permiss
                     onClick={handleLoadUser}
                   />
                 </Fade>
+              )}
+              {editing && (
+                <NormalButton color="primary" disabled={inProgress} onClick={handleCancelClick}>
+                  Отменить
+                </NormalButton>
               )}
               <Fade in={true}>
                 <NormalButton color="primary" disabled={inProgress} onClick={handleEditingClick}>

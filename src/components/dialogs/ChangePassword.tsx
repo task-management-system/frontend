@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import FormField from 'components/formik/FormField';
 import NormalButton from 'components/themed/NormalButton';
+import PasswordField from 'components/common/PasswordField';
 import { changePassword } from 'api/v1';
 
 interface IChildrenHelpers {
@@ -79,9 +80,9 @@ const ChangePassword: React.FC<IChangePasswordProps> = ({ children, userId }) =>
         <DialogTitle>Смена пароля</DialogTitle>
         <DialogContent className={classes.form}>
           <FormField
+            component={PasswordField}
             label="Текущий пароль"
             name="currentPassword"
-            type="password"
             value={formik.values.currentPassword}
             errors={formik.errors}
             touched={formik.touched}
@@ -91,9 +92,9 @@ const ChangePassword: React.FC<IChangePasswordProps> = ({ children, userId }) =>
             required
           />
           <FormField
+            component={PasswordField}
             label="Новый пароль"
             name="newPassword"
-            type="password"
             value={formik.values.newPassword}
             errors={formik.errors}
             touched={formik.touched}
@@ -103,9 +104,9 @@ const ChangePassword: React.FC<IChangePasswordProps> = ({ children, userId }) =>
             required
           />
           <FormField
+            component={PasswordField}
             label="Повторите новый пароль"
             name="newPasswordConfirm"
-            type="password"
             value={formik.values.newPasswordConfirm}
             errors={formik.errors}
             touched={formik.touched}

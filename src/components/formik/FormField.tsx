@@ -4,6 +4,7 @@ import { TextField, TextFieldProps } from '@material-ui/core';
 import { IFieldProps } from 'types/components/formik/field';
 
 const FormField = <U,>({
+  component: Component = TextField,
   label,
   name,
   value,
@@ -16,7 +17,7 @@ const FormField = <U,>({
   const isTouched = touched !== undefined ? getIn(touched, name) !== undefined : true;
 
   return (
-    <TextField
+    <Component
       label={label}
       name={name}
       value={value}

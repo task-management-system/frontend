@@ -48,9 +48,9 @@ export const changePassword = (id: number, data: IChangePassword) => {
     id: id.toString(),
   });
 
-  withNotification(
+  return withNotification(
     withAuthorization(
-      methods.post<IChangePassword, null>(`${API_BASE}/change-password?${params}`, data)
+      methods.patch<IChangePassword, null>(`${API_BASE}/change-password?${params}`, data)
     )
   );
 };
