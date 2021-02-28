@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
   },
 }));
 
@@ -49,6 +50,8 @@ const TaskTypesList: React.FC<
           value={status}
           textColor="secondary"
           indicatorColor="secondary"
+          variant="scrollable"
+          scrollButtons="auto"
           onChange={handleStatusChange}
         >
           {statuses.map(status => (

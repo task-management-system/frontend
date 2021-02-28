@@ -1,8 +1,7 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, Middleware } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import localForage from 'localforage';
 import thunk from 'redux-thunk';
-import logger from 'redux-logger';
 import rootReducer from './reducers';
 import { TStore, TPersistState, IAction } from 'types/redux';
 
@@ -12,9 +11,14 @@ const persistConfig = {
   whitelist: ['metaData', 'cache', 'tabs'],
 };
 
+const middleware: Middleware<unknown>[] = [thunk];
+if (process.env.NODE_ENV === 'development') {
+  middleware.push(require('redux-logger').default);
+}
+
 const store: TStore = createStore<TPersistState, IAction<any>, any, any>(
   persistReducer(persistConfig, rootReducer),
-  process.env.NODE_ENV === 'production' ? applyMiddleware(thunk) : applyMiddleware(thunk, logger)
+  applyMiddleware(...middleware)
 );
 
 const persistor = persistStore(store);
