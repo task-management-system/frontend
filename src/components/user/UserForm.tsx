@@ -9,17 +9,17 @@ import NormalButton from 'components/themed/NormalButton';
 import ToggleLockButton from 'components/user/ToggleLockButton';
 import { haveAnyPermission } from 'utils/permissions';
 import { getUser, getCurrentUser, updateUser } from 'api/v1';
-import { IUser } from 'types';
-import { TState } from 'types/redux';
+import { User } from 'types';
+import { State } from 'types/redux';
 import { RequireOnlyOne } from 'types/common';
-import { TUndefinableUserForm } from 'types/components/user';
+import { UndefinableUserForm } from 'types/components/user';
 
-interface IUserFormBase {
+interface UserFormBase {
   id: number;
   self: boolean;
 }
 
-type TUserFormProps = RequireOnlyOne<IUserFormBase, 'id' | 'self'>;
+type UserFormProps = RequireOnlyOne<UserFormBase, 'id' | 'self'>;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,9 +36,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserForm: React.FC<TUserFormProps & TUserFormState> = ({ id, self, permissions }) => {
+const UserForm: React.FC<UserFormProps & UserFormState> = ({ id, self, permissions }) => {
   const classes = useStyles();
-  const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [editing, setEditing] = useState(false);
   const inProgress = user === null;
 
@@ -47,7 +47,7 @@ const UserForm: React.FC<TUserFormProps & TUserFormState> = ({ id, self, permiss
     setUser(response.data || null);
   };
 
-  const formik = useFormik<TUndefinableUserForm>({
+  const formik = useFormik<UndefinableUserForm>({
     initialValues: {
       username: undefined,
       name: undefined,
@@ -148,12 +148,12 @@ const UserForm: React.FC<TUserFormProps & TUserFormState> = ({ id, self, permiss
   );
 };
 
-const mapStateToProps = ({ metaData }: TState) => ({
+const mapStateToProps = ({ metaData }: State) => ({
   permissions: {
     update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
   },
 });
 
-type TUserFormState = ReturnType<typeof mapStateToProps>;
+type UserFormState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(UserForm);

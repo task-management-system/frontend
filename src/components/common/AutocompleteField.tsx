@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, TextFieldProps } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 
-export interface IAutocompleteFieldProps<T> {
+export interface AutocompleteFieldProps<T> {
   label: string;
   name: string;
   value: T | null;
@@ -21,7 +21,7 @@ const AutocompleteField = <T,>({
   getOptionSelected,
   onChange,
   ...props
-}: React.PropsWithChildren<IAutocompleteFieldProps<T> & Omit<TextFieldProps, 'onChange'>>) => {
+}: React.PropsWithChildren<AutocompleteFieldProps<T> & Omit<TextFieldProps, 'onChange'>>) => {
   return (
     <Autocomplete
       value={value}

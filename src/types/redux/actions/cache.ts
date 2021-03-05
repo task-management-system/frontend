@@ -1,7 +1,7 @@
 import { SET_CACHE } from 'redux/actionTypes';
-import { ICachePayload } from '../payload';
+import { CachePayload } from '../payload';
 
-export interface ISetCacheAction<T> {
+export interface SetCacheAction<T> {
   type: typeof SET_CACHE;
-  payload: ICachePayload<T>;
+  payload: CachePayload<T>;
 }

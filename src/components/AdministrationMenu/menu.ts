@@ -1,8 +1,8 @@
 import { salt } from 'utils';
-import { TMenu, TMenuItem } from 'types/components/menu';
 import { People, Apartment, AccountBox } from '@material-ui/icons';
+import { MenuBase, MenuItemBase } from 'types/components/menu';
 
-class Menu implements TMenu {
+class Menu implements MenuBase {
   public id: string = salt();
   public icon: React.ComponentType<any> | null = null;
 
@@ -15,7 +15,7 @@ class Menu implements TMenu {
   }
 }
 
-class MenuItem implements TMenuItem {
+class MenuItem implements MenuItemBase {
   public id: string = salt();
   public icon: React.ComponentType<any> | null = null;
 

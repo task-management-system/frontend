@@ -1,8 +1,8 @@
 import React from 'react';
 import { getIn } from 'formik';
 import { TextFieldProps } from '@material-ui/core';
-import AutocompleteField, { IAutocompleteFieldProps } from 'components/common/AutocompleteField';
-import { IFieldProps } from 'types/components/formik/field';
+import AutocompleteField, { AutocompleteFieldProps } from 'components/common/AutocompleteField';
+import { FieldProps } from 'types/components/formik/field';
 
 const AutocompleteFormField = <U, T>({
   label,
@@ -13,7 +13,7 @@ const AutocompleteFormField = <U, T>({
   onChange,
   ...props
 }: React.PropsWithChildren<
-  IFieldProps<U> & IAutocompleteFieldProps<T> & Omit<TextFieldProps, 'onChange'>
+  FieldProps<U> & AutocompleteFieldProps<T> & Omit<TextFieldProps, 'onChange'>
 >) => {
   const error = getIn(errors, name);
   const isTouched = touched !== undefined ? getIn(touched, name) !== undefined : true;

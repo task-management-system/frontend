@@ -1,8 +1,8 @@
 import { salt } from 'utils';
-import { INotification, TNotificationType } from 'types';
+import { Notification, NotificationType } from 'types';
 
-export const createNotification = (type: TNotificationType, text: string): INotification => ({
+export const createNotification = (type: NotificationType, text: string): Notification => ({
   id: salt(),
-  type: type.toLowerCase() as TNotificationType,
+  type: type.toLowerCase() as NotificationType,
   text,
 });

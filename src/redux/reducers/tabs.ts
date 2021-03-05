@@ -1,13 +1,13 @@
 import { SET_GROUP, SET_STATUS } from 'redux/actionTypes';
-import { ITabs, TTabsAction } from 'types/redux/reducers';
+import { Tabs, TabsAction } from 'types/redux/reducers';
 import { APPOINTED } from 'constants/tasks';
 
-const initialState: ITabs = {
+const initialState: Tabs = {
   group: APPOINTED,
   status: null,
 };
 
-const tabsReducer = (state: ITabs = initialState, action: TTabsAction): ITabs => {
+const tabsReducer = (state: Tabs = initialState, action: TabsAction): Tabs => {
   switch (action.type) {
     case SET_GROUP:
       return {

@@ -3,7 +3,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import localForage from 'localforage';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
-import { TStore, TPersistState, IAction } from 'types/redux';
+import { AppStore, PersisState, Action } from 'types/redux';
 
 const persistConfig = {
   key: 'root',
@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'development') {
   middleware.push(require('redux-logger').default);
 }
 
-const store: TStore = createStore<TPersistState, IAction<any>, any, any>(
+const store: AppStore = createStore<PersisState, Action<any>, any, any>(
   persistReducer(persistConfig, rootReducer),
   applyMiddleware(...middleware)
 );

@@ -1,5 +1,5 @@
 import { getToken } from './utils';
-import { TCollectedResponse, TResponse, IPagination } from 'types/api';
+import { CollectedResponse, BasicResponse, Pagination } from 'types/api';
 
 const API_URL = '/api/v1';
 
@@ -15,8 +15,8 @@ export const prepareHeaders = async (headers: Headers): Promise<void> => {
   }
 };
 
-export const collectResponse = async <T>(response: Response): Promise<TCollectedResponse<T>> => {
-  const data = (await response.json()) as TResponse<T>;
+export const collectResponse = async <T>(response: Response): Promise<CollectedResponse<T>> => {
+  const data = (await response.json()) as BasicResponse<T>;
   const { ok, status, statusText } = response;
 
   return {
@@ -29,7 +29,7 @@ export const collectResponse = async <T>(response: Response): Promise<TCollected
   };
 };
 
-export const collectPaginationParams = (pagination: IPagination): URLSearchParams => {
+export const collectPaginationParams = (pagination: Pagination): URLSearchParams => {
   const params = new URLSearchParams();
   params.set('page', (pagination.page || 1).toString());
   params.set('size', (pagination.size || 25).toString());
@@ -41,7 +41,7 @@ export const collectPaginationParams = (pagination: IPagination): URLSearchParam
 const getMethod = async <T>(
   url: string = '/',
   headers: Headers = new Headers()
-): Promise<TCollectedResponse<T>> => {
+): Promise<CollectedResponse<T>> => {
   await prepareHeaders(headers);
 
   return fetch(`${API_URL}${url}`, {
@@ -54,7 +54,7 @@ const postMethod = async <P, T>(
   url: string = '/',
   payload: P,
   headers: Headers = new Headers()
-): Promise<TCollectedResponse<T>> => {
+): Promise<CollectedResponse<T>> => {
   await prepareHeaders(headers);
 
   return fetch(`${API_URL}${url}`, {
@@ -68,7 +68,7 @@ const putMethod = async <P, T>(
   url: string = '/',
   payload: P,
   headers: Headers = new Headers()
-): Promise<TCollectedResponse<T>> => {
+): Promise<CollectedResponse<T>> => {
   await prepareHeaders(headers);
 
   return fetch(`${API_URL}${url}`, {
@@ -82,7 +82,7 @@ const patchMethod = async <P, T>(
   url: string = '/',
   payload: P,
   headers: Headers = new Headers()
-): Promise<TCollectedResponse<T>> => {
+): Promise<CollectedResponse<T>> => {
   await prepareHeaders(headers);
 
   return fetch(`${API_URL}${url}`, {
@@ -96,7 +96,7 @@ const deleteMethod = async <P, T>(
   url: string = '/',
   payload: P,
   headers: Headers = new Headers()
-): Promise<TCollectedResponse<T>> => {
+): Promise<CollectedResponse<T>> => {
   await prepareHeaders(headers);
 
   return fetch(`${API_URL}${url}`, {

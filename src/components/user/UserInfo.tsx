@@ -3,19 +3,19 @@ import clsx from 'clsx';
 import { connect } from 'react-redux';
 import { Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import { FormikProps } from 'formik';
 import TextParamView from 'components/param-view/TextParamView';
 import RoleParamView from 'components/param-view/RoleParamView';
 import NormalButton from 'components/themed/NormalButton';
-import { FormikProps } from 'formik';
-import { TUndefinableUserForm } from 'types/components/user';
 import ChangePassword from 'components/dialogs/ChangePassword';
 import { haveAnyPermission } from 'utils/permissions';
-import { IUser } from 'types';
-import { TState } from 'types/redux';
+import { User } from 'types';
+import { State } from 'types/redux';
+import { UndefinableUserForm } from 'types/components/user';
 
-interface IUserInfoProps {
-  user: IUser | null;
-  form: FormikProps<TUndefinableUserForm>;
+interface UserInfoProps {
+  user: User | null;
+  form: FormikProps<UndefinableUserForm>;
   self?: boolean;
   editing?: boolean;
 }
@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserInfo: React.FC<IUserInfoProps & TUserInfoState> = ({
+const UserInfo: React.FC<UserInfoProps & UserInfoState> = ({
   user,
   form,
   self = false,
@@ -150,12 +150,12 @@ const UserInfo: React.FC<IUserInfoProps & TUserInfoState> = ({
   );
 };
 
-const mapStateToProps = ({ metaData }: TState) => ({
+const mapStateToProps = ({ metaData }: State) => ({
   permissions: {
     update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
   },
 });
 
-type TUserInfoState = ReturnType<typeof mapStateToProps>;
+type UserInfoState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(UserInfo);

@@ -4,7 +4,7 @@ import { Paper, Tabs, Tab, makeStyles } from '@material-ui/core';
 import { NewReleases, Details, Block, Done } from '@material-ui/icons';
 import ThemedTab from './themed/ThemedTab';
 import { APPOINTED, CREATED } from 'constants/tasks';
-import { TDispatch, TState } from 'types/redux';
+import { Dispatch, State } from 'types/redux';
 import { setGroup, setStatus } from 'redux/actions/tabs';
 
 const icons: { [key: number]: JSX.Element } = {
@@ -14,7 +14,7 @@ const icons: { [key: number]: JSX.Element } = {
   4: <Done />,
 };
 
-interface ITaskTypesListProps {}
+interface TaskTypesListProps {}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,9 +24,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TaskTypesList: React.FC<
-  ITaskTypesListProps & TTaskTypesListState & TTaskTypesListDispatch
-> = ({ statuses, group, status, setGroup, setStatus }) => {
+const TaskTypesList: React.FC<TaskTypesListProps & TaskTypesLisState & TaskTypesLisDispatch> = ({
+  statuses,
+  group,
+  status,
+  setGroup,
+  setStatus,
+}) => {
   const classes = useStyles();
 
   useEffect(() => {
@@ -68,18 +72,18 @@ const TaskTypesList: React.FC<
   );
 };
 
-const mapStateToProps = (state: TState) => ({
+const mapStateToProps = (state: State) => ({
   statuses: state.metaData.statuses,
   ...state.tabs,
 });
 
-type TTaskTypesListState = ReturnType<typeof mapStateToProps>;
+type TaskTypesLisState = ReturnType<typeof mapStateToProps>;
 
-const mapDispatchToProps = (dispatch: TDispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   setGroup: (payload: string) => dispatch(setGroup(payload)),
   setStatus: (payload: number) => dispatch(setStatus(payload)),
 });
 
-type TTaskTypesListDispatch = ReturnType<typeof mapDispatchToProps>;
+type TaskTypesLisDispatch = ReturnType<typeof mapDispatchToProps>;
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskTypesList);

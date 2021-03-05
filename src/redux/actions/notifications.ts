@@ -1,13 +1,13 @@
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from 'redux/actionTypes';
-import { INotification } from 'types';
-import { IAddNotificationAction, IRemoveNotificationAction } from 'types/redux/actions';
+import { Notification } from 'types';
+import { AddNotificationAction, RemoveNotificationAction } from 'types/redux/actions';
 
-export const addNotification = (payload: INotification): IAddNotificationAction => ({
+export const addNotification = (payload: Notification): AddNotificationAction => ({
   type: ADD_NOTIFICATION,
   payload,
 });
 
-export const removeNotification = (payload: string): IRemoveNotificationAction => ({
+export const removeNotification = (payload: string): RemoveNotificationAction => ({
   type: REMOVE_NOTIFICATION,
   payload,
 });

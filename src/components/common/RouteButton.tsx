@@ -4,14 +4,14 @@ import { ButtonProps } from '@material-ui/core';
 import NormalButton from 'components/themed/NormalButton';
 import { noop } from 'utils';
 
-interface IRouteButtonProps {
+interface RouteButtonProps {
   to?: string;
   back?: boolean;
   component?: React.ComponentType<ButtonProps>;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const RouteButton: React.FC<IRouteButtonProps & ButtonProps> = ({
+const RouteButton: React.FC<RouteButtonProps & ButtonProps> = ({
   children,
   to = '/',
   back = false,

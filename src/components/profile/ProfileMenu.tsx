@@ -6,9 +6,9 @@ import ThemedPopover from 'components/themed/ThemedPopover';
 import NormalButton from 'components/themed/NormalButton';
 import { removeToken } from 'api/utils';
 import { reset } from 'redux/actions/common';
-import { TDispatch } from 'types/redux';
+import { Dispatch } from 'types/redux';
 
-interface IProfileMenuProps {
+interface ProfileMenuProps {
   children: (handleOpen: (event: React.MouseEvent<HTMLButtonElement>) => void) => React.ReactNode;
   reset: () => void;
 }
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ProfileMenu: React.FC<IProfileMenuProps> = ({ children, ...props }) => {
+const ProfileMenu: React.FC<ProfileMenuProps> = ({ children, ...props }) => {
   const classes = useStyles();
   const history = useHistory();
   const [anchor, setAnchor] = useState<HTMLButtonElement | null>(null);
@@ -66,7 +66,7 @@ const ProfileMenu: React.FC<IProfileMenuProps> = ({ children, ...props }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch: TDispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   reset: () => dispatch(reset()),
 });
 

@@ -1,17 +1,17 @@
 import { SET_USER, SET_PERMISSIONS, SET_STATUSES } from 'redux/actionTypes';
-import { IUser, IPermission, IStatus } from 'types';
+import { User, Permission, Status } from 'types';
 
-export interface ISetUserAction {
+export interface SetUserAction {
   type: typeof SET_USER;
-  payload: IUser | null;
+  payload: User | null;
 }
 
-export interface ISetPermissionsAction {
+export interface SetPermissionsAction {
   type: typeof SET_PERMISSIONS;
-  payload: IPermission[];
+  payload: Permission[];
 }
 
-export interface ISetStatusesAction {
+export interface SetStatusesAction {
   type: typeof SET_STATUSES;
-  payload: IStatus[];
+  payload: Status[];
 }

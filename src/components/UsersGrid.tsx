@@ -1,10 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
 import UserCard from './user/UserCard';
-import { IUser } from 'types';
+import { User } from 'types';
 
-interface IUsersGridProps {
-  users: IUser[];
+interface UsersGridProps {
+  users: User[];
   updateUsers: () => Promise<void>;
 }
 
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UsersGrid: React.FC<IUsersGridProps> = ({ users, updateUsers }) => {
+const UsersGrid: React.FC<UsersGridProps> = ({ users, updateUsers }) => {
   const classes = useStyles();
 
   return (

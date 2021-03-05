@@ -7,14 +7,14 @@ import NormalButton from 'components/themed/NormalButton';
 import PasswordField from 'components/common/PasswordField';
 import { changePassword } from 'api/v1';
 
-interface IChildrenHelpers {
+interface ChildrenHelpers {
   handleOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-interface IChangePasswordProps {
+interface ChangePasswordProps {
   userId: number;
-  children: (helpers: IChildrenHelpers) => React.ReactNode;
+  children: (helpers: ChildrenHelpers) => React.ReactNode;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -36,7 +36,7 @@ const validationSchema = yup.object().shape({
     .required('Является обязательным'),
 });
 
-const ChangePassword: React.FC<IChangePasswordProps> = ({ children, userId }) => {
+const ChangePassword: React.FC<ChangePasswordProps> = ({ children, userId }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 

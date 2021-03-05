@@ -1,10 +1,10 @@
 import localForage from 'localforage';
 import { store } from 'redux/store';
+import { createNotification } from 'utils/notification';
 import { reset } from 'redux/actions/common';
 import { addNotification } from 'redux/actions/notifications';
-import { TCollectedResponse } from 'types/api';
-import { createNotification } from 'utils/notification';
 import { setCache } from 'redux/actions/cache';
+import { CollectedResponse } from 'types/api';
 
 export const removeToken = async () => {
   await localForage.removeItem('token');
@@ -21,8 +21,8 @@ export const setToken = async (token: string | null) => {
 };
 
 export const withAuthorization = <T>(
-  handler: Promise<TCollectedResponse<T>>
-): Promise<TCollectedResponse<T>> =>
+  handler: Promise<CollectedResponse<T>>
+): Promise<CollectedResponse<T>> =>
   handler.then(response => {
     if (!response.details.ok && response.details.status === 401) {
       store.dispatch(reset());
@@ -34,8 +34,8 @@ export const withAuthorization = <T>(
   });
 
 export const withNotification = <T>(
-  handler: Promise<TCollectedResponse<T>>
-): Promise<TCollectedResponse<T>> =>
+  handler: Promise<CollectedResponse<T>>
+): Promise<CollectedResponse<T>> =>
   handler
     .then(response => {
       if (response.message !== null) {
@@ -46,7 +46,7 @@ export const withNotification = <T>(
 
       return Promise.resolve(response);
     })
-    .catch((error: TCollectedResponse<T> | any) => {
+    .catch((error: CollectedResponse<T> | any) => {
       if (typeof error.message === 'object' && 'type' in error.message && 'text' in error.message) {
         store.dispatch(addNotification(createNotification(error.message.type, error.message.text)));
       } else {
@@ -59,9 +59,9 @@ export const withNotification = <T>(
 export const withCache = <X extends any[], T>(
   name: string,
   duration: number,
-  handler: (...args: X) => Promise<TCollectedResponse<T>>
+  handler: (...args: X) => Promise<CollectedResponse<T>>
 ) => {
-  return (...args: X): Promise<TCollectedResponse<T>> => {
+  return (...args: X): Promise<CollectedResponse<T>> => {
     const { cache } = store.getState();
     const isCached = name in cache;
     const isExpired = (cache[name]?.timestamp || 0) + (cache[name]?.duration || 0) < Date.now();

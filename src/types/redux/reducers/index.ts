@@ -1,4 +1,4 @@
-export type { IMetaData, TMetaDataAction } from './metaData';
-export type { TNotifications, TNotificationsAction } from './notifications';
-export type { ICache, TCacheAction } from './cache';
-export type { ITabs, TTabsAction } from './tabs';
+export type { MetaData, MetaDataAction } from './metaData';
+export type { Notifications, NotificationsAction } from './notifications';
+export type { Cache, CacheAction } from './cache';
+export type { Tabs, TabsAction } from './tabs';

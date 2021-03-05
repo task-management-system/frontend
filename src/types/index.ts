@@ -1,37 +1,37 @@
-export interface IRole {
+export interface Role {
   id: number;
   power: number;
   text: string;
 }
 
-export interface IUser {
+export interface User {
   id: number;
   username: string;
   name: string | null;
   email: string | null;
   isActive: boolean;
-  role: IRole;
+  role: Role;
 }
 
-export interface IUserWithPassword extends IUser {
+export interface UserWithPassword extends User {
   password: string;
 }
 
-export interface IPermission {
+export interface Permission {
   name: string;
   power: number;
   description: string;
 }
 
-export type TNotificationType = 'success' | 'error' | 'warning';
+export type NotificationType = 'success' | 'error' | 'warning';
 
-export interface INotification {
+export interface Notification {
   id: string;
-  type: TNotificationType;
+  type: NotificationType;
   text: string;
 }
 
-export interface IStatus {
+export interface Status {
   id: number;
   name: string;
 }

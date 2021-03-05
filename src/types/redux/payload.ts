@@ -1,4 +1,4 @@
-export interface ICachePayload<T> {
+export interface CachePayload<T> {
   timestamp: number;
   duration: number;
   name: string;

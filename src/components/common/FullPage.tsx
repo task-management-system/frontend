@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core';
 
-interface IFullPageProps {
+interface FullPageProps {
   className?: string;
 }
 
@@ -15,7 +15,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const FullPage: React.FC<IFullPageProps> = ({ className, children }) => {
+const FullPage: React.FC<FullPageProps> = ({ className, children }) => {
   const classes = useStyles();
 
   return <div className={clsx(classes.root, className)}>{children}</div>;

@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import AutocompleteParamView from 'components/param-view/AutocompleteParamView';
 import { getRoles } from 'api/v1';
-import { IRole } from 'types';
+import { Role } from 'types';
 
-interface IRoleParamView {
+interface RoleParamViewProps {
   label: string;
   name: string;
-  value: IRole | null;
+  value: Role | null;
   editing: boolean;
   onChange: (name: string, value: any) => void;
 }
 
-const RoleParamView: React.FC<IRoleParamView> = props => {
-  const [options, setOptions] = useState<IRole[]>([]);
+const RoleParamView: React.FC<RoleParamViewProps> = props => {
+  const [options, setOptions] = useState<Role[]>([]);
 
   useEffect(() => {
     if (options.length === 0 && props.editing) {

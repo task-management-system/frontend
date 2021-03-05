@@ -1,13 +1,13 @@
-interface IMenuEntry {
+interface MenuEntry {
   id: string;
   text: string;
   icon: React.ComponentType<any> | null;
 }
 
-export type TMenu = IMenuEntry & {
-  children: (TMenu | TMenuItem)[];
+export type MenuBase = MenuEntry & {
+  children: (MenuBase | MenuItemBase)[];
 };
 
-export type TMenuItem = IMenuEntry & {
+export type MenuItemBase = MenuEntry & {
   to: string;
 };

@@ -1,4 +1,4 @@
-export type { ISetUserAction, ISetPermissionsAction, ISetStatusesAction } from './metaData';
-export type { IAddNotificationAction, IRemoveNotificationAction } from './notifications';
-export type { ISetCacheAction } from './cache';
-export type { ISetGroupAction, ISetStatusAction } from './tabs';
+export type { SetUserAction, SetPermissionsAction, SetStatusesAction } from './metaData';
+export type { AddNotificationAction, RemoveNotificationAction } from './notifications';
+export type { SetCacheAction } from './cache';
+export type { SetGroupAction, SetStatusAction } from './tabs';

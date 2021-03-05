@@ -5,18 +5,18 @@ import WideDialog from 'components/themed/WideDialog';
 import NormalButton from 'components/themed/NormalButton';
 import UserInfo from 'components/user/UserInfo';
 import { updateUser } from 'api/v1';
-import { IUser } from 'types';
-import { TUndefinableUserForm } from 'types/components/user';
+import { User } from 'types';
+import { UndefinableUserForm } from 'types/components/user';
 
-interface IChildrenHelpers {
+interface ChildrenHelpers {
   handleOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-interface IUserEditProps {
-  user: IUser;
+interface UserEditProps {
+  user: User;
   onChange: () => Promise<void>;
-  children: (helpers: IChildrenHelpers) => React.ReactNode;
+  children: (helpers: ChildrenHelpers) => React.ReactNode;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserEdit: React.FC<IUserEditProps> = ({ children, user, onChange }) => {
+const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -33,7 +33,7 @@ const UserEdit: React.FC<IUserEditProps> = ({ children, user, onChange }) => {
 
   const handleClose = () => setOpen(false);
 
-  const formik = useFormik<TUndefinableUserForm>({
+  const formik = useFormik<UndefinableUserForm>({
     initialValues: {
       username: undefined,
       name: undefined,

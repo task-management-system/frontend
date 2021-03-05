@@ -6,9 +6,9 @@ import Profile from '../profile/Profile';
 import NavigationButton from './NavigationButton';
 import { haveAnyPermission } from 'utils/permissions';
 import { ADMINISTRATION_PERMISSIONS } from 'constants/permissions';
-import { TState } from 'types/redux';
+import { State } from 'types/redux';
 
-interface INavbarProps {}
+interface NavbarProps {}
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Navbar: React.FC<INavbarProps & TNavbarState> = ({ permissions }) => {
+const Navbar: React.FC<NavbarProps & NavbarState> = ({ permissions }) => {
   const classes = useStyles();
 
   return (
@@ -43,7 +43,7 @@ const Navbar: React.FC<INavbarProps & TNavbarState> = ({ permissions }) => {
   );
 };
 
-const mapStateToProps = ({ metaData }: TState) => ({
+const mapStateToProps = ({ metaData }: State) => ({
   permissions: {
     administration: haveAnyPermission(
       metaData.user?.role.power,
@@ -53,6 +53,6 @@ const mapStateToProps = ({ metaData }: TState) => ({
   },
 });
 
-type TNavbarState = ReturnType<typeof mapStateToProps>;
+type NavbarState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(Navbar);

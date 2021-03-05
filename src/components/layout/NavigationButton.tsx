@@ -3,12 +3,12 @@ import { ButtonProps } from '@material-ui/core';
 import RouteButton from 'components/common/RouteButton';
 import FlatButton from 'components/themed/FlatButton';
 
-interface INavigationButtonProps {
+interface NavigationButtonProps {
   to?: string;
   children: string;
 }
 
-const NavigationButton: React.FC<INavigationButtonProps> = props => (
+const NavigationButton: React.FC<NavigationButtonProps> = props => (
   <RouteButton
     to={props.to}
     component={FlatButton as React.ComponentType<ButtonProps>}

@@ -1,11 +1,11 @@
-import { IRole } from 'types';
+import { Role } from 'types';
 import { Undefinable } from 'types/common';
 
-export interface IUserForm {
+export interface UserForm {
   username: string;
   name: string;
   email: string;
-  role: IRole;
+  role: Role;
 }
 
-export type TUndefinableUserForm = Undefinable<IUserForm>;
+export type UndefinableUserForm = Undefinable<UserForm>;

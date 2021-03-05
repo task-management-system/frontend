@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { Typography, makeStyles } from '@material-ui/core';
 
-interface IFormControlProps {
+interface FormControlProps {
   label: string;
   flow?: 'row' | 'column';
 }
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const FormControl: React.FC<IFormControlProps> = ({ children, label, flow = 'column' }) => {
+const FormControl: React.FC<FormControlProps> = ({ children, label, flow = 'column' }) => {
   const classes = useStyles();
 
   return (

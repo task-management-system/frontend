@@ -5,11 +5,11 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import NotificationViewer from 'components/NotificationViewer';
 import Auth from 'routing/Auth';
 import Home from 'routing/Home';
-import { TState } from 'types/redux';
+import { State } from 'types/redux';
 
-interface IAppProps {}
+interface AppProps {}
 
-const App: React.FC<IAppProps & TAppState> = ({ authorized }) => (
+const App: React.FC<AppProps & AppState> = ({ authorized }) => (
   <>
     <CssBaseline />
     <NotificationViewer />
@@ -22,10 +22,10 @@ const App: React.FC<IAppProps & TAppState> = ({ authorized }) => (
   </>
 );
 
-const mapStateToProps = (state: TState) => ({
+const mapStateToProps = (state: State) => ({
   authorized: state.metaData.user !== null,
 });
 
-type TAppState = ReturnType<typeof mapStateToProps>;
+type AppState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(App);

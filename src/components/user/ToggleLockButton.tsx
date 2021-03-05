@@ -4,13 +4,13 @@ import NormalButton from 'components/themed/NormalButton';
 import usePromiseTrack from 'hooks/usePromiseTrack';
 import { lock, unlock } from 'api/v1';
 
-interface IToggleLockButtonProps {
+interface ToggleLockButtonProps {
   userId: number;
   isActive: boolean;
   onClick: () => Promise<void>;
 }
 
-const ToggleLockButton: React.FC<IToggleLockButtonProps & ButtonProps> = ({
+const ToggleLockButton: React.FC<ToggleLockButtonProps & ButtonProps> = ({
   userId,
   isActive,
   onClick,

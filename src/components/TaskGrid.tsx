@@ -3,7 +3,7 @@ import { Card, CardContent, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { range } from 'utils';
 
-interface ITaskGridProps {
+interface TaskGridProps {
   tasks?: any[];
 }
 
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TaskGrid: React.FC<ITaskGridProps> = ({ tasks = [] }) => {
+const TaskGrid: React.FC<TaskGridProps> = ({ tasks = [] }) => {
   const classes = useStyles();
 
   return (

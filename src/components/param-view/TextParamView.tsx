@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField, Typography } from '@material-ui/core';
 import useStyles from './styles';
 
-interface ITextParamViewProps {
+interface TextParamViewProps {
   label: string;
   name: string;
   value?: string;
@@ -11,7 +11,7 @@ interface ITextParamViewProps {
   onChange: (event: React.ChangeEvent<any>) => void;
 }
 
-const TextParamView: React.FC<ITextParamViewProps> = ({
+const TextParamView: React.FC<TextParamViewProps> = ({
   label,
   name,
   value,

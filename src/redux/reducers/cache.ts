@@ -1,11 +1,11 @@
 import { SET_CACHE } from 'redux/actionTypes';
-import { ICache, TCacheAction } from 'types/redux/reducers';
+import { Cache, CacheAction } from 'types/redux/reducers';
 
-const initialState: ICache = {
+const initialState: Cache = {
   roles: null,
 };
 
-const metaDataReducer = (state: ICache = initialState, action: TCacheAction): ICache => {
+const metaDataReducer = (state: Cache = initialState, action: CacheAction): Cache => {
   switch (action.type) {
     case SET_CACHE:
       return {

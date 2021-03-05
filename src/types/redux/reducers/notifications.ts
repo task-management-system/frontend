@@ -1,6 +1,6 @@
-import { INotification } from 'types';
-import { IAddNotificationAction, IRemoveNotificationAction } from '../actions/notifications';
+import { Notification } from 'types';
+import { AddNotificationAction, RemoveNotificationAction } from '../actions/notifications';
 
-export type TNotifications = INotification[];
+export type Notifications = Notification[];
 
-export type TNotificationsAction = IAddNotificationAction | IRemoveNotificationAction;
+export type NotificationsAction = AddNotificationAction | RemoveNotificationAction;

@@ -13,14 +13,14 @@ import {
 } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import ToggleLockButton from './ToggleLockButton';
-import { IUser, IPermission } from 'types';
-import { TState } from 'types/redux';
 import RouteButton from 'components/common/RouteButton';
-import { haveAnyPermission } from 'utils/permissions';
 import UserEdit from 'components/dialogs/UserEdit';
+import { haveAnyPermission } from 'utils/permissions';
+import { User, Permission } from 'types';
+import { State } from 'types/redux';
 
-interface IUserCardProps {
-  user: IUser;
+interface UserCardProps {
+  user: User;
   onChange: () => Promise<void>;
 }
 
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserCard: React.FC<IUserCardProps & TUserCardState> = ({
+const UserCard: React.FC<UserCardProps & UserCardState> = ({
   user,
   permissionsList,
   permissions,
@@ -53,7 +53,7 @@ const UserCard: React.FC<IUserCardProps & TUserCardState> = ({
 }) => {
   const classes = useStyles();
 
-  const userPermissionsList = permissionsList.reduce<IPermission[]>((accumulator, permission) => {
+  const userPermissionsList = permissionsList.reduce<Permission[]>((accumulator, permission) => {
     if ((user.role.power & permission.power) > 0) {
       accumulator.push(permission);
     }
@@ -116,13 +116,13 @@ const UserCard: React.FC<IUserCardProps & TUserCardState> = ({
   );
 };
 
-const mapStateToProps = ({ metaData }: TState) => ({
+const mapStateToProps = ({ metaData }: State) => ({
   permissionsList: metaData.permissions,
   permissions: {
     update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
   },
 });
 
-type TUserCardState = ReturnType<typeof mapStateToProps>;
+type UserCardState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(UserCard);

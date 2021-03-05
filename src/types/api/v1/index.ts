@@ -1,18 +1,18 @@
-import { IUser } from 'types';
+import { User } from 'types';
 
-export interface IAuth {
-  user: IUser | null;
+export interface Auth {
+  user: User | null;
   token: string;
 }
 
-export interface ITransferUser {
+export interface TransferUser {
   username: string;
   name: string | null;
   email: string | null;
   roleId: number;
 }
 
-export interface IChangePassword {
+export interface ChangePassword {
   currentPassword: string;
   newPassword: string;
 }

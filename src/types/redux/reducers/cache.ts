@@ -1,6 +1,6 @@
-import { ISetCacheAction } from '../actions/cache';
+import { SetCacheAction } from '../actions/cache';
 
-export interface ICache {
+export interface Cache {
   [key: string]: {
     timestamp: number;
     duration: number;
@@ -8,4 +8,4 @@ export interface ICache {
   } | null;
 }
 
-export type TCacheAction = ISetCacheAction<any>;
+export type CacheAction = SetCacheAction<any>;

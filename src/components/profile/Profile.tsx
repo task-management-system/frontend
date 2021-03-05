@@ -4,9 +4,9 @@ import { Avatar, makeStyles } from '@material-ui/core';
 import ProfileMenu from './ProfileMenu';
 import FlatButton from 'components/themed/FlatButton';
 import useScreenWidthCompare from 'hooks/useScreenWidthCompare';
-import { TState } from 'types/redux';
+import { State } from 'types/redux';
 
-interface IProfileProps {}
+interface ProfileProps {}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Profile: React.FC<IProfileProps & TProfileState> = ({ username, role }) => {
+const Profile: React.FC<ProfileProps & ProfileState> = ({ username, role }) => {
   const classes = useStyles();
   const isSmall = useScreenWidthCompare(width => width <= 640);
 
@@ -43,11 +43,11 @@ const Profile: React.FC<IProfileProps & TProfileState> = ({ username, role }) =>
   );
 };
 
-const mapStateToProps = ({ metaData }: TState) => ({
+const mapStateToProps = ({ metaData }: State) => ({
   username: metaData.user?.name || metaData.user?.username || 'Нет имени',
   role: metaData.user?.role.text || 'Нет роли',
 });
 
-type TProfileState = ReturnType<typeof mapStateToProps>;
+type ProfileState = ReturnType<typeof mapStateToProps>;
 
 export default connect(mapStateToProps)(Profile);

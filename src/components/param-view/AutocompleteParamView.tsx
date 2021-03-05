@@ -1,9 +1,9 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import useStyles from './styles';
-import AutocompleteField, { IAutocompleteFieldProps } from 'components/common/AutocompleteField';
+import AutocompleteField, { AutocompleteFieldProps } from 'components/common/AutocompleteField';
 
-interface IAutocompleteParamViewProps<T> {
+interface AutocompleteParamViewProps<T> {
   editing: boolean;
   render?: (value: T | null) => React.ReactNode;
 }
@@ -18,7 +18,7 @@ const AutocompleteParamView = <T,>({
   editing,
   render = value => value,
   onChange,
-}: React.PropsWithChildren<IAutocompleteParamViewProps<T> & IAutocompleteFieldProps<T>>) => {
+}: React.PropsWithChildren<AutocompleteParamViewProps<T> & AutocompleteFieldProps<T>>) => {
   const classes = useStyles();
 
   if (editing) {

@@ -8,9 +8,9 @@ import TinyButton from 'components/themed/TinyButton';
 import usePromiseTrack from 'hooks/usePromiseTrack';
 import { groupBy, range } from 'utils';
 import { getUsers } from 'api/v1';
-import { IUser } from 'types';
+import { User } from 'types';
 
-type TChapterRefs = { [key: string]: React.RefObject<HTMLDivElement> };
+type ChapterRefs = { [key: string]: React.RefObject<HTMLDivElement> };
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 
 const Users: React.FC = () => {
   const classes = useStyles();
-  const [users, setUsers] = useState<IUser[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [inProgress, trackedGetUsers] = usePromiseTrack(getUsers);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const Users: React.FC = () => {
 
   const groups = groupBy(users, user => user.username[0].toUpperCase());
   const chapters = [...groups.keys()].sort((a, b) => a.localeCompare(b));
-  const references = chapters.reduce<TChapterRefs>((accumulator, chapter) => {
+  const references = chapters.reduce<ChapterRefs>((accumulator, chapter) => {
     accumulator[chapter] = React.createRef();
 
     return accumulator;

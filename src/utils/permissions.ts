@@ -1,11 +1,11 @@
-import { IPermission } from 'types';
+import { Permission } from 'types';
 
 const cache = new Map<string, number>();
 
 export const haveEveryPermission = (
   power: number = 0,
   required: string[],
-  permissions: IPermission[] = []
+  permissions: Permission[] = []
 ) => {
   const requiredPower = required.reduce((accumulator, name) => {
     if (!cache.has(name)) {
@@ -25,7 +25,7 @@ export const haveEveryPermission = (
 export const haveAnyPermission = (
   power: number = 0,
   required: string[],
-  permissions: IPermission[] = []
+  permissions: Permission[] = []
 ) => {
   const permissionsPower = required.reduce<number[]>((accumulator, name) => {
     if (!cache.has(name)) {

@@ -1,8 +1,8 @@
-import { ISetGroupAction, ISetStatusAction } from '../actions/tabs';
+import { SetGroupAction, SetStatusAction } from '../actions/tabs';
 
-export interface ITabs {
+export interface Tabs {
   group: string;
   status: number | null;
 }
 
-export type TTabsAction = ISetGroupAction | ISetStatusAction;
+export type TabsAction = SetGroupAction | SetStatusAction;

@@ -2,21 +2,21 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Collapse, Divider, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
-import { TMenu, TMenuItem } from 'types/components/menu';
+import { MenuBase, MenuItemBase } from 'types/components/menu';
 
-interface INestedMenuProps {
-  menu: (TMenu | TMenuItem)[];
+interface NestedMenuProps {
+  menu: (MenuBase | MenuItemBase)[];
 }
 
-interface IMenuProps {
-  entry: TMenu;
+interface MenuProps {
+  entry: MenuBase;
 }
 
-interface IMenuItemProps {
-  entry: TMenuItem;
+interface MenuItemProps {
+  entry: MenuItemBase;
 }
 
-const Menu: React.FC<IMenuProps> = ({ entry }) => {
+const Menu: React.FC<MenuProps> = ({ entry }) => {
   const [open, setOpen] = useState(false);
   const Icon = entry.icon !== null ? entry.icon : React.Fragment;
   const hasChildren = entry.children.length > 0;
@@ -48,7 +48,7 @@ const Menu: React.FC<IMenuProps> = ({ entry }) => {
   );
 };
 
-const MenuItem: React.FC<IMenuItemProps> = ({ entry }) => {
+const MenuItem: React.FC<MenuItemProps> = ({ entry }) => {
   const history = useHistory();
   const Icon = entry.icon !== null ? entry.icon : React.Fragment;
 
@@ -68,7 +68,7 @@ const MenuItem: React.FC<IMenuItemProps> = ({ entry }) => {
   );
 };
 
-const NestedMenu: React.FC<INestedMenuProps> = ({ menu }) => {
+const NestedMenu: React.FC<NestedMenuProps> = ({ menu }) => {
   return (
     <List disablePadding>
       {menu.map(entry =>

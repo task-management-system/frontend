@@ -1,32 +1,30 @@
-export interface IMessage {
+export interface Message {
   type: 'success' | 'error' | 'warning';
   text: string;
   stackTrace: string | null;
 }
 
-export interface IDetails {
+export interface Details {
   ok: boolean;
   status: number;
   statusText: string;
 }
 
-export type TDetails = {
-  details: IDetails;
-};
-
-export type TResponse<T> = {
-  message: IMessage | null;
+export type BasicResponse<T> = {
+  message: Message | null;
   data: T | null;
 };
 
-export type TPaged<T> = {
+export type Paged<T> = {
   total: number;
   list: T;
 };
 
-export type TCollectedResponse<T> = TResponse<T> & TDetails;
+export type CollectedResponse<T> = BasicResponse<T> & {
+  details: Details;
+};
 
-export interface IPagination {
+export interface Pagination {
   page?: number;
   size?: number;
   order?: 'ASC' | 'DESC';

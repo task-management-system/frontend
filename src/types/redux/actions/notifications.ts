@@ -1,12 +1,12 @@
-import { INotification } from 'types';
+import { Notification } from 'types';
 import { ADD_NOTIFICATION, REMOVE_NOTIFICATION } from 'redux/actionTypes';
 
-export interface IAddNotificationAction {
+export interface AddNotificationAction {
   type: typeof ADD_NOTIFICATION;
-  payload: INotification;
+  payload: Notification;
 }
 
-export interface IRemoveNotificationAction {
+export interface RemoveNotificationAction {
   type: typeof REMOVE_NOTIFICATION;
   payload: string;
 }

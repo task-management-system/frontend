@@ -1,13 +1,13 @@
 import { SET_USER, SET_PERMISSIONS, SET_STATUSES } from 'redux/actionTypes';
-import { IMetaData, TMetaDataAction } from 'types/redux/reducers';
+import { MetaData, MetaDataAction } from 'types/redux/reducers';
 
-const initialState: IMetaData = {
+const initialState: MetaData = {
   user: null,
   permissions: [],
   statuses: [],
 };
 
-const metaDataReducer = (state: IMetaData = initialState, action: TMetaDataAction): IMetaData => {
+const metaDataReducer = (state: MetaData = initialState, action: MetaDataAction): MetaData => {
   switch (action.type) {
     case SET_USER:
       return {

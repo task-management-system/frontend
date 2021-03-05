@@ -10,22 +10,22 @@ import AutocompleteFormField from 'components/formik/AutocompleteFormField';
 import FlatButton from 'components/themed/FlatButton';
 import AcceptButton from 'components/themed/AcceptButton';
 import { getRoles, createUsers } from 'api/v1';
-import { IRole, IUserWithPassword } from 'types';
+import { Role, UserWithPassword } from 'types';
 import { NullableProperties } from 'types/common';
 
-type TUserToAdd = NullableProperties<Omit<IUserWithPassword, 'id' | 'isActive'>, 'role'>;
+type UserToAdd = NullableProperties<Omit<UserWithPassword, 'id' | 'isActive'>, 'role'>;
 
-interface IAddUserForm {
-  users: TUserToAdd[];
+interface AddUserForm {
+  users: UserToAdd[];
 }
 
-const initialValues: IAddUserForm = {
+const initialValues: AddUserForm = {
   users: [createUserTemplate()],
 };
 
 const AddUser: React.FC = () => {
   const classes = useStyles();
-  const [options, setOptions] = useState<IRole[]>([]);
+  const [options, setOptions] = useState<Role[]>([]);
 
   useEffect(() => {
     getRoles().then(response => {
@@ -33,7 +33,7 @@ const AddUser: React.FC = () => {
     });
   }, []);
 
-  const handleSubmit = (values: IAddUserForm, helpers: FormikHelpers<IAddUserForm>) => {
+  const handleSubmit = (values: AddUserForm, helpers: FormikHelpers<AddUserForm>) => {
     const users = values.users.map(user => ({
       username: user.username,
       password: user.password,

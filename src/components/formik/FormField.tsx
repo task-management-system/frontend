@@ -1,7 +1,7 @@
 import React from 'react';
 import { getIn } from 'formik';
 import { TextField, TextFieldProps } from '@material-ui/core';
-import { IFieldProps } from 'types/components/formik/field';
+import { FieldProps } from 'types/components/formik/field';
 
 const FormField = <U,>({
   component: Component = TextField,
@@ -12,7 +12,7 @@ const FormField = <U,>({
   touched,
   onChange,
   ...props
-}: React.PropsWithChildren<IFieldProps<U> & TextFieldProps>) => {
+}: React.PropsWithChildren<FieldProps<U> & TextFieldProps>) => {
   const error = getIn(errors, name);
   const isTouched = touched !== undefined ? getIn(touched, name) !== undefined : true;
 
