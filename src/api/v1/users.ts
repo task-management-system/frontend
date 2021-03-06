@@ -1,4 +1,4 @@
-import { methods } from '../core';
+import { methods } from 'api/core';
 import { withNotification, withAuthorization } from '../utils';
 import { User } from 'types';
 import { Paged } from 'types/api';

@@ -10,12 +10,7 @@ import {
 } from '@material-ui/core';
 import { State } from 'types/redux';
 
-interface PermissionsListProps {}
-
-const PermissionsList: React.FC<PermissionsListProps & PermissionsLisState> = ({
-  power,
-  permissions,
-}) => {
+const PermissionsList: React.FC<PermissionsLisState> = ({ power, permissions }) => {
   const [checked, setChecked] = useState<string[]>([]);
 
   useEffect(() => {

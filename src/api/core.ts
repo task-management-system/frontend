@@ -29,14 +29,12 @@ export const collectResponse = async <T>(response: Response): Promise<CollectedR
   };
 };
 
-export const collectPaginationParams = (pagination: Pagination): URLSearchParams => {
-  const params = new URLSearchParams();
-  params.set('page', (pagination.page || 1).toString());
-  params.set('size', (pagination.size || 25).toString());
-  params.set('order', pagination.order || 'ASC');
-
-  return params;
-};
+export const collectPaginationParams = (pagination: Pagination) =>
+  new URLSearchParams({
+    page: (pagination.page || 1).toString(),
+    size: (pagination.size || 25).toString(),
+    order: pagination.order || 'ASC',
+  });
 
 const getMethod = async <T>(
   url: string = '/',

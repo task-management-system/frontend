@@ -6,13 +6,12 @@ import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
 import { setUser, setPermissions, setStatuses } from 'redux/actions/metaData';
+import { setStatus } from 'redux/actions/tabs';
 import { authenticate, getPermissions, getStatuses } from 'api/v1';
 import { setToken } from 'api/utils';
 import { User, Permission, Status } from 'types';
 import { Dispatch } from 'types/redux';
 import { AuthForm } from 'types/components/auth';
-
-interface AuthProps {}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,7 +43,7 @@ const initialValues: AuthForm = {
   password: '',
 };
 
-const Auth: React.FC<AuthProps & AuthDispatch> = ({ setUser, setPermissions, setStatuses }) => {
+const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, setStatus }) => {
   const classes = useStyles();
 
   const sendData = async (values: AuthForm, helpers: FormikHelpers<AuthForm>) => {
@@ -58,7 +57,10 @@ const Auth: React.FC<AuthProps & AuthDispatch> = ({ setUser, setPermissions, set
       const [permissions, statuses] = await Promise.all([getPermissions(), getStatuses()]);
 
       setPermissions(permissions.data || []);
-      setStatuses(statuses.data || []);
+      if (statuses.data !== null && statuses.data.length > 0) {
+        setStatuses(statuses.data);
+        setStatus(statuses.data[0].id);
+      }
     }
 
     helpers.setSubmitting(false);
@@ -112,6 +114,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setUser: (payload: User | null) => dispatch(setUser(payload)),
   setPermissions: (payload: Permission[]) => dispatch(setPermissions(payload)),
   setStatuses: (payload: Status[]) => dispatch(setStatuses(payload)),
+  setStatus: (payload: number) => dispatch(setStatus(payload)),
 });
 
 type AuthDispatch = ReturnType<typeof mapDispatchToProps>;

@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Paper, Tabs, Tab, makeStyles } from '@material-ui/core';
 import { NewReleases, Details, Block, Done } from '@material-ui/icons';
-import ThemedTab from './themed/ThemedTab';
+import ThemedTab from 'components/themed/ThemedTab';
+import { setGroup, setStatus } from 'redux/actions/tabs';
 import { APPOINTED, CREATED } from 'constants/tasks';
 import { Dispatch, State } from 'types/redux';
-import { setGroup, setStatus } from 'redux/actions/tabs';
 
 const icons: { [key: number]: JSX.Element } = {
   1: <NewReleases />,
@@ -13,8 +13,6 @@ const icons: { [key: number]: JSX.Element } = {
   3: <Block />,
   4: <Done />,
 };
-
-interface TaskTypesListProps {}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TaskTypesList: React.FC<TaskTypesListProps & TaskTypesLisState & TaskTypesLisDispatch> = ({
+const TaskTypesList: React.FC<TaskTypesLisState & TaskTypesLisDispatch> = ({
   statuses,
   group,
   status,
@@ -32,12 +30,6 @@ const TaskTypesList: React.FC<TaskTypesListProps & TaskTypesLisState & TaskTypes
   setStatus,
 }) => {
   const classes = useStyles();
-
-  useEffect(() => {
-    if (status === null && statuses.length > 0) {
-      setStatus(statuses[0].id);
-    }
-  }, []);
 
   const handleGroupChange = (event: React.ChangeEvent<{}>, value: string) => setGroup(value);
 

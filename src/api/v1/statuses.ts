@@ -1,4 +1,4 @@
-import { methods } from '../core';
+import { methods } from 'api/core';
 import { withAuthorization } from 'api/utils';
 import { Status } from 'types';
 

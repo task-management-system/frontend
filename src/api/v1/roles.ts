@@ -1,4 +1,4 @@
-import { methods } from '../core';
+import { methods } from 'api/core';
 import { withAuthorization, withCache } from '../utils';
 import { Role } from 'types';
 

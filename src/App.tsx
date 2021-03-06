@@ -7,9 +7,7 @@ import Auth from 'routing/Auth';
 import Home from 'routing/Home';
 import { State } from 'types/redux';
 
-interface AppProps {}
-
-const App: React.FC<AppProps & AppState> = ({ authorized }) => (
+const App: React.FC<AppState> = ({ authorized }) => (
   <>
     <CssBaseline />
     <NotificationViewer />

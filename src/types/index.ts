@@ -35,3 +35,19 @@ export interface Status {
   id: number;
   name: string;
 }
+
+export interface Creator {
+  id: number;
+  username: string;
+  name: string | null;
+  email: string | null;
+}
+
+export interface Task {
+  taskId: number;
+  detailId: number;
+  title: string;
+  description: string | null;
+  creator: Creator;
+  dueDate: number;
+}

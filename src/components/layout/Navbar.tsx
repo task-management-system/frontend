@@ -8,8 +8,6 @@ import { haveAnyPermission } from 'utils/permissions';
 import { ADMINISTRATION_PERMISSIONS } from 'constants/permissions';
 import { State } from 'types/redux';
 
-interface NavbarProps {}
-
 const useStyles = makeStyles(theme => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -24,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Navbar: React.FC<NavbarProps & NavbarState> = ({ permissions }) => {
+const Navbar: React.FC<NavbarState> = ({ permissions }) => {
   const classes = useStyles();
 
   return (

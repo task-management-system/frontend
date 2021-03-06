@@ -5,10 +5,8 @@ import { Alert } from '@material-ui/lab';
 import { removeNotification } from 'redux/actions/notifications';
 import { State, Dispatch } from 'types/redux';
 
-interface NotificationViewerProps {}
-
 const NotificationViewer: React.FC<
-  NotificationViewerProps & NotificationViewerState & NotificationViewerDispatch
+  NotificationViewerState & NotificationViewerDispatch
 > = props => {
   const [hideable, setHideable] = useState<string[]>([]);
 

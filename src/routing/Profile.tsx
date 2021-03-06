@@ -4,9 +4,7 @@ import UserForm from 'components/user/UserForm';
 import NoMatch from './NoMatch';
 import { State } from 'types/redux';
 
-interface ProfileProps {}
-
-const Profile: React.FC<ProfileProps & ProfileState> = ({ hasUser }) => {
+const Profile: React.FC<ProfileState> = ({ hasUser }) => {
   if (!hasUser) {
     return <NoMatch />;
   }

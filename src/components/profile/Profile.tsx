@@ -6,8 +6,6 @@ import FlatButton from 'components/themed/FlatButton';
 import useScreenWidthCompare from 'hooks/useScreenWidthCompare';
 import { State } from 'types/redux';
 
-interface ProfileProps {}
-
 const useStyles = makeStyles(theme => ({
   root: {
     gap: theme.spacing(1),
@@ -21,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Profile: React.FC<ProfileProps & ProfileState> = ({ username, role }) => {
+const Profile: React.FC<ProfileState> = ({ username, role }) => {
   const classes = useStyles();
   const isSmall = useScreenWidthCompare(width => width <= 640);
 
