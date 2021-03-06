@@ -1,6 +1,8 @@
 import React from 'react';
-import { Avatar, Typography, makeStyles } from '@material-ui/core';
+import { Typography, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import CleverAvatar from 'components/common/CleverAvatar';
+import Link from 'components/common/Link';
 import { Task } from 'types';
 
 interface TaskItemProps {
@@ -10,17 +12,17 @@ interface TaskItemProps {
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'grid',
-    gridTemplateColumns: '160px 1fr 140px',
+    gridTemplateColumns: '160px 1fr 160px',
   },
   columns: {
-    padding: theme.spacing(1),
+    padding: theme.spacing(1, 1.5),
     gap: theme.spacing(2),
     display: 'grid',
     gridTemplateColumns: 'max-content 1fr',
     alignItems: 'center',
   },
   column: {
-    padding: theme.spacing(1),
+    padding: theme.spacing(1, 1.5),
     display: 'grid',
     alignItems: 'center',
     textAlign: 'end',
@@ -28,7 +30,11 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     width: 32,
     height: 32,
+    margin: theme.spacing(0, 0.5),
     textTransform: 'uppercase',
+  },
+  link: {
+    justifySelf: 'start',
   },
   text: {
     whiteSpace: 'nowrap',
@@ -45,8 +51,14 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, ...props }) => {
   return (
     <div className={classes.root} {...props}>
       <div className={classes.columns}>
-        <Avatar className={classes.avatar}>{creatorName[0]}</Avatar>
-        <Typography className={classes.text}>{creatorName}</Typography>
+        <Link to={`/user/${task.creator.id}`}>
+          <CleverAvatar className={classes.avatar}>{creatorName[0]}</CleverAvatar>
+        </Link>
+        <Link className={classes.link} to={`/user/${task.creator.id}`}>
+          <Typography className={classes.text} color="textPrimary">
+            {creatorName}
+          </Typography>
+        </Link>
       </div>
       <div className={classes.columns}>
         <Typography>{task.title}</Typography>
@@ -71,12 +83,10 @@ export const TaskItemSkeleton: React.FC = props => {
       <div className={classes.columns}>
         <Skeleton className={classes.avatar} variant="circle" />
         <Skeleton variant="rect" height={16} />
-        {/* <Skeleton variant="rect" height={24} /> */}
       </div>
       <div className={classes.columns}>
         <Skeleton variant="rect" width={128} height={24} />
         <Skeleton variant="rect" height={16} />
-        {/* <Skeleton variant="rect" height={24} /> */}
       </div>
       <div className={classes.column}>
         <Skeleton variant="rect" height={24} />

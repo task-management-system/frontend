@@ -46,8 +46,6 @@ const TaskTypesList: React.FC<TaskTypesLisState & TaskTypesLisDispatch> = ({
           value={status}
           textColor="secondary"
           indicatorColor="secondary"
-          variant="scrollable"
-          scrollButtons="auto"
           onChange={handleStatusChange}
         >
           {statuses.map(status => (

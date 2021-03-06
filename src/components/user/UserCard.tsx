@@ -6,13 +6,13 @@ import {
   CardContent,
   CardActions,
   IconButton,
-  Avatar,
   Chip,
   Typography,
   makeStyles,
 } from '@material-ui/core';
 import { Edit } from '@material-ui/icons';
 import ToggleLockButton from './ToggleLockButton';
+import CleverAvatar from 'components/common/CleverAvatar';
 import RouteButton from 'components/common/RouteButton';
 import UserEdit from 'components/dialogs/UserEdit';
 import { haveAnyPermission } from 'utils/permissions';
@@ -34,6 +34,9 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     display: 'grid',
     gridAutoRows: 'max-content',
+  },
+  avatar: {
+    textTransform: 'uppercase',
   },
   chipList: {
     margin: theme.spacing(-0.25),
@@ -64,7 +67,7 @@ const UserCard: React.FC<UserCardProps & UserCardState> = ({
   return (
     <Card className={classes.card}>
       <CardHeader
-        avatar={<Avatar>{user.username[0]}</Avatar>}
+        avatar={<CleverAvatar className={classes.avatar}>{user.username[0]}</CleverAvatar>}
         title={user.username}
         subheader={user.name}
         action={

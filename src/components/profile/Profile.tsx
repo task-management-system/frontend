@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Avatar, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import ProfileMenu from './ProfileMenu';
+import CleverAvatar from 'components/common/CleverAvatar';
 import FlatButton from 'components/themed/FlatButton';
 import useScreenWidthCompare from 'hooks/useScreenWidthCompare';
 import { State } from 'types/redux';
@@ -17,6 +18,9 @@ const useStyles = makeStyles(theme => ({
   button: {
     alignSelf: 'stretch',
   },
+  avatar: {
+    textTransform: 'uppercase',
+  },
 }));
 
 const Profile: React.FC<ProfileState> = ({ username, role }) => {
@@ -28,7 +32,7 @@ const Profile: React.FC<ProfileState> = ({ username, role }) => {
       {handleOpen => (
         <FlatButton className={classes.button} color="inherit" onClick={handleOpen}>
           <div className={classes.root}>
-            <Avatar>{username[0]}</Avatar>
+            <CleverAvatar className={classes.avatar}>{username[0]}</CleverAvatar>
             {!isSmall && (
               <>
                 {username} ({role})

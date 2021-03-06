@@ -86,6 +86,7 @@ const TaskList: React.FC<TaskListProps & TaskListState> = ({ group, status }) =>
       <Paper className={classes.pagination} square>
         <Pagination
           color="primary"
+          page={page}
           count={Math.ceil(tasks.total / SIZE) || 1}
           onChange={(event, page) => setPage(page)}
           showFirstButton
