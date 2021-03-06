@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import Container from 'components/common/Container';
-import UsersGrid from 'components/UsersGrid';
+import UsersGrid from 'components/user/UsersGrid';
 import LightSkeleton from 'components/themed/LightSkeleton';
 import TinyButton from 'components/themed/TinyButton';
 import usePromiseTrack from 'hooks/usePromiseTrack';

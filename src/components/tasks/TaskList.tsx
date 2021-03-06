@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Paper, Card, CardContent, Fade, makeStyles } from '@material-ui/core';
-import { Pagination, Skeleton } from '@material-ui/lab';
-import TaskCard from './TaskCard';
+import { Paper, Divider, Fade, makeStyles } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
+import TaskItem, { TaskItemSkeleton } from './TaskItem';
 import { range } from 'utils';
 import { APPOINTED, CREATED } from 'constants/tasks';
 import { getReceivedTasks, getCreatedTasks } from 'api/v1';
@@ -10,29 +10,24 @@ import { Task } from 'types';
 import { Paged } from 'types/api';
 import { State } from 'types/redux';
 
-interface TaskGridProps {
+interface TaskListProps {
   group: string;
 }
 
 const useStyles = makeStyles(theme => ({
   root: {
-    gap: theme.spacing(3),
-    display: 'grid',
-    gridAutoRows: 'max-content',
-  },
-  grid: {
     gap: theme.spacing(2),
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+    gridAutoRows: 'max-content',
   },
   pagination: {
     padding: theme.spacing(1),
   },
 }));
 
-const SIZE = 6;
+const SIZE = 10;
 
-const TaskGrid: React.FC<TaskGridProps & TaskGridState> = ({ group, status }) => {
+const TaskList: React.FC<TaskListProps & TaskListState> = ({ group, status }) => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -67,24 +62,27 @@ const TaskGrid: React.FC<TaskGridProps & TaskGridState> = ({ group, status }) =>
     }
   }, [group, status, page]);
 
+  const count = tasks.list.length;
+
   return (
     <div className={classes.root}>
-      <div className={classes.grid}>
+      <Paper square>
         {tasks.list.length > 0
-          ? tasks.list.map(task => (
-              <Fade in={!loading} key={task.detailId || task.taskId}>
-                <TaskCard task={task} />
-              </Fade>
+          ? tasks.list.map((task, index) => (
+              <React.Fragment key={task.detailId || task.taskId}>
+                <Fade in={!loading}>
+                  <TaskItem task={task} />
+                </Fade>
+                {count - 1 > index && <Divider />}
+              </React.Fragment>
             ))
-          : range(12).map(index => (
-              <Card key={index}>
-                <CardContent>
-                  <Skeleton />
-                  <Skeleton variant="rect" height={40} />
-                </CardContent>
-              </Card>
+          : range(SIZE).map(index => (
+              <React.Fragment key={index}>
+                <TaskItemSkeleton />
+                {index + 1 < SIZE && <Divider />}
+              </React.Fragment>
             ))}
-      </div>
+      </Paper>
       <Paper className={classes.pagination} square>
         <Pagination
           color="primary"
@@ -102,6 +100,6 @@ const mapStateToProps = (state: State) => ({
   status: state.tabs.status,
 });
 
-type TaskGridState = ReturnType<typeof mapStateToProps>;
+type TaskListState = ReturnType<typeof mapStateToProps>;
 
-export default connect(mapStateToProps)(TaskGrid);
+export default connect(mapStateToProps)(TaskList);

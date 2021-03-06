@@ -1,0 +1,88 @@
+import React from 'react';
+import { Avatar, Typography, makeStyles } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
+import { Task } from 'types';
+
+interface TaskItemProps {
+  task: Task;
+}
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'grid',
+    gridTemplateColumns: '160px 1fr 140px',
+  },
+  columns: {
+    padding: theme.spacing(1),
+    gap: theme.spacing(2),
+    display: 'grid',
+    gridTemplateColumns: 'max-content 1fr',
+    alignItems: 'center',
+  },
+  column: {
+    padding: theme.spacing(1),
+    display: 'grid',
+    alignItems: 'center',
+    textAlign: 'end',
+  },
+  avatar: {
+    width: 32,
+    height: 32,
+    textTransform: 'uppercase',
+  },
+  text: {
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+}));
+
+const TaskItem: React.FC<TaskItemProps> = ({ task, ...props }) => {
+  const classes = useStyles();
+  const creatorName = task.creator.name || task.creator.username;
+  const dueDate = new Date(task.dueDate);
+
+  return (
+    <div className={classes.root} {...props}>
+      <div className={classes.columns}>
+        <Avatar className={classes.avatar}>{creatorName[0]}</Avatar>
+        <Typography className={classes.text}>{creatorName}</Typography>
+      </div>
+      <div className={classes.columns}>
+        <Typography>{task.title}</Typography>
+        {task.description !== null && (
+          <Typography className={classes.text} variant="body2" color="textSecondary">
+            {task.description}
+          </Typography>
+        )}
+      </div>
+      <div className={classes.column}>
+        <Typography variant="body2">Срок: {dueDate.toLocaleDateString()}</Typography>
+      </div>
+    </div>
+  );
+};
+
+export const TaskItemSkeleton: React.FC = props => {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.root} {...props}>
+      <div className={classes.columns}>
+        <Skeleton className={classes.avatar} variant="circle" />
+        <Skeleton variant="rect" height={16} />
+        {/* <Skeleton variant="rect" height={24} /> */}
+      </div>
+      <div className={classes.columns}>
+        <Skeleton variant="rect" width={128} height={24} />
+        <Skeleton variant="rect" height={16} />
+        {/* <Skeleton variant="rect" height={24} /> */}
+      </div>
+      <div className={classes.column}>
+        <Skeleton variant="rect" height={24} />
+      </div>
+    </div>
+  );
+};
+
+export default TaskItem;

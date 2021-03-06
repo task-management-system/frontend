@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 import Container from 'components/common/Container';
 import TaskTypesList from 'components/tasks/TaskTypesList';
-import TaskGrid from 'components/tasks/TaskGrid';
+import TaskList from 'components/tasks/TaskList';
 import { APPOINTED, CREATED } from 'constants/tasks';
 import { State } from 'types/redux';
 
@@ -27,10 +27,10 @@ const Main: React.FC<MainState> = ({ group }) => {
       <TaskTypesList />
       <TabContext value={group}>
         <TabPanel className={classes.tab} value={APPOINTED}>
-          <TaskGrid group={APPOINTED} />
+          <TaskList group={APPOINTED} />
         </TabPanel>
         <TabPanel className={classes.tab} value={CREATED}>
-          <TaskGrid group={CREATED} />
+          <TaskList group={CREATED} />
         </TabPanel>
       </TabContext>
     </Container>

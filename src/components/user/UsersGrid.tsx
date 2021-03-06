@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core';
-import UserCard from './user/UserCard';
+import UserCard from './UserCard';
 import { User } from 'types';
 
 interface UsersGridProps {

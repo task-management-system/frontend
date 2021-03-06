@@ -45,7 +45,7 @@ export interface Creator {
 
 export interface Task {
   taskId: number;
-  detailId: number;
+  detailId: number | undefined;
   title: string;
   description: string | null;
   creator: Creator;
