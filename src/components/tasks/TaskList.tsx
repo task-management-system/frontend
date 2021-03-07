@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Paper, Divider, Fade, makeStyles } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
+import TaskListToolbar from './TaskListToolbar';
 import TaskItem, { TaskItemSkeleton } from './TaskItem';
 import { range } from 'utils';
 import { APPOINTED, CREATED } from 'constants/tasks';
@@ -20,7 +21,11 @@ const useStyles = makeStyles(theme => ({
     display: 'grid',
     gridAutoRows: 'max-content',
   },
-  pagination: {
+  toolbar: {
+    display: 'grid',
+    gridTemplateColumns: '1fr max-content',
+  },
+  wrapper: {
     padding: theme.spacing(1),
   },
 }));
@@ -66,6 +71,18 @@ const TaskList: React.FC<TaskListProps & TaskListState> = ({ group, status }) =>
 
   return (
     <div className={classes.root}>
+      <Paper className={classes.toolbar} square>
+        <div className={classes.wrapper}>{group === CREATED && <TaskListToolbar />}</div>
+        <Pagination
+          className={classes.wrapper}
+          color="primary"
+          page={page}
+          count={Math.ceil(tasks.total / SIZE) || 1}
+          onChange={(event, page) => setPage(page)}
+          showFirstButton
+          showLastButton
+        />
+      </Paper>
       <Paper square>
         {tasks.list.length > 0
           ? tasks.list.map((task, index) => (
@@ -82,16 +99,6 @@ const TaskList: React.FC<TaskListProps & TaskListState> = ({ group, status }) =>
                 {index + 1 < SIZE && <Divider />}
               </React.Fragment>
             ))}
-      </Paper>
-      <Paper className={classes.pagination} square>
-        <Pagination
-          color="primary"
-          page={page}
-          count={Math.ceil(tasks.total / SIZE) || 1}
-          onChange={(event, page) => setPage(page)}
-          showFirstButton
-          showLastButton
-        />
       </Paper>
     </div>
   );
