@@ -1,33 +1,30 @@
 import React from 'react';
-import { getIn } from 'formik';
+import { useField } from 'formik';
 import { TextFieldProps } from '@material-ui/core';
 import AutocompleteField, { AutocompleteFieldProps } from 'components/common/AutocompleteField';
-import { FieldProps } from 'types/components/formik/field';
+import { FieldProps, ExcessProps } from 'types/components/formik/field';
 
-const AutocompleteFormField = <U, T>({
+const AutocompleteFormField = <T,>({
   label,
   name,
-  value,
-  errors = {},
-  touched,
-  onChange,
   ...props
 }: React.PropsWithChildren<
-  FieldProps<U> & AutocompleteFieldProps<T> & Omit<TextFieldProps, 'onChange'>
+  FieldProps & Omit<AutocompleteFieldProps<T>, ExcessProps> & Omit<TextFieldProps, ExcessProps>
 >) => {
-  const error = getIn(errors, name);
-  const isTouched = touched !== undefined ? getIn(touched, name) !== undefined : true;
+  const [field, meta, helpers] = useField(name);
 
   return (
     <AutocompleteField
+      id={name}
       label={label}
       name={name}
-      value={value}
+      value={field.value}
       variant="outlined"
       size="small"
-      error={isTouched && error !== undefined}
-      helperText={isTouched ? error || null : null}
-      onChange={onChange}
+      error={meta.touched && meta.error !== undefined}
+      helperText={meta.touched ? meta.error || null : null}
+      onChange={(name, value) => helpers.setValue(value)}
+      onBlur={field.onBlur}
       {...props}
     />
   );

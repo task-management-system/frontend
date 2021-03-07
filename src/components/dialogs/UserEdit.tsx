@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useFormik } from 'formik';
 import { DialogTitle, DialogContent, DialogActions, makeStyles } from '@material-ui/core';
+import { useFormik } from 'formik';
 import WideDialog from 'components/themed/WideDialog';
 import NormalButton from 'components/themed/NormalButton';
 import UserInfo from 'components/user/UserInfo';
 import { updateUser } from 'api/v1';
 import { User } from 'types';
+import { DialogChildrenHelpers } from 'types/components/dialogs';
 import { UndefinableUserForm } from 'types/components/user';
-
-interface ChildrenHelpers {
-  handleOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
 
 interface UserEditProps {
   user: User;
   onChange: () => Promise<void>;
-  children: (helpers: ChildrenHelpers) => React.ReactNode;
+  children: (helpers: DialogChildrenHelpers) => React.ReactNode;
 }
 
 const useStyles = makeStyles(theme => ({

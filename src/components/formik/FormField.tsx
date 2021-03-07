@@ -1,31 +1,27 @@
 import React from 'react';
-import { getIn } from 'formik';
+import { useField } from 'formik';
 import { TextField, TextFieldProps } from '@material-ui/core';
-import { FieldProps } from 'types/components/formik/field';
+import { FieldProps, ExcessProps } from 'types/components/formik/field';
 
-const FormField = <U,>({
+const FormField: React.FC<FieldProps & Omit<TextFieldProps, ExcessProps>> = ({
   component: Component = TextField,
   label,
   name,
-  value,
-  errors = {},
-  touched,
-  onChange,
   ...props
-}: React.PropsWithChildren<FieldProps<U> & TextFieldProps>) => {
-  const error = getIn(errors, name);
-  const isTouched = touched !== undefined ? getIn(touched, name) !== undefined : true;
+}) => {
+  const [field, meta] = useField(name);
 
   return (
     <Component
       label={label}
       name={name}
-      value={value}
+      value={field.value}
       variant="outlined"
       size="small"
-      error={isTouched && error !== undefined}
-      helperText={isTouched ? error || null : null}
-      onChange={onChange}
+      error={meta.touched && meta.error !== undefined}
+      helperText={meta.touched ? meta.error || null : null}
+      onChange={field.onChange}
+      onBlur={field.onBlur}
       {...props}
     />
   );

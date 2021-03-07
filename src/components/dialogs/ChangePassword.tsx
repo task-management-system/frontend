@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, makeStyles } from '@material-ui/core';
-import { useFormik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 import FormField from 'components/formik/FormField';
 import NormalButton from 'components/themed/NormalButton';
 import PasswordField from 'components/common/PasswordField';
 import { changePassword } from 'api/v1';
-
-interface ChildrenHelpers {
-  handleOpen: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  handleClose: (event: React.MouseEvent<HTMLButtonElement>) => void;
-}
+import { DialogChildrenHelpers } from 'types/components/dialogs';
 
 interface ChangePasswordProps {
   userId: number;
-  children: (helpers: ChildrenHelpers) => React.ReactNode;
+  children: (helpers: DialogChildrenHelpers) => React.ReactNode;
+}
+
+interface ChangePasswordForm {
+  currentPassword: string;
+  newPassword: string;
+  newPasswordConfirm: string;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -25,6 +27,12 @@ const useStyles = makeStyles(theme => ({
     gridAutoRows: 64,
   },
 }));
+
+const initialValues: ChangePasswordForm = {
+  currentPassword: '',
+  newPassword: '',
+  newPasswordConfirm: '',
+};
 
 const validationSchema = yup.object().shape({
   currentPassword: yup.string().min(8, 'Минимальная длина 8').required('Является обязательным'),
@@ -44,90 +52,71 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ children, userId }) => 
 
   const handleClose = () => setOpen(false);
 
-  const formik = useFormik({
-    initialValues: {
-      currentPassword: '',
-      newPassword: '',
-      newPasswordConfirm: '',
-    },
-    validationSchema,
-    validateOnBlur: true,
-    onSubmit: values => {
-      formik.setSubmitting(true);
-      changePassword(userId, {
-        currentPassword: values.currentPassword,
-        newPassword: values.newPassword,
-      }).then(response => {
-        formik.setSubmitting(false);
+  const handleSubmit = (values: ChangePasswordForm, helpers: FormikHelpers<ChangePasswordForm>) => {
+    helpers.setSubmitting(true);
+    changePassword(userId, {
+      currentPassword: values.currentPassword,
+      newPassword: values.newPassword,
+    }).then(response => {
+      helpers.setSubmitting(false);
 
-        if (response.details.ok) {
-          handleClose();
-        }
-      });
-    },
-  });
-
-  useEffect(() => {
-    if (!open) {
-      formik.resetForm();
-    }
-  }, [open]);
+      if (response.details.ok) {
+        handleClose();
+      }
+    });
+  };
 
   return (
     <>
       {children({ handleOpen, handleClose })}
       <Dialog open={open}>
         <DialogTitle>Смена пароля</DialogTitle>
-        <DialogContent className={classes.form}>
-          <FormField
-            component={PasswordField}
-            label="Текущий пароль"
-            name="currentPassword"
-            value={formik.values.currentPassword}
-            errors={formik.errors}
-            touched={formik.touched}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            disabled={formik.isSubmitting}
-            required
-          />
-          <FormField
-            component={PasswordField}
-            label="Новый пароль"
-            name="newPassword"
-            value={formik.values.newPassword}
-            errors={formik.errors}
-            touched={formik.touched}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            disabled={formik.isSubmitting}
-            required
-          />
-          <FormField
-            component={PasswordField}
-            label="Повторите новый пароль"
-            name="newPasswordConfirm"
-            value={formik.values.newPasswordConfirm}
-            errors={formik.errors}
-            touched={formik.touched}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            disabled={formik.isSubmitting}
-            required
-          />
-        </DialogContent>
-        <DialogActions>
-          <NormalButton color="primary" disabled={formik.isSubmitting} onClick={handleClose}>
-            Отмена
-          </NormalButton>
-          <NormalButton
-            color="primary"
-            disabled={formik.isSubmitting || !formik.isValid || !formik.dirty}
-            onClick={formik.submitForm}
-          >
-            Изменить
-          </NormalButton>
-        </DialogActions>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+          validateOnBlur
+        >
+          {({ submitForm, dirty, isValid, isSubmitting }) => (
+            <>
+              <DialogContent className={classes.form}>
+                <FormField
+                  component={PasswordField}
+                  label="Текущий пароль"
+                  name="currentPassword"
+                  disabled={isSubmitting}
+                  required
+                />
+                <FormField
+                  component={PasswordField}
+                  label="Новый пароль"
+                  name="newPassword"
+                  disabled={isSubmitting}
+                  required
+                />
+                <FormField
+                  component={PasswordField}
+                  label="Повторите новый пароль"
+                  name="newPasswordConfirm"
+                  disabled={isSubmitting}
+                  required
+                />
+              </DialogContent>
+              <DialogActions>
+                <NormalButton color="primary" disabled={isSubmitting} onClick={handleClose}>
+                  Отмена
+                </NormalButton>
+                <NormalButton
+                  color="primary"
+                  disabled={isSubmitting || !isValid || !dirty}
+                  onClick={submitForm}
+                >
+                  Изменить
+                </NormalButton>
+              </DialogActions>
+            </>
+          )}
+        </Formik>
       </Dialog>
     </>
   );

@@ -10,6 +10,7 @@ export interface AutocompleteFieldProps<T> {
   getOptionLabel: (option: T) => string;
   getOptionSelected: (option: T, value: T) => boolean;
   onChange: (name: string, value: T | null) => void;
+  onBlur?: (event: React.FocusEvent<any>) => void;
 }
 
 const AutocompleteField = <T,>({
@@ -20,10 +21,14 @@ const AutocompleteField = <T,>({
   getOptionLabel,
   getOptionSelected,
   onChange,
+  onBlur,
   ...props
-}: React.PropsWithChildren<AutocompleteFieldProps<T> & Omit<TextFieldProps, 'onChange'>>) => {
+}: React.PropsWithChildren<
+  AutocompleteFieldProps<T> & Omit<TextFieldProps, 'value' | 'onChange'>
+>) => {
   return (
     <Autocomplete
+      id={props.id}
       value={value}
       options={options}
       getOptionLabel={getOptionLabel}
@@ -32,6 +37,7 @@ const AutocompleteField = <T,>({
         <TextField {...params} label={label} variant="outlined" size="small" {...props} />
       )}
       onChange={(event, value) => onChange(name, value)}
+      onBlur={onBlur}
     />
   );
 };

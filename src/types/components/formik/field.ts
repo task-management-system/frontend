@@ -1,9 +1,8 @@
 import { TextFieldProps } from '@material-ui/core';
-import { FormikErrors, FormikTouched } from 'formik';
 
-export interface FieldProps<T> {
+export interface FieldProps {
   component?: React.ComponentType<TextFieldProps>;
   name: string;
-  errors?: FormikErrors<T>;
-  touched?: FormikTouched<T>;
 }
+
+export type ExcessProps = 'value' | 'onChange';

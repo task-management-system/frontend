@@ -70,9 +70,6 @@ const AddUser: React.FC = () => {
                         <FormField
                           label="Имя пользователя"
                           name={`users[${index}].username`}
-                          value={entry.username}
-                          errors={errors}
-                          onChange={handleChange}
                           disabled={isSubmitting}
                           required
                         />
@@ -80,17 +77,11 @@ const AddUser: React.FC = () => {
                           <FormField
                             label="Имя профиля"
                             name={`users[${index}].name`}
-                            value={entry.name}
-                            errors={errors}
-                            onChange={handleChange}
                             disabled={isSubmitting}
                           />
                           <FormField
                             label="Почта"
                             name={`users[${index}].email`}
-                            value={entry.email}
-                            errors={errors}
-                            onChange={handleChange}
                             disabled={isSubmitting}
                           />
                         </div>
@@ -99,21 +90,15 @@ const AddUser: React.FC = () => {
                         <FormField
                           label="Пароль"
                           name={`users[${index}].password`}
-                          value={entry.password}
-                          errors={errors}
-                          onChange={handleChange}
                           disabled
                           required
                         />
                         <AutocompleteFormField
                           label="Роль"
                           name={`users[${index}].role`}
-                          value={entry.role}
                           options={options}
                           getOptionLabel={option => option.text}
                           getOptionSelected={(option, value) => option.id === value.id}
-                          errors={errors}
-                          onChange={setFieldValue}
                           disabled={isSubmitting}
                           required
                         />
