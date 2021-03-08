@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
-import { DialogTitle, DialogContent, DialogActions, makeStyles } from '@material-ui/core';
+import {
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  FormControlLabel,
+  Switch,
+  makeStyles,
+} from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 import WideDialog from 'components/themed/WideDialog';
 import NormalButton from 'components/themed/NormalButton';
 import NewFormField from 'components/formik/FormField';
-import Editor from 'components/Editor';
-import BorderContainer from 'components/common/BorderContainer';
+import MarkdownView from 'components/MarkdownView';
+import MarkdownEditor from 'components/MarkdownEditor';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
 
 interface TaskCreateProps {
@@ -16,7 +23,7 @@ interface TaskCreateProps {
 interface TaskCreateForm {
   title: string;
   description: string;
-  text: string | null;
+  text: string;
   dueDate: string;
 }
 
@@ -24,27 +31,31 @@ const useStyles = makeStyles(theme => ({
   content: {
     gap: theme.spacing(2),
     display: 'grid',
-    gridTemplateRows: 'max-content max-content 480px',
+    gridTemplateRows: 'max-content',
+  },
+  editor: {
+    height: 320,
   },
 }));
 
 const initialValues: TaskCreateForm = {
   title: '',
   description: '',
-  text: null,
+  text: '',
   dueDate: '',
 };
 
 const validationSchema = yup.object().shape({
-  title: yup.string().required(),
+  title: yup.string().required('Ябляется обязательным'),
   description: yup.string(),
-  text: yup.string().nullable(),
+  text: yup.string(),
   dueDate: yup.string(),
 });
 
 const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [preview, setPreview] = useState(false);
 
   const handleOpen = () => setOpen(true);
 
@@ -72,15 +83,26 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
               <DialogContent className={classes.content}>
                 <NewFormField label="Название" name="title" disabled={isSubmitting} required />
                 <NewFormField label="Описание" name="description" disabled={isSubmitting} />
-
-                <BorderContainer>
-                  <Editor
-                    data={values.text !== null ? JSON.parse(values.text) : null}
-                    onChange={(api, data) =>
-                      setFieldValue('text', data !== undefined ? JSON.stringify(data) : null)
-                    }
+                {preview ? (
+                  <MarkdownView className={classes.editor}>{values.text}</MarkdownView>
+                ) : (
+                  <MarkdownEditor
+                    className={classes.editor}
+                    value={values.text}
+                    onChange={value => setFieldValue('text', value)}
                   />
-                </BorderContainer>
+                )}
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={preview}
+                      onChange={() => setPreview(preview => !preview)}
+                      name="preview"
+                      color="primary"
+                    />
+                  }
+                  label="Предпросмотр"
+                />
               </DialogContent>
               <DialogActions>
                 <NormalButton color="primary" disabled={isSubmitting} onClick={handleClose}>
