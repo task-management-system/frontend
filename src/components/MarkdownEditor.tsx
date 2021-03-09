@@ -30,12 +30,12 @@ const groupActions: Action[][] = [
     new Action(<H6 />, selection => `###### ${selection}`),
   ],
   [
-    new Action(<FormatItalic />, selection => `*${selection}*`, true),
-    new Action(<FormatBold />, selection => `**${selection}**`, true),
-    new Action(<FormatStrikethrough />, selection => `~~${selection}~~`, true),
+    new Action(<FormatItalic />, (selection, cursor) => `*${selection}${cursor}*`, true),
+    new Action(<FormatBold />, (selection, cursor) => `**${selection}${cursor}**`, true),
+    new Action(<FormatStrikethrough />, (selection, cursor) => `~~${selection}${cursor}~~`, true),
   ],
   [
-    new Action(<FormatQuote />, selection => `> ${selection}`),
+    new Action(<FormatQuote />, (selection, cursor) => `> ${selection}${cursor}`),
     new Action(<Link />, (selection, cursor) => `[${selection}](${cursor})`),
     new Action(<Image />, (selection, cursor) => `![${selection}](${cursor})`),
   ],

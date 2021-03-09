@@ -23,12 +23,13 @@ export class Action {
     const modified = this.modifier(selection, CURSOR_CHAR);
     const cursorPosition = modified.indexOf(CURSOR_CHAR);
     const value = modified.replace(ALL_CURSORS, '');
+    const selectionLength = selection.length;
     const valueLength = value.length;
 
-    if (this.saveRange) {
+    if (this.saveRange && selectionLength > 0) {
       const valuePosition = value.indexOf(selection);
       const start = Math.max(0, valuePosition);
-      const length = valuePosition < 0 ? valueLength : selection.length;
+      const length = valuePosition < 0 ? valueLength : selectionLength;
 
       return {
         value,
