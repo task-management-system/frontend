@@ -41,7 +41,7 @@ const groupActions: Action[][] = [
   ],
   [
     new Action(<FormatListBulleted />, selection => formatLines(selection, value => `- ${value}`)),
-    new Action(<FormatListNumbered />, selection => formatLines(selection, (value, index) => `${index}. ${value}`)),
+    new Action(<FormatListNumbered />, selection => formatLines(selection, (value, index) => `${index + 1}. ${value}`)),
   ],
 ];
 

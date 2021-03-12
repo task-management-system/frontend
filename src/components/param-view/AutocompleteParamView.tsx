@@ -1,7 +1,9 @@
 import React from 'react';
 import { Typography } from '@material-ui/core';
 import useStyles from './styles';
-import AutocompleteField, { AutocompleteFieldProps } from 'components/common/AutocompleteField';
+import AutocompleteField, {
+  AutocompleteFieldSingleProps,
+} from 'components/common/AutocompleteField';
 
 interface AutocompleteParamViewProps<T> {
   editing: boolean;
@@ -18,7 +20,7 @@ const AutocompleteParamView = <T,>({
   editing,
   render = value => value,
   onChange,
-}: React.PropsWithChildren<AutocompleteParamViewProps<T> & AutocompleteFieldProps<T>>) => {
+}: React.PropsWithChildren<AutocompleteParamViewProps<T> & AutocompleteFieldSingleProps<T>>) => {
   const classes = useStyles();
 
   if (editing) {
@@ -31,6 +33,7 @@ const AutocompleteParamView = <T,>({
         getOptionLabel={getOptionLabel}
         getOptionSelected={getOptionSelected}
         onChange={onChange}
+        multiple={false}
       />
     );
   } else {

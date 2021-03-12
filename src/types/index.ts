@@ -43,6 +43,12 @@ export interface Creator {
   email: string | null;
 }
 
+export interface Executor {
+  id: number;
+  username: string;
+  name: string | null;
+}
+
 export interface Task {
   taskId: number;
   detailId: number | undefined;
