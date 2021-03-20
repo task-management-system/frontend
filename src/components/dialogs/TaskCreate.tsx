@@ -23,6 +23,7 @@ import { DialogChildrenHelpers } from 'types/components/dialogs';
 import { createTask } from 'api/v1';
 
 interface TaskCreateProps {
+  onCreate: () => void;
   children: (helpers: DialogChildrenHelpers) => React.ReactNode;
 }
 
@@ -81,7 +82,7 @@ const validationSchema = yup.object().shape({
     .required(REQUIRED_FIELD),
 });
 
-const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
+const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState(false);
@@ -97,16 +98,22 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
       title: values.title,
       description: values.description,
       text: values.text,
-      dueDate: values.dueDate!.toISOString(),
+      // dueDate: values.dueDate!.toISOString(),
+      dueDate: values.dueDate!.getTime(),
       executorIds: values.executors.map(executor => executor.id),
     };
 
-    createTask(data).then(response => {
-      if (response.details.ok) {
+    createTask(data)
+      .then(response => {
+        if (response.details.ok) {
+          helpers.setSubmitting(false);
+          handleClose();
+          onCreate();
+        }
+      })
+      .catch(() => {
         helpers.setSubmitting(false);
-        handleClose();
-      }
-    });
+      });
   };
 
   return (
@@ -136,6 +143,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
                   name="dueDate"
                   minDate={today}
                   disabled={isSubmitting}
+                  required
                 />
                 {preview ? (
                   <MarkdownView className={classes.editor}>{values.text}</MarkdownView>

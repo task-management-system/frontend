@@ -41,7 +41,7 @@ const TaskList: React.FC<TaskListProps & TaskListState> = ({ group, status }) =>
     list: [],
   });
 
-  useEffect(() => {
+  const loadTasks = () => {
     if (status !== null) {
       const pagination = { page, size: SIZE };
 
@@ -65,6 +65,10 @@ const TaskList: React.FC<TaskListProps & TaskListState> = ({ group, status }) =>
         });
       }
     }
+  };
+
+  useEffect(() => {
+    loadTasks();
   }, [group, status, page]);
 
   const count = tasks.list.length;
@@ -72,7 +76,9 @@ const TaskList: React.FC<TaskListProps & TaskListState> = ({ group, status }) =>
   return (
     <div className={classes.root}>
       <Paper className={classes.toolbar} square>
-        <div className={classes.wrapper}>{group === CREATED && <TaskListToolbar />}</div>
+        <div className={classes.wrapper}>
+          {group === CREATED && <TaskListToolbar loadTasks={loadTasks} />}
+        </div>
         <Pagination
           className={classes.wrapper}
           color="primary"

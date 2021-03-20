@@ -21,6 +21,6 @@ export interface CreateTask {
   title: string;
   description: string | null;
   text: string;
-  dueDate: string;
+  dueDate: number | string;
   executorIds: number[];
 }

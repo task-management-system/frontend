@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import CleverAvatar from 'components/common/CleverAvatar';
 import Link from 'components/common/Link';
+import TaskDeadline from './TaskDeadline';
 import { Task } from 'types';
 
 interface TaskItemProps {
@@ -46,7 +47,7 @@ const useStyles = makeStyles(theme => ({
 const TaskItem: React.FC<TaskItemProps> = ({ task, ...props }) => {
   const classes = useStyles();
   const creatorName = task.creator.name || task.creator.username;
-  const dueDate = new Date(task.dueDate);
+  const dueDate = useMemo(() => new Date(task.dueDate), [task.dueDate]);
 
   return (
     <div className={classes.root} {...props}>
@@ -69,7 +70,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, ...props }) => {
         )}
       </div>
       <div className={classes.column}>
-        <Typography variant="body2">Срок: {dueDate.toLocaleDateString()}</Typography>
+        <TaskDeadline date={dueDate} />
       </div>
     </div>
   );

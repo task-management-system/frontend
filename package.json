@@ -54,7 +54,7 @@
     "lint-staged": "lint-staged",
     "postinstall": "husky install"
   },
-  "proxy": "http://25.91.177.160:1212/",
+  "proxy": "http://25.91.177.160:7000/",
   "lint-staged": {
     "*.(js|jsx|ts|tsx)": "eslint --cache --fix",
     "*.(json|css|md)": "prettier --write"

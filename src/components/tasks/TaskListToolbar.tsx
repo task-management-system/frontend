@@ -2,9 +2,13 @@ import React from 'react';
 import TaskCreate from 'components/dialogs/TaskCreate';
 import NormalButton from 'components/themed/NormalButton';
 
-const TaskListToolbar: React.FC = () => {
+interface TaskListToolbarProps {
+  loadTasks: () => void;
+}
+
+const TaskListToolbar: React.FC<TaskListToolbarProps> = ({ loadTasks }) => {
   return (
-    <TaskCreate>
+    <TaskCreate onCreate={loadTasks}>
       {({ handleOpen }) => (
         <NormalButton color="primary" onClick={handleOpen}>
           Создать задачу
