@@ -20,6 +20,7 @@ import { currentDate, parseDateString } from 'utils/date';
 import { REQUIRED_FIELD } from 'constants/fields';
 import { Executor } from 'types';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
+import { createTask } from 'api/v1';
 
 interface TaskCreateProps {
   children: (helpers: DialogChildrenHelpers) => React.ReactNode;
@@ -76,7 +77,8 @@ const validationSchema = yup.object().shape({
     .date()
     .transform(parseDateString)
     .min(today, 'Дата не может быть раньше сегоднешней')
-    .nullable(),
+    .nullable()
+    .required(REQUIRED_FIELD),
 });
 
 const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
@@ -90,8 +92,21 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
 
   const handleSubmit = (values: TaskCreateForm, helpers: FormikHelpers<TaskCreateForm>) => {
     helpers.setSubmitting(true);
-    console.log(values);
-    helpers.setSubmitting(false);
+
+    const data = {
+      title: values.title,
+      description: values.description,
+      text: values.text,
+      dueDate: values.dueDate!.toISOString(),
+      executorIds: values.executors.map(executor => executor.id),
+    };
+
+    createTask(data).then(response => {
+      if (response.details.ok) {
+        helpers.setSubmitting(false);
+        handleClose();
+      }
+    });
   };
 
   return (

@@ -16,3 +16,11 @@ export interface ChangePassword {
   currentPassword: string;
   newPassword: string;
 }
+
+export interface CreateTask {
+  title: string;
+  description: string | null;
+  text: string;
+  dueDate: string;
+  executorIds: number[];
+}
