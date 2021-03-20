@@ -94,10 +94,10 @@ const Editor: React.FC<EditorProps> = ({
           {groupActions.map((actions, index) => (
             <ButtonGroup
               size="small"
-              key={index}
               color="secondary"
               variant="contained"
               disableElevation
+              key={index}
             >
               {actions.map((action, index) => (
                 <Button onClick={() => handleClick(action)} key={index}>

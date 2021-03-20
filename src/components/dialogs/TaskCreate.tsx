@@ -12,9 +12,12 @@ import * as yup from 'yup';
 import WideDialog from 'components/themed/WideDialog';
 import NormalButton from 'components/themed/NormalButton';
 import FormField from 'components/formik/FormField';
+import DateFormField from 'components/formik/DateFormField';
 import ExecutorsAutocomplete from 'components/fields/ExecutorsAutocomplete';
 import MarkdownView from 'components/MarkdownView';
 import MarkdownEditor from 'components/MarkdownEditor';
+import { currentDate, parseDateString } from 'utils/date';
+import { REQUIRED_FIELD } from 'constants/fields';
 import { Executor } from 'types';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
 
@@ -27,7 +30,7 @@ interface TaskCreateForm {
   description: string;
   executors: Executor[];
   text: string;
-  dueDate: string;
+  dueDate: Date | null;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -39,18 +42,23 @@ const useStyles = makeStyles(theme => ({
   editor: {
     height: 320,
   },
+  switch: {
+    justifySelf: 'start',
+  },
 }));
+
+const today = currentDate();
 
 const initialValues: TaskCreateForm = {
   title: '',
   description: '',
   executors: [],
   text: '',
-  dueDate: '',
+  dueDate: null,
 };
 
 const validationSchema = yup.object().shape({
-  title: yup.string().required('Ябляется обязательным'),
+  title: yup.string().required(REQUIRED_FIELD),
   description: yup.string(),
   executors: yup
     .array()
@@ -62,9 +70,13 @@ const validationSchema = yup.object().shape({
       })
     )
     .min(1, 'Необходим минимум один исполнитель')
-    .required('Является обязательным'),
+    .required(REQUIRED_FIELD),
   text: yup.string(),
-  dueDate: yup.string(),
+  dueDate: yup
+    .date()
+    .transform(parseDateString)
+    .min(today, 'Дата не может быть раньше сегоднешней')
+    .nullable(),
 });
 
 const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
@@ -85,7 +97,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
   return (
     <>
       {children({ handleOpen, handleClose })}
-      <WideDialog open={open} onClose={handleClose}>
+      <WideDialog open={open}>
         <DialogTitle>Создание задачи</DialogTitle>
         <Formik
           initialValues={initialValues}
@@ -104,6 +116,12 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
                   disabled={isSubmitting}
                   required
                 />
+                <DateFormField
+                  label="Срок исполнения"
+                  name="dueDate"
+                  minDate={today}
+                  disabled={isSubmitting}
+                />
                 {preview ? (
                   <MarkdownView className={classes.editor}>{values.text}</MarkdownView>
                 ) : (
@@ -114,6 +132,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ children }) => {
                   />
                 )}
                 <FormControlLabel
+                  className={classes.switch}
                   control={
                     <Switch
                       checked={preview}

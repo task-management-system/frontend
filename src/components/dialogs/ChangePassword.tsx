@@ -5,6 +5,7 @@ import * as yup from 'yup';
 import FormField from 'components/formik/FormField';
 import NormalButton from 'components/themed/NormalButton';
 import PasswordField from 'components/common/PasswordField';
+import { REQUIRED_FIELD } from 'constants/fields';
 import { changePassword } from 'api/v1';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
 
@@ -35,13 +36,13 @@ const initialValues: ChangePasswordForm = {
 };
 
 const validationSchema = yup.object().shape({
-  currentPassword: yup.string().min(8, 'Минимальная длина 8').required('Является обязательным'),
-  newPassword: yup.string().min(8, 'Минимальная длина 8').required('Является обязательным'),
+  currentPassword: yup.string().min(8, 'Минимальная длина 8').required(REQUIRED_FIELD),
+  newPassword: yup.string().min(8, 'Минимальная длина 8').required(REQUIRED_FIELD),
   newPasswordConfirm: yup
     .string()
     .oneOf([yup.ref('newPassword'), null], 'Значения должны совпадать')
     .min(8, 'Минимальная длина 8')
-    .required('Является обязательным'),
+    .required(REQUIRED_FIELD),
 });
 
 const ChangePassword: React.FC<ChangePasswordProps> = ({ children, userId }) => {

@@ -13,8 +13,8 @@ export interface Action<T> {
   payload: T;
 }
 
-export type PersisState = State & PersistPartial;
+export type PersistState = State & PersistPartial;
 
 export type Dispatch = <T>(payload: Action<T>) => Action<T>;
 
-export type AppStore = Store<PersisState, Action<any>> & { dispatch: Dispatch };
+export type AppStore = Store<PersistState, Action<any>> & { dispatch: Dispatch };
