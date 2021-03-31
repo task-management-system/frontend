@@ -1,8 +1,18 @@
 import { User, UUID } from 'types';
 
-export interface Auth {
+export interface AuthInfo {
   user: User | null;
   token: string;
+}
+
+export interface AuthWithUsername {
+  username: string;
+  password: string;
+}
+
+export interface AuthWithEmail {
+  email: string;
+  password: string;
 }
 
 export interface TransferUser {

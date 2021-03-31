@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Card, CardContent, CardActions, TextField, makeStyles, fade } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  CardActions,
+  TextField,
+  FormControlLabel,
+  Switch,
+  makeStyles,
+  fade,
+} from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
 import FullPage from 'components/common/FullPage';
 import PasswordField from 'components/common/PasswordField';
@@ -11,7 +20,7 @@ import { authenticate, getPermissions, getStatuses } from 'api/v1';
 import { setToken } from 'api/utils';
 import { User, Permission, Status } from 'types';
 import { Dispatch } from 'types/redux';
-import { AuthForm } from 'types/components/auth';
+import { AuthWithUsername, AuthWithEmail } from 'types/api/v1';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,23 +42,37 @@ const useStyles = makeStyles(theme => ({
     display: 'grid',
     gridAutoRows: 'max-content',
   },
+  switch: {
+    justifySelf: 'start',
+  },
   actions: {
     padding: theme.spacing(2),
   },
 }));
 
+interface AuthForm {
+  username: string;
+  email: string;
+  password: string;
+}
+
 const initialValues: AuthForm = {
   username: '',
+  email: '',
   password: '',
 };
 
 const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, setStatus }) => {
   const classes = useStyles();
+  const [isEmail, setIsEmail] = useState(false);
 
   const sendData = async (values: AuthForm, helpers: FormikHelpers<AuthForm>) => {
     helpers.setSubmitting(true);
 
-    const response = await authenticate(values);
+    const data = !isEmail
+      ? ({ username: values.username, password: values.password } as AuthWithUsername)
+      : ({ email: values.email, password: values.password } as AuthWithEmail);
+    const response = await authenticate(data);
     const token = response.data?.token ?? null;
     await setToken(token);
 
@@ -75,14 +98,26 @@ const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, se
           {({ values, isSubmitting, handleChange, submitForm }) => (
             <>
               <CardContent className={classes.body}>
-                <TextField
-                  label="Имя пользователя"
-                  name="username"
-                  value={values.username}
-                  variant="outlined"
-                  disabled={isSubmitting}
-                  onChange={handleChange}
-                />
+                {!isEmail ? (
+                  <TextField
+                    label="Имя пользователя"
+                    name="username"
+                    value={values.username}
+                    variant="outlined"
+                    disabled={isSubmitting}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <TextField
+                    label="Почта"
+                    type="email"
+                    name="email"
+                    value={values.email}
+                    variant="outlined"
+                    disabled={isSubmitting}
+                    onChange={handleChange}
+                  />
+                )}
                 <PasswordField
                   label="Пароль"
                   name="password"
@@ -90,6 +125,18 @@ const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, se
                   variant="outlined"
                   disabled={isSubmitting}
                   onChange={handleChange}
+                />
+                <FormControlLabel
+                  className={classes.switch}
+                  control={
+                    <Switch
+                      checked={isEmail}
+                      onChange={() => setIsEmail(isEmail => !isEmail)}
+                      name="isEmail"
+                      color="primary"
+                    />
+                  }
+                  label="По почте"
                 />
               </CardContent>
               <CardActions className={classes.actions}>
