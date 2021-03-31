@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import {
   Card,
   CardContent,
   CardActions,
-  TextField,
   FormControlLabel,
   Switch,
   makeStyles,
   fade,
 } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
+import * as yup from 'yup';
 import FullPage from 'components/common/FullPage';
+import FormField from 'components/formik/FormField';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
 import { setUser, setPermissions, setStatuses } from 'redux/actions/metaData';
@@ -21,6 +22,7 @@ import { setToken } from 'api/utils';
 import { User, Permission, Status } from 'types';
 import { Dispatch } from 'types/redux';
 import { AuthWithUsername, AuthWithEmail } from 'types/api/v1';
+import { REQUIRED_FIELD } from 'constants/fields';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,25 +53,39 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface AuthForm {
+  useEmail: boolean;
   username: string;
   email: string;
   password: string;
 }
 
 const initialValues: AuthForm = {
+  useEmail: false,
   username: '',
   email: '',
   password: '',
 };
 
+const validationSchema = yup.object().shape({
+  useEmail: yup.boolean(),
+  username: yup.string().when('useEmail', {
+    is: false,
+    then: yup.string().required(REQUIRED_FIELD),
+  }),
+  email: yup.string().when('useEmail', {
+    is: true,
+    then: yup.string().email('Невалидный адрес почты').required(REQUIRED_FIELD),
+  }),
+  password: yup.string().min(8, 'Минимальная длина 8').required(REQUIRED_FIELD),
+});
+
 const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, setStatus }) => {
   const classes = useStyles();
-  const [isEmail, setIsEmail] = useState(false);
 
   const sendData = async (values: AuthForm, helpers: FormikHelpers<AuthForm>) => {
     helpers.setSubmitting(true);
 
-    const data = !isEmail
+    const data = !values.useEmail
       ? ({ username: values.username, password: values.password } as AuthWithUsername)
       : ({ email: values.email, password: values.password } as AuthWithEmail);
     const response = await authenticate(data);
@@ -94,45 +110,45 @@ const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, se
   return (
     <FullPage className={classes.root}>
       <Card className={classes.card}>
-        <Formik initialValues={initialValues} onSubmit={sendData}>
-          {({ values, isSubmitting, handleChange, submitForm }) => (
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          validateOnBlur
+          onSubmit={sendData}
+        >
+          {({ values, handleChange, submitForm, isSubmitting }) => (
             <>
               <CardContent className={classes.body}>
-                {!isEmail ? (
-                  <TextField
+                {!values.useEmail ? (
+                  <FormField
                     label="Имя пользователя"
                     name="username"
-                    value={values.username}
-                    variant="outlined"
+                    size="medium"
                     disabled={isSubmitting}
-                    onChange={handleChange}
                   />
                 ) : (
-                  <TextField
+                  <FormField
                     label="Почта"
                     type="email"
                     name="email"
-                    value={values.email}
-                    variant="outlined"
+                    size="medium"
                     disabled={isSubmitting}
-                    onChange={handleChange}
                   />
                 )}
-                <PasswordField
+                <FormField
+                  component={PasswordField}
                   label="Пароль"
                   name="password"
-                  value={values.password}
-                  variant="outlined"
+                  size="medium"
                   disabled={isSubmitting}
-                  onChange={handleChange}
                 />
                 <FormControlLabel
                   className={classes.switch}
                   control={
                     <Switch
-                      checked={isEmail}
-                      onChange={() => setIsEmail(isEmail => !isEmail)}
-                      name="isEmail"
+                      name="useEmail"
+                      checked={values.useEmail}
+                      onChange={handleChange}
                       color="primary"
                     />
                   }
