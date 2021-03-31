@@ -26,9 +26,9 @@ const RoleParamView: React.FC<RoleParamViewProps> = props => {
     <AutocompleteParamView
       {...props}
       options={options}
-      getOptionLabel={option => option.text}
+      getOptionLabel={option => option.meaning}
       getOptionSelected={(option, value) => option.id === value.id}
-      render={entry => entry?.text}
+      render={entry => entry?.meaning}
     />
   );
 };

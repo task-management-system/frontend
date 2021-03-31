@@ -9,13 +9,13 @@ import NormalButton from 'components/themed/NormalButton';
 import ToggleLockButton from 'components/user/ToggleLockButton';
 import { haveAnyPermission } from 'utils/permissions';
 import { getUser, getCurrentUser, updateUser } from 'api/v1';
-import { User } from 'types';
+import { User, UUID } from 'types';
 import { State } from 'types/redux';
 import { RequireOnlyOne } from 'types/common';
 import { UndefinableUserForm } from 'types/components/user';
 
 interface UserFormBase {
-  id: number;
+  id: UUID;
   self: boolean;
 }
 

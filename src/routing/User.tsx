@@ -9,7 +9,7 @@ interface RouteParams {
 const User: React.FC = () => {
   const { params } = useRouteMatch<RouteParams>();
 
-  return <UserForm id={parseInt(params.id)} />;
+  return <UserForm id={params.id} />;
 };
 
 export default User;

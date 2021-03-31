@@ -5,7 +5,6 @@ import Logo from './Logo';
 import Profile from '../profile/Profile';
 import NavigationButton from './NavigationButton';
 import { haveAnyPermission } from 'utils/permissions';
-import { ADMINISTRATION_PERMISSIONS } from 'constants/permissions';
 import { State } from 'types/redux';
 
 const useStyles = makeStyles(theme => ({
@@ -45,7 +44,7 @@ const mapStateToProps = ({ metaData }: State) => ({
   permissions: {
     administration: haveAnyPermission(
       metaData.user?.role.power,
-      ADMINISTRATION_PERMISSIONS,
+      ['Administrator'],
       metaData.permissions
     ),
   },

@@ -15,7 +15,7 @@ const ExecutorsAutocomplete: React.FC<
 
   useEffect(() => {
     getUsers().then(response => {
-      setExecutors(response.data?.list || []);
+      setExecutors(response.data || []);
     });
   }, []);
 

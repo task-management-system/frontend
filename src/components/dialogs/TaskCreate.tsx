@@ -66,7 +66,7 @@ const validationSchema = yup.object().shape({
     .array()
     .of(
       yup.object().shape({
-        id: yup.number(),
+        id: yup.string().uuid(),
         name: yup.string().nullable(),
         username: yup.string(),
       })
@@ -98,8 +98,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
       title: values.title,
       description: values.description,
       text: values.text,
-      // dueDate: values.dueDate!.toISOString(),
-      dueDate: values.dueDate!.getTime(),
+      dueDate: values.dueDate!.toISOString(),
       executorIds: values.executors.map(executor => executor.id),
     };
 

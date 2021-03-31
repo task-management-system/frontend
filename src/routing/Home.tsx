@@ -5,7 +5,6 @@ import Main from './Main';
 import NoMatch from './NoMatch';
 import Loading from 'components/Loading';
 import PermittedRoute from 'components/common/PermittedRoute';
-import { ADMINISTRATION_PERMISSIONS } from 'constants/permissions';
 
 const Profile = React.lazy(() => import('./Profile'));
 const User = React.lazy(() => import('./User'));
@@ -22,12 +21,12 @@ const Home: React.FC = () => (
           <Profile />
         </React.Suspense>
       </Route>
-      <PermittedRoute path="/user/:id" every={['ViewUser']}>
+      <PermittedRoute path="/user/:id" any={['Administrator', 'ViewUser']}>
         <React.Suspense fallback={<Loading />}>
           <User />
         </React.Suspense>
       </PermittedRoute>
-      <PermittedRoute path="/administration/:module?" any={ADMINISTRATION_PERMISSIONS}>
+      <PermittedRoute path="/administration/:module?" any={['Administrator']}>
         <React.Suspense fallback={<Loading />}>
           <Administration />
         </React.Suspense>

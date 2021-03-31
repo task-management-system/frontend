@@ -1,11 +1,13 @@
+export type UUID = string;
+
 export interface Role {
   id: number;
   power: number;
-  text: string;
+  meaning: string;
 }
 
 export interface User {
-  id: number;
+  id: UUID;
   username: string;
   name: string | null;
   email: string | null;
@@ -37,23 +39,29 @@ export interface Status {
 }
 
 export interface Creator {
-  id: number;
+  id: UUID;
   username: string;
   name: string | null;
   email: string | null;
 }
 
 export interface Executor {
-  id: number;
+  id: UUID;
   username: string;
   name: string | null;
 }
 
-export interface Task {
-  taskId: number;
-  detailId: number | undefined;
+export interface TaskInfo {
+  id: UUID;
   title: string;
   description: string | null;
+  markdown: string | null;
   creator: Creator;
-  dueDate: number;
+  dueDate: string;
+  createdAt: string;
 }
+
+export type TaskInstance = {
+  id: UUID;
+  task: TaskInfo;
+};

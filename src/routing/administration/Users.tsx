@@ -50,13 +50,13 @@ const Users: React.FC = () => {
 
   useEffect(() => {
     trackedGetUsers().then(response => {
-      setUsers(response.data?.list || []);
+      setUsers(response.data || []);
     });
   }, []);
 
   const updateUsers = async () => {
     const response = await getUsers();
-    setUsers(response.data?.list || []);
+    setUsers(response.data || []);
   };
 
   const groups = groupBy(users, user => user.username[0].toUpperCase());

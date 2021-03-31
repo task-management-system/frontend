@@ -59,7 +59,7 @@ const AddUser: React.FC = () => {
         onSubmit={handleSubmit}
         validateOnMount
       >
-        {({ values, errors, isSubmitting, handleChange, setFieldValue, submitForm }) => (
+        {({ values, errors, isSubmitting, submitForm }) => (
           <FieldArray name="users">
             {arrayHelpers => (
               <div className={classes.grid}>
@@ -97,7 +97,7 @@ const AddUser: React.FC = () => {
                           label="Роль"
                           name={`users[${index}].role`}
                           options={options}
-                          getOptionLabel={option => option.text}
+                          getOptionLabel={option => option.meaning}
                           getOptionSelected={(option, value) => option.id === value.id}
                           disabled={isSubmitting}
                           required

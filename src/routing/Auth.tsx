@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const initialValues: AuthForm = {
-  usernameOrEmail: '',
+  username: '',
   password: '',
 };
 
@@ -77,8 +77,8 @@ const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, se
               <CardContent className={classes.body}>
                 <TextField
                   label="Имя пользователя"
-                  name="usernameOrEmail"
-                  value={values.usernameOrEmail}
+                  name="username"
+                  value={values.username}
                   variant="outlined"
                   disabled={isSubmitting}
                   onChange={handleChange}

@@ -1,11 +1,11 @@
 import { methods } from 'api/core';
 import { withNotification, withAuthorization } from '../utils';
-import { User } from 'types';
+import { User, UUID } from 'types';
 import { TransferUser, ChangePassword } from 'types/api/v1';
 
 const API_BASE = '/user';
 
-export const lock = (id: number) => {
+export const lock = (id: UUID) => {
   const params = new URLSearchParams({
     id: id.toString(),
   });
@@ -15,7 +15,7 @@ export const lock = (id: number) => {
   );
 };
 
-export const unlock = (id: number) => {
+export const unlock = (id: UUID) => {
   const params = new URLSearchParams({
     id: id.toString(),
   });
@@ -25,7 +25,7 @@ export const unlock = (id: number) => {
   );
 };
 
-export const getUser = (id: number) => {
+export const getUser = (id: UUID) => {
   const params = new URLSearchParams({
     id: id.toString(),
   });
@@ -33,7 +33,7 @@ export const getUser = (id: number) => {
   return withNotification(withAuthorization(methods.get<User>(`${API_BASE}?${params}`)));
 };
 
-export const updateUser = (id: number, data: TransferUser) => {
+export const updateUser = (id: UUID, data: TransferUser) => {
   const params = new URLSearchParams({
     id: id.toString(),
   });
@@ -43,7 +43,7 @@ export const updateUser = (id: number, data: TransferUser) => {
   );
 };
 
-export const changePassword = (id: number, data: ChangePassword) => {
+export const changePassword = (id: UUID, data: ChangePassword) => {
   const params = new URLSearchParams({
     id: id.toString(),
   });

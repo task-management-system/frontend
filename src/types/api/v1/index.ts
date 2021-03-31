@@ -1,4 +1,4 @@
-import { User } from 'types';
+import { User, UUID } from 'types';
 
 export interface Auth {
   user: User | null;
@@ -22,5 +22,5 @@ export interface CreateTask {
   description: string | null;
   text: string;
   dueDate: number | string;
-  executorIds: number[];
+  executorIds: UUID[];
 }

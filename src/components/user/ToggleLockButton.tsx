@@ -3,9 +3,10 @@ import { ButtonProps } from '@material-ui/core';
 import NormalButton from 'components/themed/NormalButton';
 import usePromiseTrack from 'hooks/usePromiseTrack';
 import { lock, unlock } from 'api/v1';
+import { UUID } from 'types';
 
 interface ToggleLockButtonProps {
-  userId: number;
+  userId: UUID;
   isActive: boolean;
   onClick: () => Promise<void>;
 }

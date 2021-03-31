@@ -7,10 +7,11 @@ import NormalButton from 'components/themed/NormalButton';
 import PasswordField from 'components/common/PasswordField';
 import { REQUIRED_FIELD } from 'constants/fields';
 import { changePassword } from 'api/v1';
+import { UUID } from 'types';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
 
 interface ChangePasswordProps {
-  userId: number;
+  userId: UUID;
   children: (helpers: DialogChildrenHelpers) => React.ReactNode;
 }
 

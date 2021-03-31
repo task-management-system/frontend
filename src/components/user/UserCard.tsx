@@ -84,7 +84,7 @@ const UserCard: React.FC<UserCardProps & UserCardState> = ({
       />
       <CardContent className={classes.content}>
         <Typography variant="body2">
-          <strong>Роль</strong>: {user.role.text}
+          <strong>Роль</strong>: {user.role.meaning}
         </Typography>
         <Typography variant="body2">
           <strong>{userPermissionsList.length > 0 ? 'Права' : 'У пользователя нет прав'}</strong>

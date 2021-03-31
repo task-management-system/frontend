@@ -47,7 +47,7 @@ const Profile: React.FC<ProfileState> = ({ username, role }) => {
 
 const mapStateToProps = ({ metaData }: State) => ({
   username: metaData.user?.name || metaData.user?.username || 'Нет имени',
-  role: metaData.user?.role.text || 'Нет роли',
+  role: metaData.user?.role.meaning || 'Нет роли',
 });
 
 type ProfileState = ReturnType<typeof mapStateToProps>;
