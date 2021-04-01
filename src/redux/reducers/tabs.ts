@@ -1,9 +1,9 @@
 import { SET_GROUP, SET_STATUS } from 'redux/actionTypes';
 import { Tabs, TabsAction } from 'types/redux/reducers';
-import { APPOINTED } from 'constants/tasks';
+import { RECEIVED } from 'constants/tasks';
 
 const initialState: Tabs = {
-  group: APPOINTED,
+  group: RECEIVED,
   status: null,
 };
 

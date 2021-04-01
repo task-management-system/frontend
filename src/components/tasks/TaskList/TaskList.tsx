@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Paper, Typography, Divider, Fade } from '@material-ui/core';
+import { Paper, Typography, Divider, Fade, makeStyles } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import TaskListToolbar from '../TaskListToolbar';
 import { TaskItemSkeleton } from '../TaskItem';
-import useStyles from './styles';
-import { SIZE } from './constants';
 import { range } from 'utils';
 import usePromiseTrack from 'hooks/usePromiseTrack';
 import { CollectedResponse, Pagination as RequestPagination, Paged } from 'types/api';
@@ -19,6 +17,26 @@ interface TaskListProps<T> {
   renderItem: (entry: T) => React.ReactElement<any, any>;
   showToolbar?: boolean;
 }
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    gap: theme.spacing(2),
+    display: 'grid',
+    gridAutoRows: 'max-content',
+  },
+  toolbar: {
+    display: 'grid',
+    gridTemplateColumns: '1fr max-content',
+  },
+  wrapper: {
+    padding: theme.spacing(1),
+  },
+  message: {
+    padding: theme.spacing(4, 2),
+  },
+}));
+
+const SIZE = 10;
 
 const TaskList = <T,>({
   getTasks,
@@ -40,11 +58,13 @@ const TaskList = <T,>({
       const pagination = { page, size: SIZE };
 
       trackedGetTasks(status, pagination).then(response => {
-        setTasks({
-          total: response.data?.total || 0,
-          list: response.data?.list || [],
-        });
-        setLoaded(true);
+        if (response.details.ok) {
+          setTasks({
+            total: response.data?.total || 0,
+            list: response.data?.list || [],
+          });
+          setLoaded(true);
+        }
       });
     }
   };

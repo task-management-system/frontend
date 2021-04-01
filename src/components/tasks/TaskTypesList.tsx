@@ -4,7 +4,7 @@ import { Paper, Tabs, Tab, makeStyles } from '@material-ui/core';
 import { NewReleases, Details, Block, Done } from '@material-ui/icons';
 import ThemedTab from 'components/themed/ThemedTab';
 import { setGroup, setStatus } from 'redux/actions/tabs';
-import { APPOINTED, CREATED } from 'constants/tasks';
+import { RECEIVED, CREATED } from 'constants/tasks';
 import { Dispatch, State } from 'types/redux';
 
 const icons: { [key: number]: JSX.Element } = {
@@ -38,7 +38,7 @@ const TaskTypesList: React.FC<TaskTypesLisState & TaskTypesLisDispatch> = ({
   return (
     <Paper className={classes.root} square>
       <Tabs value={group} textColor="primary" indicatorColor="primary" onChange={handleGroupChange}>
-        <Tab label="Назначенные" value={APPOINTED} />
+        <Tab label="Назначенные" value={RECEIVED} />
         <Tab label="Созданные" value={CREATED} />
       </Tabs>
       {status !== null && (

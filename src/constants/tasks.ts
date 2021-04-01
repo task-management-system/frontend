@@ -1,2 +1,2 @@
-export const APPOINTED = 'APPOINTED';
+export const RECEIVED = 'RECEIVED';
 export const CREATED = 'CREATED';

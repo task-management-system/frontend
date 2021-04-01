@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 import Container from 'components/common/Container';
 import TaskTypesList from 'components/tasks/TaskTypesList';
-import { AppointedTaskList, CreatedTaskList } from 'components/tasks/TaskList';
-import { APPOINTED, CREATED } from 'constants/tasks';
+import { ReceivedTaskList, CreatedTaskList } from 'components/tasks/TaskList';
+import { RECEIVED, CREATED } from 'constants/tasks';
 import { State } from 'types/redux';
 
 const useStyles = makeStyles(theme => ({
@@ -26,8 +26,8 @@ const Main: React.FC<MainState> = ({ group }) => {
     <Container className={classes.root}>
       <TaskTypesList />
       <TabContext value={group}>
-        <TabPanel className={classes.tab} value={APPOINTED}>
-          <AppointedTaskList />
+        <TabPanel className={classes.tab} value={RECEIVED}>
+          <ReceivedTaskList />
         </TabPanel>
         <TabPanel className={classes.tab} value={CREATED}>
           <CreatedTaskList />
