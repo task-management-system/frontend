@@ -16,7 +16,7 @@ interface ChangePasswordProps {
 }
 
 interface ChangePasswordForm {
-  currentPassword: string;
+  oldPassword: string;
   newPassword: string;
   newPasswordConfirm: string;
 }
@@ -31,13 +31,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const initialValues: ChangePasswordForm = {
-  currentPassword: '',
+  oldPassword: '',
   newPassword: '',
   newPasswordConfirm: '',
 };
 
 const validationSchema = yup.object().shape({
-  currentPassword: yup.string().min(8, 'Минимальная длина 8').required(REQUIRED_FIELD),
+  oldPassword: yup.string().min(8, 'Минимальная длина 8').required(REQUIRED_FIELD),
   newPassword: yup.string().min(8, 'Минимальная длина 8').required(REQUIRED_FIELD),
   newPasswordConfirm: yup
     .string()
@@ -56,8 +56,9 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ children, userId }) => 
 
   const handleSubmit = (values: ChangePasswordForm, helpers: FormikHelpers<ChangePasswordForm>) => {
     helpers.setSubmitting(true);
-    changePassword(userId, {
-      currentPassword: values.currentPassword,
+    changePassword({
+      id: userId,
+      oldPassword: values.oldPassword,
       newPassword: values.newPassword,
     }).then(response => {
       helpers.setSubmitting(false);
@@ -85,7 +86,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ children, userId }) => 
                 <FormField
                   component={PasswordField}
                   label="Текущий пароль"
-                  name="currentPassword"
+                  name="oldPassword"
                   disabled={isSubmitting}
                   required
                 />

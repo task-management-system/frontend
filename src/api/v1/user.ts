@@ -43,16 +43,9 @@ export const updateUser = (id: UUID, data: TransferUser) => {
   );
 };
 
-export const changePassword = (id: UUID, data: ChangePassword) => {
-  const params = new URLSearchParams({
-    id: id.toString(),
-  });
-
-  return withNotification(
-    withAuthorization(
-      methods.patch<ChangePassword, null>(`${API_BASE}/change-password?${params}`, data)
-    )
+export const changePassword = (data: ChangePassword) =>
+  withNotification(
+    withAuthorization(methods.patch<ChangePassword, null>(`${API_BASE}/change-password`, data))
   );
-};
 
 export const getCurrentUser = () => withAuthorization(methods.get<User>(`${API_BASE}/current`));

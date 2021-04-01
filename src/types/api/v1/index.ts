@@ -23,7 +23,8 @@ export interface TransferUser {
 }
 
 export interface ChangePassword {
-  currentPassword: string;
+  id: UUID;
+  oldPassword: string;
   newPassword: string;
 }
 
