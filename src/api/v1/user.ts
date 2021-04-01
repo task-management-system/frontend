@@ -7,7 +7,7 @@ const API_BASE = '/user';
 
 export const lock = (id: UUID) => {
   const params = new URLSearchParams({
-    id: id.toString(),
+    id,
   });
 
   return withNotification(
@@ -17,7 +17,7 @@ export const lock = (id: UUID) => {
 
 export const unlock = (id: UUID) => {
   const params = new URLSearchParams({
-    id: id.toString(),
+    id,
   });
 
   return withNotification(
@@ -27,7 +27,7 @@ export const unlock = (id: UUID) => {
 
 export const getUser = (id: UUID) => {
   const params = new URLSearchParams({
-    id: id.toString(),
+    id,
   });
 
   return withNotification(withAuthorization(methods.get<User>(`${API_BASE}?${params}`)));
@@ -35,7 +35,7 @@ export const getUser = (id: UUID) => {
 
 export const updateUser = (id: UUID, data: TransferUser) => {
   const params = new URLSearchParams({
-    id: id.toString(),
+    id,
   });
 
   return withNotification(

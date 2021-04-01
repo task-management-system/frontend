@@ -2,12 +2,15 @@ import React, { useMemo } from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import CleverAvatar from 'components/common/CleverAvatar';
+import ClickableArea from 'components/common/ClickableArea';
 import Link from 'components/common/Link';
 import TaskDeadline from './TaskDeadline';
-import { TaskShortInfo } from 'types';
+import { noop } from 'utils';
+import { TaskInfo } from 'types';
 
 interface TaskItemProps {
-  task: TaskShortInfo;
+  task: TaskInfo;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -44,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TaskItem: React.FC<TaskItemProps> = ({ task, ...props }) => {
+const TaskItem: React.FC<TaskItemProps> = ({ task, onClick = noop, ...props }) => {
   const classes = useStyles();
   const creatorName = task.creator.name || task.creator.username;
   const dueDate = useMemo(() => new Date(task.dueDate), [task.dueDate]);
@@ -61,14 +64,14 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, ...props }) => {
           </Typography>
         </Link>
       </div>
-      <div className={classes.columns}>
+      <ClickableArea className={classes.columns} onClick={onClick}>
         <Typography>{task.title}</Typography>
         {task.description !== null && (
           <Typography className={classes.text} variant="body2" color="textSecondary">
             {task.description}
           </Typography>
         )}
-      </div>
+      </ClickableArea>
       <div className={classes.column}>
         <TaskDeadline date={dueDate} />
       </div>

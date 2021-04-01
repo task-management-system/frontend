@@ -50,7 +50,12 @@ export interface Executor {
   name: string | null;
 }
 
-export interface TaskShortInfo {
+export interface Parent {
+  id: UUID;
+  status: Status;
+}
+
+export interface TaskInfo {
   id: UUID;
   title: string;
   description: string | null;
@@ -58,12 +63,13 @@ export interface TaskShortInfo {
   dueDate: string;
 }
 
-export interface TaskFullInfo extends TaskShortInfo {
+export interface ReceivedTaskInfo extends TaskInfo {
   markdown: string | null;
+  parent: Parent;
   createdAt: string;
 }
 
 export type TaskInstance = {
   id: UUID;
-  task: TaskShortInfo;
+  task: TaskInfo;
 };
