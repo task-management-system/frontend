@@ -104,8 +104,9 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
 
     createTask(data)
       .then(response => {
+        helpers.setSubmitting(false);
+
         if (response.details.ok) {
-          helpers.setSubmitting(false);
           handleClose();
           onCreate();
         }

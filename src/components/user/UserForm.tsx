@@ -150,7 +150,11 @@ const UserForm: React.FC<UserFormProps & UserFormState> = ({ id, self, permissio
 
 const mapStateToProps = ({ metaData }: State) => ({
   permissions: {
-    update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
+    update: haveAnyPermission(
+      metaData.user?.role.power,
+      ['Administrator', 'UpdateUser'],
+      metaData.permissions
+    ),
   },
 });
 

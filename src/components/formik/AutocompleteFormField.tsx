@@ -19,6 +19,7 @@ export type AutocompleteFormFieldProps<T> = FieldProps &
 const AutocompleteFormField = <T,>({
   label,
   name,
+  readOnly = false,
   ...props
 }: React.PropsWithChildren<AutocompleteFormFieldProps<T>>) => {
   const [field, meta, helpers] = useField(name);
@@ -35,6 +36,10 @@ const AutocompleteFormField = <T,>({
       helperText={meta.touched ? meta.error || null : null}
       onChange={(name: any, value: any) => helpers.setValue(value)}
       onBlur={field.onBlur}
+      InputProps={{
+        readOnly,
+        ...props.InputProps,
+      }}
       {...props}
     />
   );

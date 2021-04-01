@@ -122,7 +122,11 @@ const UserCard: React.FC<UserCardProps & UserCardState> = ({
 const mapStateToProps = ({ metaData }: State) => ({
   permissionsList: metaData.permissions,
   permissions: {
-    update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
+    update: haveAnyPermission(
+      metaData.user?.role.power,
+      ['Administrator', 'UpdateUser'],
+      metaData.permissions
+    ),
   },
 });
 

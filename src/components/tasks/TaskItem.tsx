@@ -4,10 +4,10 @@ import { Skeleton } from '@material-ui/lab';
 import CleverAvatar from 'components/common/CleverAvatar';
 import Link from 'components/common/Link';
 import TaskDeadline from './TaskDeadline';
-import { TaskInfo } from 'types';
+import { TaskShortInfo } from 'types';
 
 interface TaskItemProps {
-  task: TaskInfo;
+  task: TaskShortInfo;
 }
 
 const useStyles = makeStyles(theme => ({

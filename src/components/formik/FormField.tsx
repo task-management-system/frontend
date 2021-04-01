@@ -7,6 +7,7 @@ const FormField: React.FC<FieldProps & Omit<TextFieldProps, ExcessProps>> = ({
   component: Component = TextField,
   label,
   name,
+  readOnly = false,
   ...props
 }) => {
   const [field, meta] = useField(name);
@@ -22,6 +23,10 @@ const FormField: React.FC<FieldProps & Omit<TextFieldProps, ExcessProps>> = ({
       helperText={meta.touched ? meta.error || null : null}
       onChange={field.onChange}
       onBlur={field.onBlur}
+      InputProps={{
+        readOnly,
+        ...props.InputProps,
+      }}
       {...props}
     />
   );

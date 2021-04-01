@@ -42,7 +42,6 @@ export interface Creator {
   id: UUID;
   username: string;
   name: string | null;
-  email: string | null;
 }
 
 export interface Executor {
@@ -51,17 +50,20 @@ export interface Executor {
   name: string | null;
 }
 
-export interface TaskInfo {
+export interface TaskShortInfo {
   id: UUID;
   title: string;
   description: string | null;
-  markdown: string | null;
   creator: Creator;
   dueDate: string;
+}
+
+export interface TaskFullInfo extends TaskShortInfo {
+  markdown: string | null;
   createdAt: string;
 }
 
 export type TaskInstance = {
   id: UUID;
-  task: TaskInfo;
+  task: TaskShortInfo;
 };

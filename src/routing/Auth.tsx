@@ -9,7 +9,7 @@ import {
   makeStyles,
   fade,
 } from '@material-ui/core';
-import { Formik, FormikHelpers } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 import FullPage from 'components/common/FullPage';
 import FormField from 'components/formik/FormField';
@@ -116,15 +116,15 @@ const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, se
           validateOnBlur
           onSubmit={sendData}
         >
-          {({ values, handleChange, submitForm, isSubmitting }) => (
-            <>
+          {({ values, handleChange, handleSubmit, submitForm, isSubmitting }) => (
+            <Form>
               <CardContent className={classes.body}>
                 {!values.useEmail ? (
                   <FormField
                     label="Имя пользователя"
                     name="username"
                     size="medium"
-                    disabled={isSubmitting}
+                    readOnly={isSubmitting}
                   />
                 ) : (
                   <FormField
@@ -132,7 +132,7 @@ const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, se
                     type="email"
                     name="email"
                     size="medium"
-                    disabled={isSubmitting}
+                    readOnly={isSubmitting}
                   />
                 )}
                 <FormField
@@ -140,7 +140,7 @@ const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, se
                   label="Пароль"
                   name="password"
                   size="medium"
-                  disabled={isSubmitting}
+                  readOnly={isSubmitting}
                 />
                 <FormControlLabel
                   className={classes.switch}
@@ -157,6 +157,7 @@ const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, se
               </CardContent>
               <CardActions className={classes.actions}>
                 <NormalButton
+                  type="submit"
                   color="primary"
                   variant="contained"
                   disabled={isSubmitting}
@@ -165,7 +166,7 @@ const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, se
                   Войти
                 </NormalButton>
               </CardActions>
-            </>
+            </Form>
           )}
         </Formik>
       </Card>
