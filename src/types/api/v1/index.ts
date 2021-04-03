@@ -31,7 +31,7 @@ export interface ChangePassword {
 export interface CreateTask {
   title: string;
   description: string | null;
-  text: string;
-  dueDate: number | string;
+  markdown: string;
+  dueDate: string;
   executorIds: UUID[];
 }

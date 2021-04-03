@@ -38,6 +38,13 @@ const useStyles = makeStyles(theme => ({
 
 const SIZE = 10;
 
+const notFoundMessages: Record<number, string> = {
+  1: 'У Вас нет новых задач',
+  2: 'У Вас нет задач в работе',
+  3: 'У Вас нет отмененных задач',
+  4: 'У Вас нет завершенных задач',
+};
+
 const TaskList = <T,>({
   getTasks,
   renderItem,
@@ -95,7 +102,7 @@ const TaskList = <T,>({
         {loaded && count === 0 ? (
           <Fade in>
             <Typography className={classes.message} variant="h4" align="center">
-              Мы не нашли задачи
+              {notFoundMessages[status!] || 'Мы не нашли задачи'}
             </Typography>
           </Fade>
         ) : count > 0 ? (

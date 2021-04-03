@@ -31,7 +31,7 @@ interface TaskCreateForm {
   title: string;
   description: string;
   executors: Executor[];
-  text: string;
+  markdown: string;
   dueDate: Date | null;
 }
 
@@ -55,7 +55,7 @@ const initialValues: TaskCreateForm = {
   title: '',
   description: '',
   executors: [],
-  text: '',
+  markdown: '',
   dueDate: null,
 };
 
@@ -73,7 +73,7 @@ const validationSchema = yup.object().shape({
     )
     .min(1, 'Необходим минимум один исполнитель')
     .required(REQUIRED_FIELD),
-  text: yup.string(),
+  markdown: yup.string(),
   dueDate: yup
     .date()
     .transform(parseDateString)
@@ -97,7 +97,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
     const data = {
       title: values.title,
       description: values.description,
-      text: values.text,
+      markdown: values.markdown,
       dueDate: values.dueDate!.toISOString(),
       executorIds: values.executors.map(executor => executor.id),
     };
@@ -146,12 +146,14 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
                   required
                 />
                 {preview ? (
-                  <MarkdownView className={classes.editor}>{values.text}</MarkdownView>
+                  <MarkdownView className={classes.editor} outlined>
+                    {values.markdown}
+                  </MarkdownView>
                 ) : (
                   <MarkdownEditor
                     className={classes.editor}
-                    value={values.text}
-                    onChange={value => setFieldValue('text', value)}
+                    value={values.markdown}
+                    onChange={value => setFieldValue('markdown', value)}
                   />
                 )}
                 <FormControlLabel

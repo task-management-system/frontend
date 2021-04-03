@@ -36,11 +36,8 @@ const AutocompleteFormField = <T,>({
       helperText={meta.touched ? meta.error || null : null}
       onChange={(name: any, value: any) => helpers.setValue(value)}
       onBlur={field.onBlur}
-      InputProps={{
-        readOnly,
-        ...props.InputProps,
-      }}
       {...props}
+      disabled={readOnly || props.disabled}
     />
   );
 };

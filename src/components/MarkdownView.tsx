@@ -7,6 +7,7 @@ import gfm from 'remark-gfm';
 
 interface MarkdownViewProps {
   className?: string;
+  outlined?: boolean;
   children: string;
 }
 
@@ -16,6 +17,7 @@ interface Renderer {
 
 type HeadingRenderer = Renderer & { level: 1 | 2 | 3 | 4 | 5 | 6 };
 type ParagraphRenderer = Renderer;
+type LinkRenderer = Renderer & { href: string };
 type ListRenderer = Renderer & { ordered: boolean };
 type ListItemRenderer = Renderer & { ordered: boolean; checked?: boolean; index: number };
 
@@ -26,6 +28,11 @@ const renderers = {
     <Typography variant={`h${level}` as Variant}>{children}</Typography>
   ),
   paragraph: ({ children }: ParagraphRenderer) => <Typography>{children}</Typography>,
+  link: ({ children, href }: LinkRenderer) => (
+    <a href={href} rel="noopener noreferrer" target="_blank">
+      {children}
+    </a>
+  ),
   list: ({ children, ordered }: ListRenderer) => (
     <List component={ordered ? 'ol' : 'ul'} dense>
       {children}
@@ -43,22 +50,33 @@ const renderers = {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    padding: theme.spacing(1),
-    border: '1px solid rgba(0, 0, 0, 0.23)',
-    borderRadius: theme.shape.borderRadius,
     display: 'grid',
     overflow: 'hidden',
+    '&$outlined': {
+      padding: theme.spacing(1),
+      border: '1px solid rgba(0, 0, 0, 0.23)',
+      borderRadius: theme.shape.borderRadius,
+    },
   },
   wrapper: {
     overflow: 'auto',
+    '&::-webkit-scrollbar': {
+      width: 6,
+      height: 6,
+    },
+    '&::-webkit-scrollbar-thumb': {
+      borderRadius: 3,
+      backgroundColor: theme.palette.primary.main,
+    },
   },
+  outlined: {},
 }));
 
-const MarkdownView: React.FC<MarkdownViewProps> = ({ className, children }) => {
+const MarkdownView: React.FC<MarkdownViewProps> = ({ className, outlined = false, children }) => {
   const classes = useStyles();
 
   return (
-    <div className={clsx(classes.root, className)}>
+    <div className={clsx(classes.root, outlined && classes.outlined, className)}>
       <div className={classes.wrapper}>
         <ReactMarkdown plugins={plugins} renderers={renderers}>
           {children}
