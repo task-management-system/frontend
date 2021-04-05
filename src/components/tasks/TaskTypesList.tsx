@@ -1,11 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { Paper, Tabs, Tab, makeStyles } from '@material-ui/core';
 import { NewReleases, Details, Block, Done } from '@material-ui/icons';
 import ThemedTab from 'components/themed/ThemedTab';
 import { setGroup, setStatus } from 'redux/actions/tabs';
 import { RECEIVED, CREATED } from 'constants/tasks';
-import { Dispatch, State } from 'types/redux';
+import { State, Dispatch } from 'types/redux';
 
 const icons: { [key: number]: JSX.Element } = {
   1: <NewReleases />,
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TaskTypesList: React.FC<TaskTypesLisState & TaskTypesLisDispatch> = ({
+const TaskTypesList: React.FC<ConnectedTaskTypesListProps> = ({
   statuses,
   group,
   status,
@@ -67,13 +67,13 @@ const mapStateToProps = (state: State) => ({
   ...state.tabs,
 });
 
-type TaskTypesLisState = ReturnType<typeof mapStateToProps>;
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setGroup: (payload: string) => dispatch(setGroup(payload)),
   setStatus: (payload: number) => dispatch(setStatus(payload)),
 });
 
-type TaskTypesLisDispatch = ReturnType<typeof mapDispatchToProps>;
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-export default connect(mapStateToProps, mapDispatchToProps)(TaskTypesList);
+type ConnectedTaskTypesListProps = ConnectedProps<typeof connector>;
+
+export default connector(TaskTypesList);

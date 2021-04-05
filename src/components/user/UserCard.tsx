@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import {
   Card,
   CardHeader,
@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserCard: React.FC<UserCardProps & UserCardState> = ({
+const UserCard: React.FC<UserCardProps & ConnectedUserCardProps> = ({
   user,
   permissionsList,
   permissions,
@@ -130,6 +130,8 @@ const mapStateToProps = ({ metaData }: State) => ({
   },
 });
 
-type UserCardState = ReturnType<typeof mapStateToProps>;
+const connector = connect(mapStateToProps);
 
-export default connect(mapStateToProps)(UserCard);
+type ConnectedUserCardProps = ConnectedProps<typeof connector>;
+
+export default connector(UserCard);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { Route, RouteProps } from 'react-router-dom';
 import NoMatch from 'routing/NoMatch';
 import { haveAnyPermission, haveEveryPermission } from 'utils/permissions';
@@ -13,7 +13,7 @@ interface PermittedRouteBase {
 
 type PermittedRouteProps = RequireOnlyOne<PermittedRouteBase, 'any' | 'every'>;
 
-const PermittedRoute: React.FC<PermittedRouteProps & PermittedRouteState & RouteProps> = ({
+const PermittedRoute: React.FC<PermittedRouteProps & ConnectedPermittedRouteProps & RouteProps> = ({
   any,
   every,
   power,
@@ -36,6 +36,8 @@ const mapStateToProps = (state: State) => ({
   permissions: state.metaData.permissions || [],
 });
 
-type PermittedRouteState = ReturnType<typeof mapStateToProps>;
+const connector = connect(mapStateToProps);
 
-export default connect(mapStateToProps)(PermittedRoute);
+type ConnectedPermittedRouteProps = ConnectedProps<typeof connector>;
+
+export default connector(PermittedRoute);

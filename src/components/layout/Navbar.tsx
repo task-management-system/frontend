@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { AppBar, Toolbar, makeStyles } from '@material-ui/core';
 import Logo from './Logo';
 import Profile from '../profile/Profile';
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Navbar: React.FC<NavbarState> = ({ permissions }) => {
+const Navbar: React.FC<ConnectedNavbarStateProps> = ({ permissions }) => {
   const classes = useStyles();
 
   return (
@@ -50,6 +50,8 @@ const mapStateToProps = ({ metaData }: State) => ({
   },
 });
 
-type NavbarState = ReturnType<typeof mapStateToProps>;
+const connector = connect(mapStateToProps);
 
-export default connect(mapStateToProps)(Navbar);
+type ConnectedNavbarStateProps = ConnectedProps<typeof connector>;
+
+export default connector(Navbar);

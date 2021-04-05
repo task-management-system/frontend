@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { removeNotification } from 'redux/actions/notifications';
 import { State, Dispatch } from 'types/redux';
 
-const NotificationViewer: React.FC<
-  NotificationViewerState & NotificationViewerDispatch
-> = props => {
+const NotificationViewer: React.FC<ConnectedNotificationViewerProps> = props => {
   const [hideable, setHideable] = useState<string[]>([]);
 
   const handleClose = (id: string, reason?: string) => {
@@ -47,12 +45,12 @@ const mapStateToProps = (state: State) => ({
   notifications: state.notifications,
 });
 
-type NotificationViewerState = ReturnType<typeof mapStateToProps>;
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   removeNotification: (payload: string) => dispatch(removeNotification(payload)),
 });
 
-type NotificationViewerDispatch = ReturnType<typeof mapDispatchToProps>;
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-export default connect(mapStateToProps, mapDispatchToProps)(NotificationViewer);
+type ConnectedNotificationViewerProps = ConnectedProps<typeof connector>;
+
+export default connector(NotificationViewer);

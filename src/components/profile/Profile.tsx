@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import ProfileMenu from './ProfileMenu';
 import CleverAvatar from 'components/common/CleverAvatar';
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Profile: React.FC<ProfileState> = ({ username, role }) => {
+const Profile: React.FC<ConnectedProfileStateProps> = ({ username, role }) => {
   const classes = useStyles();
   const isSmall = useScreenWidthCompare(width => width <= 640);
 
@@ -50,6 +50,8 @@ const mapStateToProps = ({ metaData }: State) => ({
   role: metaData.user?.role.meaning || 'Нет роли',
 });
 
-type ProfileState = ReturnType<typeof mapStateToProps>;
+const connector = connect(mapStateToProps);
 
-export default connect(mapStateToProps)(Profile);
+type ConnectedProfileStateProps = ConnectedProps<typeof connector>;
+
+export default connector(Profile);

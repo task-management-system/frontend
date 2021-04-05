@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import ThemedPopover from 'components/themed/ThemedPopover';
@@ -10,7 +10,6 @@ import { Dispatch } from 'types/redux';
 
 interface ProfileMenuProps {
   children: (handleOpen: (event: React.MouseEvent<HTMLButtonElement>) => void) => React.ReactNode;
-  reset: () => void;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -19,7 +18,10 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ProfileMenu: React.FC<ProfileMenuProps> = ({ children, ...props }) => {
+const ProfileMenu: React.FC<ProfileMenuProps & ConnectedProfileMenuProps> = ({
+  children,
+  ...props
+}) => {
   const classes = useStyles();
   const history = useHistory();
   const [anchor, setAnchor] = useState<HTMLButtonElement | null>(null);
@@ -70,4 +72,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   reset: () => dispatch(reset()),
 });
 
-export default connect(null, mapDispatchToProps)(ProfileMenu);
+const connector = connect(null, mapDispatchToProps);
+
+type ConnectedProfileMenuProps = ConnectedProps<typeof connector>;
+
+export default connector(ProfileMenu);

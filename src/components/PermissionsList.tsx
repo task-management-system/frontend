@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import {
   FormGroup,
   FormControl,
@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { State } from 'types/redux';
 
-const PermissionsList: React.FC<PermissionsLisState> = ({ power, permissions }) => {
+const PermissionsList: React.FC<ConnectedPermissionsListProps> = ({ power, permissions }) => {
   const [checked, setChecked] = useState<string[]>([]);
 
   useEffect(() => {
@@ -74,6 +74,8 @@ const mapStateToProps = (state: State) => ({
   permissions: state.metaData.permissions || [],
 });
 
-type PermissionsLisState = ReturnType<typeof mapStateToProps>;
+const connector = connect(mapStateToProps);
 
-export default connect(mapStateToProps)(PermissionsList);
+type ConnectedPermissionsListProps = ConnectedProps<typeof connector>;
+
+export default connector(PermissionsList);

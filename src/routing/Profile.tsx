@@ -1,10 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import UserForm from 'components/user/UserForm';
 import NoMatch from './NoMatch';
 import { State } from 'types/redux';
 
-const Profile: React.FC<ProfileState> = ({ hasUser }) => {
+const Profile: React.FC<ConnectedProfileProps> = ({ hasUser }) => {
   if (!hasUser) {
     return <NoMatch />;
   }
@@ -16,6 +16,8 @@ const mapStateToProps = (state: State) => ({
   hasUser: state.metaData.user !== null,
 });
 
-type ProfileState = ReturnType<typeof mapStateToProps>;
+const connector = connect(mapStateToProps);
 
-export default connect(mapStateToProps)(Profile);
+type ConnectedProfileProps = ConnectedProps<typeof connector>;
+
+export default connector(Profile);

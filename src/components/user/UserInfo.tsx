@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { FormikProps } from 'formik';
@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserInfo: React.FC<UserInfoProps & UserInfoState> = ({
+const UserInfo: React.FC<UserInfoProps & ConnectedUserInfoProps> = ({
   user,
   form,
   self = false,
@@ -152,10 +152,16 @@ const UserInfo: React.FC<UserInfoProps & UserInfoState> = ({
 
 const mapStateToProps = ({ metaData }: State) => ({
   permissions: {
-    update: haveAnyPermission(metaData.user?.role.power, ['UpdateUser'], metaData.permissions),
+    update: haveAnyPermission(
+      metaData.user?.role.power,
+      ['Administrator', 'UpdateUser'],
+      metaData.permissions
+    ),
   },
 });
 
-type UserInfoState = ReturnType<typeof mapStateToProps>;
+const connector = connect(mapStateToProps);
 
-export default connect(mapStateToProps)(UserInfo);
+type ConnectedUserInfoProps = ConnectedProps<typeof connector>;
+
+export default connector(UserInfo);

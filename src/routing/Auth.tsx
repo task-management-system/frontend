@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import {
   Card,
   CardContent,
@@ -79,7 +79,12 @@ const validationSchema = yup.object().shape({
   password: yup.string().min(8, 'Минимальная длина 8').required(REQUIRED_FIELD),
 });
 
-const Auth: React.FC<AuthDispatch> = ({ setUser, setPermissions, setStatuses, setStatus }) => {
+const Auth: React.FC<ConnectedAuthProps> = ({
+  setUser,
+  setPermissions,
+  setStatuses,
+  setStatus,
+}) => {
   const classes = useStyles();
 
   const sendData = async (values: AuthForm, helpers: FormikHelpers<AuthForm>) => {
@@ -181,6 +186,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setStatus: (payload: number) => dispatch(setStatus(payload)),
 });
 
-type AuthDispatch = ReturnType<typeof mapDispatchToProps>;
+const connector = connect(null, mapDispatchToProps);
 
-export default connect(null, mapDispatchToProps)(Auth);
+type ConnectedAuthProps = ConnectedProps<typeof connector>;
+
+export default connector(Auth);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { makeStyles } from '@material-ui/core';
 import { TabContext, TabPanel } from '@material-ui/lab';
 import Container from 'components/common/Container';
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Main: React.FC<MainState> = ({ group }) => {
+const Main: React.FC<ConnectedMainProps> = ({ group }) => {
   const classes = useStyles();
 
   return (
@@ -41,6 +41,8 @@ const mapStateToProps = (state: State) => ({
   group: state.tabs.group,
 });
 
-type MainState = ReturnType<typeof mapStateToProps>;
+const connector = connect(mapStateToProps);
 
-export default connect(mapStateToProps)(Main);
+type ConnectedMainProps = ConnectedProps<typeof connector>;
+
+export default connector(Main);

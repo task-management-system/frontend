@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { useFormik } from 'formik';
 import { Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const UserForm: React.FC<UserFormProps & UserFormState> = ({ id, self, permissions }) => {
+const UserForm: React.FC<UserFormProps & ConnectedUserFormProps> = ({ id, self, permissions }) => {
   const classes = useStyles();
   const [user, setUser] = useState<User | null>(null);
   const [editing, setEditing] = useState(false);
@@ -158,6 +158,8 @@ const mapStateToProps = ({ metaData }: State) => ({
   },
 });
 
-type UserFormState = ReturnType<typeof mapStateToProps>;
+const connector = connect(mapStateToProps);
 
-export default connect(mapStateToProps)(UserForm);
+type ConnectedUserFormProps = ConnectedProps<typeof connector>;
+
+export default connector(UserForm);
