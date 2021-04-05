@@ -73,3 +73,10 @@ export type TaskInstance = {
   id: UUID;
   task: TaskInfo;
 };
+
+export interface FileDescriptor {
+  id: UUID;
+  name: string;
+  size: number;
+  data?: Blob;
+}

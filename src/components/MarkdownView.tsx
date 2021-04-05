@@ -2,6 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import { List, ListItem, Typography, Checkbox, makeStyles } from '@material-ui/core';
 import { Variant } from '@material-ui/core/styles/createTypography';
+import ScrollableArea from 'components/common/ScrollableArea';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 
@@ -58,17 +59,6 @@ const useStyles = makeStyles(theme => ({
       borderRadius: theme.shape.borderRadius,
     },
   },
-  wrapper: {
-    overflow: 'auto',
-    '&::-webkit-scrollbar': {
-      width: 6,
-      height: 6,
-    },
-    '&::-webkit-scrollbar-thumb': {
-      borderRadius: 3,
-      backgroundColor: theme.palette.primary.main,
-    },
-  },
   outlined: {},
 }));
 
@@ -77,11 +67,11 @@ const MarkdownView: React.FC<MarkdownViewProps> = ({ className, outlined = false
 
   return (
     <div className={clsx(classes.root, outlined && classes.outlined, className)}>
-      <div className={classes.wrapper}>
+      <ScrollableArea>
         <ReactMarkdown plugins={plugins} renderers={renderers}>
           {children}
         </ReactMarkdown>
-      </div>
+      </ScrollableArea>
     </div>
   );
 };
