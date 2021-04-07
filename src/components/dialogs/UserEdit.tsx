@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { DialogTitle, DialogContent, DialogActions, makeStyles } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, makeStyles } from '@material-ui/core';
 import { useFormik } from 'formik';
-import WideDialog from 'components/themed/WideDialog';
 import NormalButton from 'components/themed/NormalButton';
 import UserInfo from 'components/user/UserInfo';
 import { updateUser } from 'api/v1';
@@ -69,7 +68,7 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
   return (
     <>
       {children({ handleOpen, handleClose })}
-      <WideDialog open={open} onClose={handleClose}>
+      <Dialog maxWidth="md" open={open} onClose={handleClose} fullWidth>
         <DialogTitle>{user?.username}</DialogTitle>
         <DialogContent className={classes.content}>
           <UserInfo user={user} form={formik} editing={true} />
@@ -82,7 +81,7 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
             Сохранить
           </NormalButton>
         </DialogActions>
-      </WideDialog>
+      </Dialog>
     </>
   );
 };

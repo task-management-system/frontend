@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -9,7 +10,6 @@ import {
 } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
 import * as yup from 'yup';
-import WideDialog from 'components/themed/WideDialog';
 import NormalButton from 'components/themed/NormalButton';
 import FormField from 'components/formik/FormField';
 import DateFormField from 'components/formik/DateFormField';
@@ -119,7 +119,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
   return (
     <>
       {children({ handleOpen, handleClose })}
-      <WideDialog open={open}>
+      <Dialog maxWidth="md" open={open} fullWidth>
         <DialogTitle>Создание задачи</DialogTitle>
         <Formik
           initialValues={initialValues}
@@ -180,7 +180,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
             </>
           )}
         </Formik>
-      </WideDialog>
+      </Dialog>
     </>
   );
 };
