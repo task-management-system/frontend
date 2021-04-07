@@ -18,8 +18,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const today = currentDate();
-
 const getClassName = (difference: number) => {
   if (difference <= 0) {
     return 'red';
@@ -34,7 +32,8 @@ const getClassName = (difference: number) => {
 
 const TaskDeadline: React.FC<TaskDeadlineProps> = ({ date }) => {
   const classes = useStyles();
-  const difference = useMemo(() => differenceInDays(date, today), [date, today]);
+  const today = React.useRef(currentDate());
+  const difference = useMemo(() => differenceInDays(date, today.current), [date, today]);
   const className = getClassName(difference);
 
   return (

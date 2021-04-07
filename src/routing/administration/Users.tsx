@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { Typography, Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import Container from 'components/common/Container';
@@ -6,9 +7,11 @@ import UsersGrid from 'components/user/UsersGrid';
 import LightSkeleton from 'components/themed/LightSkeleton';
 import TinyButton from 'components/themed/TinyButton';
 import usePromiseTrack from 'hooks/usePromiseTrack';
+import { setUsers, updateUser } from 'redux/actions/users';
 import { groupBy, range } from 'utils';
 import { getUsers } from 'api/v1';
 import { User } from 'types';
+import { State, Dispatch } from 'types/redux';
 
 type ChapterRefs = { [key: string]: React.RefObject<HTMLDivElement> };
 
@@ -43,21 +46,15 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Users: React.FC = () => {
+const Users: React.FC<ConnectedUsersProps> = ({ users, setUsers, updateUser }) => {
   const classes = useStyles();
-  const [users, setUsers] = useState<User[]>([]);
   const [inProgress, trackedGetUsers] = usePromiseTrack(getUsers);
 
   useEffect(() => {
     trackedGetUsers().then(response => {
       setUsers(response.data || []);
     });
-  }, []);
-
-  const updateUsers = async () => {
-    const response = await getUsers();
-    setUsers(response.data || []);
-  };
+  }, [trackedGetUsers, setUsers]);
 
   const groups = groupBy(users, user => user.username[0].toUpperCase());
   const chapters = [...groups.keys()].sort((a, b) => a.localeCompare(b));
@@ -95,7 +92,7 @@ const Users: React.FC = () => {
                 <Fade in={true} key={chapter}>
                   <div className={classes.group} ref={references[chapter]}>
                     <Typography variant="h4">{chapter}</Typography>
-                    <UsersGrid users={groups.get(chapter)!} updateUsers={updateUsers} />
+                    <UsersGrid users={groups.get(chapter)!} updateUser={updateUser} />
                   </div>
                 </Fade>
               ))
@@ -113,4 +110,17 @@ const Users: React.FC = () => {
   );
 };
 
-export default Users;
+const mapStateToProps = (state: State) => ({
+  users: state.users,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  setUsers: (payload: User[]) => dispatch(setUsers(payload)),
+  updateUser: (payload: User) => dispatch(updateUser(payload)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type ConnectedUsersProps = ConnectedProps<typeof connector>;
+
+export default connector(Users);

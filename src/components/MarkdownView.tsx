@@ -1,7 +1,7 @@
 import React from 'react';
-import clsx from 'clsx';
-import { List, ListItem, Typography, Checkbox, makeStyles } from '@material-ui/core';
+import { List, ListItem, Typography, Checkbox } from '@material-ui/core';
 import { Variant } from '@material-ui/core/styles/createTypography';
+import Wrapper from 'components/common/Wrapper';
 import ScrollableArea from 'components/common/ScrollableArea';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
@@ -49,31 +49,14 @@ const renderers = {
   ),
 };
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'grid',
-    overflow: 'hidden',
-    '&$outlined': {
-      padding: theme.spacing(1),
-      border: '1px solid rgba(0, 0, 0, 0.23)',
-      borderRadius: theme.shape.borderRadius,
-    },
-  },
-  outlined: {},
-}));
-
-const MarkdownView: React.FC<MarkdownViewProps> = ({ className, outlined = false, children }) => {
-  const classes = useStyles();
-
-  return (
-    <div className={clsx(classes.root, outlined && classes.outlined, className)}>
-      <ScrollableArea>
-        <ReactMarkdown plugins={plugins} renderers={renderers}>
-          {children}
-        </ReactMarkdown>
-      </ScrollableArea>
-    </div>
-  );
-};
+const MarkdownView: React.FC<MarkdownViewProps> = ({ className, outlined = false, children }) => (
+  <Wrapper className={className} outlined={outlined}>
+    <ScrollableArea>
+      <ReactMarkdown plugins={plugins} renderers={renderers}>
+        {children}
+      </ReactMarkdown>
+    </ScrollableArea>
+  </Wrapper>
+);
 
 export default MarkdownView;

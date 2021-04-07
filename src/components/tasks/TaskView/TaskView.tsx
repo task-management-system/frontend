@@ -7,12 +7,12 @@ import FilesUpload from 'components/common/FilesUpload';
 import FilesList from 'components/common/FilesList';
 import DateView from 'components/common/DateView';
 import NormalButton from 'components/themed/NormalButton';
-import { ReceivedTaskInfo, UUID } from 'types';
+import { DetailedTaskInfo, UUID } from 'types';
 import { CollectedResponse } from 'types/api';
 
-interface TaskViewProps<T> {
+interface TaskViewProps {
   id: UUID;
-  loadTask: (id: UUID) => Promise<CollectedResponse<T>>;
+  loadTask: (id: UUID) => Promise<CollectedResponse<DetailedTaskInfo>>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -55,12 +55,9 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TaskView = <T,>({
-  id,
-  loadTask,
-}: React.PropsWithChildren<TaskViewProps<ReceivedTaskInfo>>) => {
+const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
   const classes = useStyles();
-  const [data, setData] = useState<ReceivedTaskInfo | null>(null);
+  const [data, setData] = useState<DetailedTaskInfo | null>(null);
 
   useEffect(() => {
     loadTask(id).then(response => {
@@ -68,7 +65,7 @@ const TaskView = <T,>({
         setData(response.data);
       }
     });
-  }, []);
+  }, [loadTask, id]);
 
   return data !== null ? (
     <div className={classes.root}>

@@ -10,7 +10,7 @@ import { UndefinableUserForm } from 'types/components/user';
 
 interface UserEditProps {
   user: User;
-  onChange: () => Promise<void>;
+  onChange: (payload: User) => void;
   children: (helpers: DialogChildrenHelpers) => React.ReactNode;
 }
 
@@ -43,15 +43,18 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
           name: values.name || null,
           email: values.email || null,
           roleId: values.role?.id || user.role.id,
-        }).then(() => {
-          onChange();
+        }).then(response => {
+          if (response.data !== null) {
+            onChange(response.data);
+          }
+
           handleClose();
         });
       }
     },
   });
 
-  const resetForm = () => {
+  useEffect(() => {
     formik.resetForm({
       values: {
         username: user?.username,
@@ -60,11 +63,7 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
         role: user?.role,
       },
     });
-  };
-
-  useEffect(() => {
-    resetForm();
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

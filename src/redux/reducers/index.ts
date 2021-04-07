@@ -1,16 +1,18 @@
 import { combineReducers } from 'redux';
 import metaData from './metaData';
-import notifications from './notifications';
 import cache from './cache';
 import tabs from './tabs';
+import notifications from './notifications';
+import users from './users';
 import { State, Action } from 'types/redux';
 import { RESET_STORE } from '../actionTypes';
 
 const appReducer = combineReducers({
   metaData,
-  notifications,
   cache,
   tabs,
+  notifications,
+  users,
 });
 
 const rootReducer = (state: State | undefined, action: any) => {

@@ -3,23 +3,26 @@ import { ButtonProps } from '@material-ui/core';
 import NormalButton from 'components/themed/NormalButton';
 import usePromiseTrack from 'hooks/usePromiseTrack';
 import { lock, unlock } from 'api/v1';
-import { UUID } from 'types';
+import { User, UUID } from 'types';
 
 interface ToggleLockButtonProps {
   userId: UUID;
   isActive: boolean;
-  onClick: () => Promise<void>;
+  onClick: (payload: User) => void;
 }
 
-const ToggleLockButton: React.FC<ToggleLockButtonProps & ButtonProps> = ({
+const ToggleLockButton: React.FC<ToggleLockButtonProps & Omit<ButtonProps, 'onClick'>> = ({
   userId,
   isActive,
   onClick,
   ...props
 }) => {
   const handleClick = async () => {
-    await (isActive ? lock : unlock)(userId);
-    await onClick();
+    const response = await (isActive ? lock : unlock)(userId);
+
+    if (response.data !== null) {
+      onClick(response.data);
+    }
   };
 
   const [inProgress, trackedHandleClick] = usePromiseTrack(handleClick);

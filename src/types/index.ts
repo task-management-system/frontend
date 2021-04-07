@@ -63,7 +63,7 @@ export interface TaskInfo {
   dueDate: string;
 }
 
-export interface ReceivedTaskInfo extends TaskInfo {
+export interface DetailedTaskInfo extends TaskInfo {
   markdown: string | null;
   parent: Parent;
   createdAt: string;

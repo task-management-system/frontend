@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@material-ui/core';
 import { getReceivedTask } from 'api/v1';
-import { ReceivedTaskInfo, UUID } from 'types';
+import { DetailedTaskInfo, UUID } from 'types';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
 import NormalButton from 'components/themed/NormalButton';
 import MarkdownView from 'components/MarkdownView';
@@ -15,7 +15,7 @@ interface ReceivedTaskViewProps {
 /** @deprecated */
 const ReceivedTaskView: React.FC<ReceivedTaskViewProps> = ({ id, children }) => {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<ReceivedTaskInfo | null>(null);
+  const [data, setData] = useState<DetailedTaskInfo | null>(null);
 
   useEffect(() => {
     if (open) {

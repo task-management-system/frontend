@@ -3,7 +3,7 @@ import { Notifications, NotificationsAction } from 'types/redux/reducers';
 
 const initialState: Notifications = [];
 
-const metaDataReducer = (
+const notificationsReducer = (
   state: Notifications = initialState,
   action: NotificationsAction
 ): Notifications => {
@@ -17,4 +17,4 @@ const metaDataReducer = (
   }
 };
 
-export default metaDataReducer;
+export default notificationsReducer;

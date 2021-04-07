@@ -5,7 +5,7 @@ const initialState: Cache = {
   roles: null,
 };
 
-const metaDataReducer = (state: Cache = initialState, action: CacheAction): Cache => {
+const cacheReducer = (state: Cache = initialState, action: CacheAction): Cache => {
   switch (action.type) {
     case SET_CACHE:
       return {
@@ -21,4 +21,4 @@ const metaDataReducer = (state: Cache = initialState, action: CacheAction): Cach
   }
 };
 
-export default metaDataReducer;
+export default cacheReducer;

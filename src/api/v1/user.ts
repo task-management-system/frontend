@@ -11,7 +11,7 @@ export const lock = (id: UUID) => {
   });
 
   return withNotification(
-    withAuthorization(methods.patch<null, null>(`${API_BASE}/lock?${params}`, null))
+    withAuthorization(methods.patch<null, User>(`${API_BASE}/lock?${params}`, null))
   );
 };
 
@@ -21,7 +21,7 @@ export const unlock = (id: UUID) => {
   });
 
   return withNotification(
-    withAuthorization(methods.patch<null, null>(`${API_BASE}/unlock?${params}`, null))
+    withAuthorization(methods.patch<null, User>(`${API_BASE}/unlock?${params}`, null))
   );
 };
 

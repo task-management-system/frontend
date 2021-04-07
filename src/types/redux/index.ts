@@ -1,12 +1,13 @@
 import { Store, CombinedState } from 'redux';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
-import { MetaData, Notifications, Cache, Tabs } from './reducers';
+import { MetaData, Notifications, Cache, Tabs, Users } from './reducers';
 
 export type State = CombinedState<{
   metaData: MetaData;
-  notifications: Notifications;
   cache: Cache;
   tabs: Tabs;
+  notifications: Notifications;
+  users: Users;
 }>;
 export interface Action<T> {
   type: string;

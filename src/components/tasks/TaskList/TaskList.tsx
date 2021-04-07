@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Paper, Typography, Divider, Fade, makeStyles } from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
@@ -60,7 +60,7 @@ const TaskList = <T,>({
   });
   const [inProgress, trackedGetTasks] = usePromiseTrack(getTasks);
 
-  const loadTasks = () => {
+  const loadTasks = useCallback(() => {
     if (status !== null) {
       const pagination = { page, size: SIZE };
 
@@ -74,11 +74,11 @@ const TaskList = <T,>({
         }
       });
     }
-  };
+  }, [trackedGetTasks, status, page]);
 
   useEffect(() => {
     loadTasks();
-  }, [status, page]);
+  }, [loadTasks]);
 
   const count = tasks.list.length;
 

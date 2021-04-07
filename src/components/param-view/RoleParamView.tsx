@@ -20,7 +20,7 @@ const RoleParamView: React.FC<RoleParamViewProps> = props => {
         setOptions(response.data || []);
       });
     }
-  }, [props.editing]);
+  }, [options.length, props.editing]);
 
   return (
     <AutocompleteParamView

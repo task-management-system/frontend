@@ -21,7 +21,7 @@ import { State } from 'types/redux';
 
 interface UserCardProps {
   user: User;
-  onChange: () => Promise<void>;
+  onChange: (payload: User) => void;
 }
 
 const useStyles = makeStyles(theme => ({

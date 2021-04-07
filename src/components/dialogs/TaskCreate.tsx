@@ -10,17 +10,20 @@ import {
 } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
 import * as yup from 'yup';
-import NormalButton from 'components/themed/NormalButton';
+import FilesUpload from 'components/common/FilesUpload';
 import FormField from 'components/formik/FormField';
 import DateFormField from 'components/formik/DateFormField';
 import ExecutorsAutocomplete from 'components/fields/ExecutorsAutocomplete';
-import MarkdownView from 'components/MarkdownView';
 import MarkdownEditor from 'components/MarkdownEditor';
+import MarkdownView from 'components/MarkdownView';
+import NormalButton from 'components/themed/NormalButton';
 import { currentDate, parseDateString } from 'utils/date';
 import { REQUIRED_FIELD } from 'constants/fields';
 import { Executor } from 'types';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
 import { createTask } from 'api/v1';
+import ScrollableArea from 'components/common/ScrollableArea';
+import Wrapper from 'components/common/Wrapper';
 
 interface TaskCreateProps {
   onCreate: () => void;
@@ -40,6 +43,15 @@ const useStyles = makeStyles(theme => ({
     gap: theme.spacing(2),
     display: 'grid',
     gridTemplateRows: 'max-content',
+  },
+  wrapper: {
+    gap: theme.spacing(2),
+    display: 'grid',
+    gridTemplateColumns: '1fr 280px',
+    [theme.breakpoints.down('md')]: {
+      gridTemplateColumns: '1fr',
+      gridAutoRows: 'max-content',
+    },
   },
   editor: {
     height: 320,
@@ -119,7 +131,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
   return (
     <>
       {children({ handleOpen, handleClose })}
-      <Dialog maxWidth="md" open={open} fullWidth>
+      <Dialog maxWidth="lg" open={open} fullWidth>
         <DialogTitle>Создание задачи</DialogTitle>
         <Formik
           initialValues={initialValues}
@@ -145,17 +157,24 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
                   disabled={isSubmitting}
                   required
                 />
-                {preview ? (
-                  <MarkdownView className={classes.editor} outlined>
-                    {values.markdown}
-                  </MarkdownView>
-                ) : (
-                  <MarkdownEditor
-                    className={classes.editor}
-                    value={values.markdown}
-                    onChange={value => setFieldValue('markdown', value)}
-                  />
-                )}
+                <div className={classes.wrapper}>
+                  {preview ? (
+                    <MarkdownView className={classes.editor} outlined>
+                      {values.markdown}
+                    </MarkdownView>
+                  ) : (
+                    <MarkdownEditor
+                      className={classes.editor}
+                      value={values.markdown}
+                      onChange={value => setFieldValue('markdown', value)}
+                    />
+                  )}
+                  <Wrapper className={classes.editor} outlined>
+                    <ScrollableArea>
+                      <FilesUpload />
+                    </ScrollableArea>
+                  </Wrapper>
+                </div>
                 <FormControlLabel
                   className={classes.switch}
                   control={

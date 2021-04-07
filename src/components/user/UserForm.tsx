@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { useFormik } from 'formik';
 import { Fade, makeStyles } from '@material-ui/core';
@@ -42,10 +42,10 @@ const UserForm: React.FC<UserFormProps & ConnectedUserFormProps> = ({ id, self, 
   const [editing, setEditing] = useState(false);
   const inProgress = user === null;
 
-  const handleLoadUser = async () => {
+  const handleLoadUser = useCallback(async () => {
     const response = await (id === undefined ? getCurrentUser() : getUser(id));
     setUser(response.data || null);
-  };
+  }, [id]);
 
   const formik = useFormik<UndefinableUserForm>({
     initialValues: {
@@ -90,7 +90,11 @@ const UserForm: React.FC<UserFormProps & ConnectedUserFormProps> = ({ id, self, 
 
   useEffect(() => {
     resetForm();
-  }, [user]);
+  }, [user]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    handleLoadUser();
+  }, [handleLoadUser]);
 
   const handleEditingClick = () => {
     if (editing) {
@@ -104,10 +108,6 @@ const UserForm: React.FC<UserFormProps & ConnectedUserFormProps> = ({ id, self, 
     setEditing(false);
     resetForm();
   };
-
-  useEffect(() => {
-    handleLoadUser();
-  }, [id]);
 
   return (
     <Container className={classes.root}>

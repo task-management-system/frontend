@@ -5,6 +5,7 @@ import { Add, Check, Delete } from '@material-ui/icons';
 import useStyles from './styles';
 import { createUserTemplate, validationSchema } from './form';
 import Container from 'components/common/Container';
+import PasswordField from 'components/common/PasswordField';
 import FormField from 'components/formik/FormField';
 import AutocompleteFormField from 'components/formik/AutocompleteFormField';
 import FlatButton from 'components/themed/FlatButton';
@@ -88,9 +89,10 @@ const AddUser: React.FC = () => {
                       </div>
                       <div className={classes.container}>
                         <FormField
+                          component={PasswordField}
                           label="Пароль"
                           name={`users[${index}].password`}
-                          disabled
+                          disabled={isSubmitting}
                           required
                         />
                         <AutocompleteFormField

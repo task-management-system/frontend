@@ -1,6 +1,6 @@
 import { methods } from 'api/core';
 import { withAuthorization, withNotification } from 'api/utils';
-import { ReceivedTaskInfo, UUID } from 'types';
+import { DetailedTaskInfo, UUID } from 'types';
 import { CreateTask } from 'types/api/v1';
 
 const API_BASE = '/task';
@@ -14,7 +14,7 @@ export const getReceivedTask = (id: UUID) => {
   });
 
   return withNotification(
-    withAuthorization(methods.get<ReceivedTaskInfo>(`${API_BASE}/received?${params}`))
+    withAuthorization(methods.get<DetailedTaskInfo>(`${API_BASE}/received?${params}`))
   );
 };
 

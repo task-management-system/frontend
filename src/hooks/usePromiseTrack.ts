@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 function usePromiseTrack<X extends any[], T>(
   promise: (...args: X) => Promise<T>,
@@ -14,21 +14,24 @@ function usePromiseTrack<X extends any[], T>(
     };
   }, []);
 
-  const wrapper = (...args: X): Promise<T> =>
-    new Promise((resolve, reject) => {
-      setInProgress(true);
+  const wrapper = useCallback(
+    (...args: X): Promise<T> =>
+      new Promise((resolve, reject) => {
+        setInProgress(true);
 
-      return promise(...args)
-        .then(resolve)
-        .catch(reject)
-        .finally(() => {
-          setTimeout(() => {
-            if (isMounted.current) {
-              setInProgress(false);
-            }
-          }, delay);
-        });
-    });
+        return promise(...args)
+          .then(resolve)
+          .catch(reject)
+          .finally(() => {
+            setTimeout(() => {
+              if (isMounted.current) {
+                setInProgress(false);
+              }
+            }, delay);
+          });
+      }),
+    [promise, delay]
+  );
 
   return [inProgress, wrapper];
 }
