@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { AddBox } from '@material-ui/icons';
 import FileButton from 'components/themed/FileButton';
 import FilesList from './FilesList';
@@ -7,6 +7,7 @@ import { FileDescriptor, UUID } from 'types';
 
 interface FilesUploadProps {
   className?: string;
+  onChange?: (files: File[]) => void;
 }
 
 const createImprint = (file: File) => {
@@ -15,9 +16,24 @@ const createImprint = (file: File) => {
   return payload.map(entry => btoa(encodeURIComponent(entry))).join('_');
 };
 
-const FilesUpload: React.FC<FilesUploadProps> = ({ className }) => {
+const getFiles = (descriptors: FileDescriptor[]) =>
+  descriptors.reduce<File[]>((files, descriptor) => {
+    if (descriptor.data !== undefined && descriptor.data !== null) {
+      files.push(descriptor.data);
+    }
+
+    return files;
+  }, []);
+
+const FilesUpload: React.FC<FilesUploadProps> = ({ className, onChange }) => {
   const [files, setFiles] = useState<FileDescriptor[]>([]);
   const input = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (typeof onChange === 'function') {
+      onChange(getFiles(files));
+    }
+  }, [files]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const removeItem = useCallback((id: UUID) => {
     setFiles(files => files.filter(file => file.id !== id));

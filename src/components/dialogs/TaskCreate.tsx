@@ -36,6 +36,7 @@ interface TaskCreateForm {
   executors: Executor[];
   markdown: string;
   dueDate: Date | null;
+  files: File[];
 }
 
 const useStyles = makeStyles(theme => ({
@@ -69,6 +70,7 @@ const initialValues: TaskCreateForm = {
   executors: [],
   markdown: '',
   dueDate: null,
+  files: [],
 };
 
 const validationSchema = yup.object().shape({
@@ -171,7 +173,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
                   )}
                   <Wrapper className={classes.editor} outlined>
                     <ScrollableArea>
-                      <FilesUpload />
+                      <FilesUpload onChange={files => setFieldValue('files', files)} />
                     </ScrollableArea>
                   </Wrapper>
                 </div>

@@ -78,5 +78,5 @@ export interface FileDescriptor {
   id: UUID;
   name: string;
   size: number;
-  data?: Blob;
+  data?: File;
 }
