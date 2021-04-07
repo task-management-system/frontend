@@ -37,7 +37,8 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
     },
     onSubmit: values => {
       if (user !== null) {
-        updateUser(user.id, {
+        updateUser({
+          id: user.id,
           username: values.username || user.username,
           name: values.name || null,
           email: values.email || null,

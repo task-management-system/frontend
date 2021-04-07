@@ -15,6 +15,10 @@ export interface AuthWithEmail {
   password: string;
 }
 
+export interface WithId {
+  id: UUID;
+}
+
 export interface TransferUser {
   username: string;
   name: string | null;
@@ -23,7 +27,6 @@ export interface TransferUser {
 }
 
 export interface ChangePassword {
-  id: UUID;
   oldPassword: string;
   newPassword: string;
 }

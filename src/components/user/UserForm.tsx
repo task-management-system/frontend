@@ -56,7 +56,8 @@ const UserForm: React.FC<UserFormProps & ConnectedUserFormProps> = ({ id, self, 
     },
     onSubmit: values => {
       if (user !== null) {
-        updateUser(user.id, {
+        updateUser({
+          id: user.id,
           username: values.username || user.username,
           name: values.name || null,
           email: values.email || null,

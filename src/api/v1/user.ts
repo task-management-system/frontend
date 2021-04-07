@@ -1,7 +1,7 @@
 import { methods } from 'api/core';
 import { withNotification, withAuthorization } from '../utils';
 import { User, UUID } from 'types';
-import { TransferUser, ChangePassword } from 'types/api/v1';
+import { WithId, TransferUser, ChangePassword } from 'types/api/v1';
 
 const API_BASE = '/user';
 
@@ -33,17 +33,10 @@ export const getUser = (id: UUID) => {
   return withNotification(withAuthorization(methods.get<User>(`${API_BASE}?${params}`)));
 };
 
-export const updateUser = (id: UUID, data: TransferUser) => {
-  const params = new URLSearchParams({
-    id,
-  });
+export const updateUser = (data: WithId & TransferUser) =>
+  withNotification(withAuthorization(methods.patch<TransferUser, User>(API_BASE, data)));
 
-  return withNotification(
-    withAuthorization(methods.patch<TransferUser, null>(`${API_BASE}?${params}`, data))
-  );
-};
-
-export const changePassword = (data: ChangePassword) =>
+export const changePassword = (data: WithId & ChangePassword) =>
   withNotification(
     withAuthorization(methods.patch<ChangePassword, null>(`${API_BASE}/change-password`, data))
   );
