@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import { AddBox } from '@material-ui/icons';
 import FileButton from 'components/themed/FileButton';
 import FilesList from './FilesList';
 import { ACCEPT_FILES, MAX_FILE_SIZE } from 'constants/files';
-import { FileDescriptor, UUID } from 'types';
+import { addNotification } from 'redux/actions/notifications';
+import { FileDescriptor, Notification, UUID } from 'types';
+import { Dispatch } from 'types/redux';
+import { createNotification } from 'utils/notification';
 
 interface FilesUploadProps {
   className?: string;
@@ -26,7 +30,12 @@ const getFiles = (descriptors: FileDescriptor[]) =>
     return files;
   }, []);
 
-const FilesUpload: React.FC<FilesUploadProps> = ({ className, readOnly = false, onChange }) => {
+const FilesUpload: React.FC<FilesUploadProps & ConnectedFilesUploadProps> = ({
+  className,
+  readOnly = false,
+  onChange,
+  addNotification,
+}) => {
   const [files, setFiles] = useState<FileDescriptor[]>([]);
   const input = useRef<HTMLInputElement>(null);
 
@@ -46,6 +55,7 @@ const FilesUpload: React.FC<FilesUploadProps> = ({ className, readOnly = false, 
     if (input.current?.files) {
       const collectedFiles: FileDescriptor[] = [];
       const currentFiles = new Set(files.map(file => file.id));
+      const warnings = [];
 
       for (let index = 0; index < input.current.files.length; index++) {
         const file = input.current.files.item(index);
@@ -60,11 +70,24 @@ const FilesUpload: React.FC<FilesUploadProps> = ({ className, readOnly = false, 
                 size: file.size,
                 data: file,
               });
+            } else {
+              warnings.push({
+                name: file.name,
+                cause: 'Файл уже добавлен в очередь',
+              });
             }
+          } else {
+            warnings.push({
+              name: file.name,
+              cause: 'Файл является слишком большим для загрузки',
+            });
           }
         }
       }
 
+      if (warnings.length > 0) {
+        addNotification(createNotification('warning', 'Не удалось добавить файл(-ы)', warnings));
+      }
       setFiles(files => [...files, ...collectedFiles]);
 
       input.current.value = '';
@@ -96,4 +119,12 @@ const FilesUpload: React.FC<FilesUploadProps> = ({ className, readOnly = false, 
   );
 };
 
-export default FilesUpload;
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  addNotification: (payload: Notification) => dispatch(addNotification(payload)),
+});
+
+const connector = connect(null, mapDispatchToProps);
+
+type ConnectedFilesUploadProps = ConnectedProps<typeof connector>;
+
+export default connector(FilesUpload);

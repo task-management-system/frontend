@@ -10,13 +10,13 @@ import { State } from 'types/redux';
 const App: React.FC<ConnectedAppProps> = ({ authorized }) => (
   <>
     <CssBaseline />
-    <NotificationViewer />
     <Router>
       <Switch>
         <Route exact path="/auth" render={() => (authorized ? <Redirect to="/" /> : <Auth />)} />
         <Route path="*" render={() => (!authorized ? <Redirect to="/auth" /> : <Home />)} />
       </Switch>
     </Router>
+    <NotificationViewer />
   </>
 );
 
