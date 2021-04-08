@@ -4,6 +4,7 @@ import { createNotification } from 'utils/notification';
 import { reset } from 'redux/actions/common';
 import { addNotification } from 'redux/actions/notifications';
 import { setCache } from 'redux/actions/cache';
+import { NotificationDetails } from 'types';
 import { CollectedResponse } from 'types/api';
 
 export const removeToken = async () => {
@@ -34,13 +35,20 @@ export const withAuthorization = <T>(
   });
 
 export const withNotification = <T>(
-  handler: Promise<CollectedResponse<T>>
+  handler: Promise<CollectedResponse<T>>,
+  detailsExtractor: (response: CollectedResponse<T>) => NotificationDetails | null = () => null
 ): Promise<CollectedResponse<T>> =>
   handler
     .then(response => {
       if (response.message !== null) {
         store.dispatch(
-          addNotification(createNotification(response.message.type, response.message.text))
+          addNotification(
+            createNotification(
+              response.message.type,
+              response.message.text,
+              detailsExtractor(response)
+            )
+          )
         );
       }
 
@@ -48,7 +56,11 @@ export const withNotification = <T>(
     })
     .catch((error: CollectedResponse<T> | any) => {
       if (typeof error.message === 'object' && 'type' in error.message && 'text' in error.message) {
-        store.dispatch(addNotification(createNotification(error.message.type, error.message.text)));
+        store.dispatch(
+          addNotification(
+            createNotification(error.message.type, error.message.text, detailsExtractor(error))
+          )
+        );
       } else {
         store.dispatch(addNotification(createNotification('error', 'Кажется что-то пошло не так')));
       }

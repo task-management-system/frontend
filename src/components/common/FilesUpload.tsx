@@ -7,6 +7,7 @@ import { FileDescriptor, UUID } from 'types';
 
 interface FilesUploadProps {
   className?: string;
+  readOnly?: boolean;
   onChange?: (files: File[]) => void;
 }
 
@@ -25,7 +26,7 @@ const getFiles = (descriptors: FileDescriptor[]) =>
     return files;
   }, []);
 
-const FilesUpload: React.FC<FilesUploadProps> = ({ className, onChange }) => {
+const FilesUpload: React.FC<FilesUploadProps> = ({ className, readOnly = false, onChange }) => {
   const [files, setFiles] = useState<FileDescriptor[]>([]);
   const input = useRef<HTMLInputElement>(null);
 
@@ -76,14 +77,21 @@ const FilesUpload: React.FC<FilesUploadProps> = ({ className, onChange }) => {
         type="file"
         accept={ACCEPT_FILES}
         onChange={handleChange}
-        ref={input}
+        disabled={readOnly}
         multiple
         hidden
+        ref={input}
       />
-      <FileButton color="primary" startIcon={<AddBox />} onClick={handleAdd} fullWidth>
+      <FileButton
+        color="primary"
+        startIcon={<AddBox />}
+        disabled={readOnly}
+        onClick={handleAdd}
+        fullWidth
+      >
         Добавить файлы
       </FileButton>
-      <FilesList files={files} removeItem={removeItem} />
+      <FilesList files={files} removeItem={!readOnly ? removeItem : undefined} />
     </div>
   );
 };

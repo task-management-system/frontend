@@ -3,7 +3,7 @@ import { CollectedResponse, BasicResponse, Pagination } from 'types/api';
 
 const API_URL = '/api/v1';
 
-export const prepareHeaders = async (headers: Headers): Promise<void> => {
+export const prepareHeaders = async <T>(headers: Headers, payload?: T): Promise<void> => {
   const token = await getToken();
 
   if (token !== null) {
@@ -11,7 +11,17 @@ export const prepareHeaders = async (headers: Headers): Promise<void> => {
   }
 
   if (!headers.has('Content-Type')) {
-    headers.append('Content-Type', 'application/json');
+    if (!(payload instanceof FormData)) {
+      headers.append('Content-Type', 'application/json');
+    }
+  }
+};
+
+export const prepareBody = <T>(payload: T) => {
+  if (payload instanceof FormData) {
+    return payload;
+  } else {
+    return JSON.stringify(payload);
   }
 };
 
@@ -53,12 +63,13 @@ const postMethod = async <P, T>(
   payload: P,
   headers: Headers = new Headers()
 ): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(headers);
+  await prepareHeaders(headers, payload);
+  const body = prepareBody(payload);
 
   return fetch(`${API_URL}${url}`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(payload),
+    body,
   }).then(response => collectResponse(response));
 };
 
@@ -67,12 +78,13 @@ const putMethod = async <P, T>(
   payload: P,
   headers: Headers = new Headers()
 ): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(headers);
+  await prepareHeaders(headers, payload);
+  const body = prepareBody(payload);
 
   return fetch(`${API_URL}${url}`, {
     method: 'PUT',
     headers,
-    body: JSON.stringify(payload),
+    body,
   }).then(response => collectResponse(response));
 };
 
@@ -81,12 +93,13 @@ const patchMethod = async <P, T>(
   payload: P,
   headers: Headers = new Headers()
 ): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(headers);
+  await prepareHeaders(headers, payload);
+  const body = prepareBody(payload);
 
   return fetch(`${API_URL}${url}`, {
     method: 'PATCH',
     headers,
-    body: JSON.stringify(payload),
+    body,
   }).then(response => collectResponse(response));
 };
 
@@ -95,12 +108,13 @@ const deleteMethod = async <P, T>(
   payload: P,
   headers: Headers = new Headers()
 ): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(headers);
+  await prepareHeaders(headers, payload);
+  const body = prepareBody(payload);
 
   return fetch(`${API_URL}${url}`, {
     method: 'DELETE',
     headers,
-    body: JSON.stringify(payload),
+    body,
   }).then(response => collectResponse(response));
 };
 

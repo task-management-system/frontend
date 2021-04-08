@@ -8,6 +8,7 @@ export interface EditorProps {
   className?: string;
   value?: string;
   groupActions?: Action[][];
+  disabled?: boolean;
   onChange?: (value: string) => void;
 }
 
@@ -64,6 +65,7 @@ const Editor: React.FC<EditorProps> = ({
   className,
   value = '',
   groupActions = [],
+  disabled = false,
   onChange = noop,
 }) => {
   const classes = useStyles();
@@ -96,6 +98,7 @@ const Editor: React.FC<EditorProps> = ({
               size="small"
               color="secondary"
               variant="contained"
+              disabled={disabled}
               disableElevation
               key={index}
             >
@@ -112,6 +115,7 @@ const Editor: React.FC<EditorProps> = ({
         <textarea
           className={classes.textarea}
           value={value}
+          disabled={disabled}
           onChange={handleChange}
           ref={textarea}
         ></textarea>

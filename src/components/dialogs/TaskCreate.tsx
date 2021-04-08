@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -6,10 +6,13 @@ import {
   DialogActions,
   FormControlLabel,
   Switch,
+  CircularProgress,
   makeStyles,
 } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
 import * as yup from 'yup';
+import ScrollableArea from 'components/common/ScrollableArea';
+import Wrapper from 'components/common/Wrapper';
 import FilesUpload from 'components/common/FilesUpload';
 import FormField from 'components/formik/FormField';
 import DateFormField from 'components/formik/DateFormField';
@@ -19,11 +22,10 @@ import MarkdownView from 'components/MarkdownView';
 import NormalButton from 'components/themed/NormalButton';
 import { currentDate, parseDateString } from 'utils/date';
 import { REQUIRED_FIELD } from 'constants/fields';
+import { createTask, attachFilesToCreated } from 'api/v1';
+import CreateTaskStage from 'enums/CreateTask';
 import { Executor } from 'types';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
-import { createTask } from 'api/v1';
-import ScrollableArea from 'components/common/ScrollableArea';
-import Wrapper from 'components/common/Wrapper';
 
 interface TaskCreateProps {
   onCreate: () => void;
@@ -40,6 +42,12 @@ interface TaskCreateForm {
 }
 
 const useStyles = makeStyles(theme => ({
+  header: {
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridAutoColumns: 'max-content',
+    alignItems: 'center',
+  },
   content: {
     gap: theme.spacing(2),
     display: 'grid',
@@ -91,6 +99,7 @@ const validationSchema = yup.object().shape({
   dueDate: yup
     .date()
     .transform(parseDateString)
+    .typeError('Дата не является валидной')
     .min(today, 'Дата не может быть раньше сегоднешней')
     .nullable()
     .required(REQUIRED_FIELD),
@@ -99,7 +108,14 @@ const validationSchema = yup.object().shape({
 const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [stage, setStage] = useState<CreateTaskStage>(CreateTaskStage.None);
   const [preview, setPreview] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setStage(CreateTaskStage.None);
+    }
+  }, [open]);
 
   const handleOpen = () => setOpen(true);
 
@@ -110,19 +126,37 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
 
     const data = {
       title: values.title,
-      description: values.description,
-      markdown: values.markdown,
+      description: values.description || null,
+      markdown: values.markdown || null,
       dueDate: values.dueDate!.toISOString(),
       executorIds: values.executors.map(executor => executor.id),
     };
 
     createTask(data)
       .then(response => {
-        helpers.setSubmitting(false);
-
         if (response.details.ok) {
-          handleClose();
-          onCreate();
+          setStage(CreateTaskStage.Prepared);
+          if (values.files.length > 0) {
+            attachFilesToCreated(response.data!.id, values.files)
+              .then(() => {
+                setStage(CreateTaskStage.Created);
+                helpers.setSubmitting(false);
+
+                handleClose();
+                onCreate();
+              })
+              .catch(() => {
+                helpers.setSubmitting(false);
+              });
+          } else {
+            setStage(CreateTaskStage.Created);
+            helpers.setSubmitting(false);
+
+            handleClose();
+            onCreate();
+          }
+        } else {
+          helpers.setSubmitting(false);
         }
       })
       .catch(() => {
@@ -134,7 +168,6 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
     <>
       {children({ handleOpen, handleClose })}
       <Dialog maxWidth="lg" open={open} fullWidth>
-        <DialogTitle>Создание задачи</DialogTitle>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -143,6 +176,10 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
         >
           {({ values, setFieldValue, submitForm, isSubmitting }) => (
             <>
+              <div className={classes.header}>
+                <DialogTitle>Создание задачи</DialogTitle>
+                {isSubmitting && <CircularProgress size={24} />}
+              </div>
               <DialogContent className={classes.content}>
                 <FormField label="Название" name="title" disabled={isSubmitting} required />
                 <FormField label="Описание" name="description" disabled={isSubmitting} />
@@ -168,12 +205,16 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
                     <MarkdownEditor
                       className={classes.editor}
                       value={values.markdown}
+                      disabled={isSubmitting}
                       onChange={value => setFieldValue('markdown', value)}
                     />
                   )}
                   <Wrapper className={classes.editor} outlined>
                     <ScrollableArea>
-                      <FilesUpload onChange={files => setFieldValue('files', files)} />
+                      <FilesUpload
+                        readOnly={stage !== CreateTaskStage.None || isSubmitting}
+                        onChange={files => setFieldValue('files', files)}
+                      />
                     </ScrollableArea>
                   </Wrapper>
                 </div>
@@ -191,12 +232,16 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
                 />
               </DialogContent>
               <DialogActions>
-                <NormalButton color="primary" disabled={isSubmitting} onClick={handleClose}>
-                  Отмена
-                </NormalButton>
-                <NormalButton color="primary" disabled={isSubmitting} onClick={submitForm}>
-                  Создать
-                </NormalButton>
+                {stage !== CreateTaskStage.Prepared && (
+                  <NormalButton color="primary" disabled={isSubmitting} onClick={handleClose}>
+                    {stage === CreateTaskStage.None ? 'Отмена' : 'Закрыть'}
+                  </NormalButton>
+                )}
+                {stage !== CreateTaskStage.Created && (
+                  <NormalButton color="primary" disabled={isSubmitting} onClick={submitForm}>
+                    Создать
+                  </NormalButton>
+                )}
               </DialogActions>
             </>
           )}

@@ -25,12 +25,20 @@ export interface Permission {
   description: string;
 }
 
+export interface Rejection {
+  name: string;
+  cause: string;
+}
+
 export type NotificationType = 'success' | 'error' | 'warning';
+
+export type NotificationDetails = Rejection[];
 
 export interface Notification {
   id: string;
   type: NotificationType;
   text: string;
+  details: NotificationDetails | null;
 }
 
 export interface Status {
@@ -65,7 +73,8 @@ export interface TaskInfo {
 
 export interface DetailedTaskInfo extends TaskInfo {
   markdown: string | null;
-  parent: Parent;
+  files: FileDescriptor[];
+  parent?: Parent;
   createdAt: string;
 }
 

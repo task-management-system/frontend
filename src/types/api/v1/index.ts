@@ -1,4 +1,4 @@
-import { User, UUID } from 'types';
+import { User, FileDescriptor, UUID } from 'types';
 
 export interface AuthInfo {
   user: User | null;
@@ -34,7 +34,20 @@ export interface ChangePassword {
 export interface CreateTask {
   title: string;
   description: string | null;
-  markdown: string;
+  markdown: string | null;
   dueDate: string;
   executorIds: UUID[];
+}
+
+export interface FailedFileUpload {
+  name: string;
+  size?: number;
+  cause: string;
+}
+
+export type SuccessFileUpload = Omit<FileDescriptor, 'data'>;
+
+export interface FilesUpload {
+  e: FailedFileUpload[];
+  s: SuccessFileUpload[];
 }

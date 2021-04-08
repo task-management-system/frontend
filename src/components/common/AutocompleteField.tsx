@@ -37,6 +37,7 @@ const AutocompleteField = <T,>({
   value,
   options = [],
   multiple = false,
+  disabled = false,
   filterSelectedOptions = false,
   getOptionLabel,
   getOptionSelected,
@@ -57,6 +58,7 @@ const AutocompleteField = <T,>({
       onChange={(event, value) => onChange(name, value as any)}
       onBlur={onBlur}
       multiple={multiple}
+      disabled={disabled}
       filterSelectedOptions={filterSelectedOptions}
       ChipProps={{
         size: 'small',
