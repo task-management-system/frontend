@@ -1,76 +1,60 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  FormGroup,
-  FormControl,
-  FormLabel,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-} from '@material-ui/core';
+import clsx from 'clsx';
+import { Chip, makeStyles } from '@material-ui/core';
 import { State } from 'types/redux';
+import { Permission } from 'types';
 
-const PermissionsList: React.FC<ConnectedPermissionsListProps> = ({ power, permissions }) => {
-  const [checked, setChecked] = useState<string[]>([]);
+interface PermissionsListProps {
+  className?: string;
+  power?: number;
+}
 
-  useEffect(() => {
-    const userPermissions = permissions
-      .filter(permission => (power & permission.power) > 0)
-      .map(permission => permission.name);
+const useStyles = makeStyles(theme => ({
+  list: {
+    margin: theme.spacing(-0.25),
+    display: 'flex',
+    flexWrap: 'wrap',
+    '& > *': {
+      margin: theme.spacing(0.25),
+    },
+  },
+}));
 
-    setChecked(userPermissions);
-  }, [power, permissions]);
+const PermissionsList: React.FC<PermissionsListProps & ConnectedPermissionsListProps> = ({
+  className,
+  power = 0,
+  permissions,
+}) => {
+  const classes = useStyles();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked(checked => {
-      if (checked.includes(event.target.name)) {
-        return checked.filter(name => name !== event.target.name);
-      } else {
-        return [event.target.name, ...checked];
-      }
-    });
-  };
-
-  const total = permissions.reduce((accumulator, permission) => {
-    if (checked.includes(permission.name)) {
-      accumulator |= permission.power;
+  const availablePermissions = permissions.reduce<Permission[]>((accumulator, permission) => {
+    if (power > 0 && (power & permission.power) === permission.power) {
+      accumulator.push(permission);
     }
 
     return accumulator;
-  }, 0);
+  }, []);
 
-  return (
-    <>
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Список возможностей</FormLabel>
-        <FormGroup>
-          {permissions.map(permission => (
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name={permission.name}
-                  checked={checked.includes(permission.name) || false}
-                  onChange={handleChange}
-                />
-              }
-              label={permission.description}
-              key={permission.power}
-            />
-          ))}
-        </FormGroup>
-      </FormControl>
-      <Typography>
-        <code>Power [DEC]: {total}</code>
-      </Typography>
-      <Typography>
-        <code>Power [BIN]: {total.toString(2).padStart(permissions.length, '0')}</code>
-      </Typography>
-    </>
-  );
+  if (availablePermissions.length > 0) {
+    return (
+      <div className={clsx(classes.list, className)}>
+        {availablePermissions.map(permission => (
+          <Chip
+            variant="outlined"
+            size="small"
+            label={permission.description}
+            key={permission.name}
+          />
+        ))}
+      </div>
+    );
+  } else {
+    return null;
+  }
 };
 
 const mapStateToProps = (state: State) => ({
-  power: state.metaData.user?.role.power || 0,
   permissions: state.metaData.permissions || [],
 });
 

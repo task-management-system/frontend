@@ -1,4 +1,4 @@
-import { SET_CACHE } from 'redux/actionTypes';
+import { SET_CACHE, REMOVE_CACHE } from 'redux/actionTypes';
 import { Cache, CacheAction } from 'types/redux/reducers';
 
 const initialState: Cache = {
@@ -15,6 +15,11 @@ const cacheReducer = (state: Cache = initialState, action: CacheAction): Cache =
           duration: action.payload.duration,
           data: action.payload.data,
         },
+      };
+    case REMOVE_CACHE:
+      return {
+        ...state,
+        [action.payload]: null,
       };
     default:
       return state;

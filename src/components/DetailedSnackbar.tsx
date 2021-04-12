@@ -143,7 +143,7 @@ const DetailedSnackbar: React.FC<
               </div>
               <div className={classes.icons}>
                 <IconButton
-                  className={clsx(classes.expand, expanded && [classes.expandOpen])}
+                  className={clsx(classes.expand, expanded && classes.expandOpen)}
                   onClick={handleExpand}
                 >
                   <ExpandMore />

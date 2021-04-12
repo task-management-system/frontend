@@ -1,13 +1,13 @@
 import React from 'react';
 import Container from 'components/common/Container';
-import PermissionsList from 'components/PermissionsList';
+import RolesTable from 'components/roles/RolesTable';
 
-const Main: React.FC = () => {
+const Roles: React.FC = () => {
   return (
     <Container>
-      <PermissionsList />
+      <RolesTable />
     </Container>
   );
 };
 
-export default Main;
+export default Roles;

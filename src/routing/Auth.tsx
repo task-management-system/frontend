@@ -151,10 +151,11 @@ const Auth: React.FC<ConnectedAuthProps> = ({
                   className={classes.switch}
                   control={
                     <Switch
+                      color="primary"
                       name="useEmail"
                       checked={values.useEmail}
                       onChange={handleChange}
-                      color="primary"
+                      disabled={isSubmitting}
                     />
                   }
                   label="По почте"

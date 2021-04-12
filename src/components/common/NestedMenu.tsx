@@ -17,7 +17,7 @@ interface MenuItemProps {
 }
 
 const Menu: React.FC<MenuProps> = ({ entry }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(entry.expanded);
   const Icon = entry.icon !== null ? entry.icon : React.Fragment;
   const hasChildren = entry.children.length > 0;
 

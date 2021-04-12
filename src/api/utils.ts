@@ -76,7 +76,8 @@ export const withCache = <X extends any[], T>(
   return (...args: X): Promise<CollectedResponse<T>> => {
     const { cache } = store.getState();
     const isCached = name in cache;
-    const isExpired = (cache[name]?.timestamp || 0) + (cache[name]?.duration || 0) < Date.now();
+    const isExpired =
+      duration === 0 || (cache[name]?.timestamp || 0) + (cache[name]?.duration || 0) < Date.now();
 
     if (isCached && !isExpired) {
       return new Promise(resolve =>

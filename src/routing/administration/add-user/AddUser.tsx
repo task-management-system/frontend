@@ -10,7 +10,7 @@ import FormField from 'components/formik/FormField';
 import AutocompleteFormField from 'components/formik/AutocompleteFormField';
 import FlatButton from 'components/themed/FlatButton';
 import AcceptButton from 'components/themed/AcceptButton';
-import { getRoles, createUsers } from 'api/v1';
+import { loadRoles, createUsers } from 'api/v1';
 import { Role, UserWithPassword } from 'types';
 import { NullableProperties } from 'types/common';
 
@@ -29,7 +29,7 @@ const AddUser: React.FC = () => {
   const [options, setOptions] = useState<Role[]>([]);
 
   useEffect(() => {
-    getRoles().then(response => {
+    loadRoles().then(response => {
       setOptions(response.data || []);
     });
   }, []);

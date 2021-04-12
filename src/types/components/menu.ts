@@ -5,6 +5,7 @@ interface MenuEntry {
 }
 
 export type MenuBase = MenuEntry & {
+  expanded: boolean;
   children: (MenuBase | MenuItemBase)[];
 };
 

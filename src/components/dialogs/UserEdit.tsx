@@ -35,7 +35,9 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
       email: undefined,
       role: undefined,
     },
-    onSubmit: values => {
+    onSubmit: (values, helpers) => {
+      helpers.setSubmitting(true);
+
       if (user !== null) {
         updateUser({
           id: user.id,
@@ -43,13 +45,19 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
           name: values.name || null,
           email: values.email || null,
           roleId: values.role?.id || user.role.id,
-        }).then(response => {
-          if (response.data !== null) {
-            onChange(response.data);
-          }
+        })
+          .then(response => {
+            helpers.setStatus(false);
 
-          handleClose();
-        });
+            if (response.data !== null) {
+              onChange(response.data);
+            }
+
+            handleClose();
+          })
+          .catch(() => {
+            helpers.setStatus(false);
+          });
       }
     },
   });
@@ -74,10 +82,10 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
           <UserInfo user={user} form={formik} editing={true} />
         </DialogContent>
         <DialogActions>
-          <NormalButton color="primary" onClick={handleClose}>
+          <NormalButton color="primary" disabled={formik.isSubmitting} onClick={handleClose}>
             Отмена
           </NormalButton>
-          <NormalButton color="primary" onClick={formik.submitForm}>
+          <NormalButton color="primary" disabled={formik.isSubmitting} onClick={formik.submitForm}>
             Сохранить
           </NormalButton>
         </DialogActions>

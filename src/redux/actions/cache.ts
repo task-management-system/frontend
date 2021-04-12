@@ -1,5 +1,5 @@
-import { SET_CACHE } from 'redux/actionTypes';
-import { SetCacheAction } from 'types/redux/actions';
+import { SET_CACHE, REMOVE_CACHE } from 'redux/actionTypes';
+import { SetCacheAction, RemoveCacheAction } from 'types/redux/actions';
 
 export const setCache = <T>(name: string, duration: number, data: T): SetCacheAction<T> => ({
   type: SET_CACHE,
@@ -9,4 +9,9 @@ export const setCache = <T>(name: string, duration: number, data: T): SetCacheAc
     name,
     data,
   },
+});
+
+export const removeCache = (name: string): RemoveCacheAction => ({
+  type: REMOVE_CACHE,
+  payload: name,
 });

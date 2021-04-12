@@ -6,4 +6,11 @@ export interface FieldProps {
   readOnly?: boolean;
 }
 
+export interface CheckboxFieldProps {
+  label: string;
+  name: string;
+  value: string;
+  readOnly?: boolean;
+}
+
 export type ExcessProps = 'value' | 'onChange';

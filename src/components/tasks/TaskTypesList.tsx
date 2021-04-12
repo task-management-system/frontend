@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Paper, Tabs, Tab, makeStyles } from '@material-ui/core';
-import { NewReleases, Details, Block, Done } from '@material-ui/icons';
+import { NewReleases, Details, Block, Done, DataUsage } from '@material-ui/icons';
 import ThemedTab from 'components/themed/ThemedTab';
 import { setGroup, setStatus } from 'redux/actions/tabs';
 import { RECEIVED, CREATED } from 'constants/tasks';
@@ -12,6 +12,7 @@ const icons: { [key: number]: JSX.Element } = {
   2: <Details />,
   3: <Block />,
   4: <Done />,
+  5: <DataUsage />,
 };
 
 const useStyles = makeStyles(theme => ({

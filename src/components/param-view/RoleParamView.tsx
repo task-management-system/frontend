@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AutocompleteParamView from 'components/param-view/AutocompleteParamView';
-import { getRoles } from 'api/v1';
+import { loadRoles } from 'api/v1';
 import { Role } from 'types';
 
 interface RoleParamViewProps {
@@ -16,7 +16,7 @@ const RoleParamView: React.FC<RoleParamViewProps> = props => {
 
   useEffect(() => {
     if (options.length === 0 && props.editing) {
-      getRoles().then(response => {
+      loadRoles().then(response => {
         setOptions(response.data || []);
       });
     }

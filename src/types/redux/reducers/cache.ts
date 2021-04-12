@@ -1,4 +1,4 @@
-import { SetCacheAction } from '../actions/cache';
+import { SetCacheAction, RemoveCacheAction } from '../actions/cache';
 
 export interface Cache {
   [key: string]: {
@@ -8,4 +8,4 @@ export interface Cache {
   } | null;
 }
 
-export type CacheAction = SetCacheAction<any>;
+export type CacheAction = SetCacheAction<any> | RemoveCacheAction;
