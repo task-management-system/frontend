@@ -1,23 +1,24 @@
 import { methods } from 'api/core';
 import { withAuthorization, withNotification } from 'api/utils';
+import { VERSION_URL } from './constants';
 import { TaskInfo, DetailedTaskInfo, UUID } from 'types';
 import { CreateTask, FilesUpload } from 'types/api/v1';
 
-const API_BASE = '/task';
+const BASE_URL = `${VERSION_URL}/task`;
 
 // export const prepareTask = (data: CreateTask) =>
-//   withNotification(withAuthorization(methods.put<CreateTask, null>(`${API_BASE}/create`, data)));
+//   withNotification(withAuthorization(methods.put<CreateTask, null>(`${BASE_URL}/create`, data)));
 
 export const createTask = (data: CreateTask) =>
   withNotification(
-    withAuthorization(methods.put<CreateTask, TaskInfo>(`${API_BASE}/create`, data))
+    withAuthorization(methods.put<TaskInfo, CreateTask>(`${BASE_URL}/create`, data))
   );
 
 export const getReceivedTask = (id: UUID) =>
-  withNotification(withAuthorization(methods.get<DetailedTaskInfo>(`${API_BASE}/received/${id}`)));
+  withNotification(withAuthorization(methods.get<DetailedTaskInfo>(`${BASE_URL}/received/${id}`)));
 
 export const getCreatedTask = (id: UUID) =>
-  withNotification(withAuthorization(methods.get<DetailedTaskInfo>(`${API_BASE}/created/${id}`)));
+  withNotification(withAuthorization(methods.get<DetailedTaskInfo>(`${BASE_URL}/created/${id}`)));
 
 export const attachFilesToCreated = (id: UUID, files: File[]) => {
   const formData = new FormData();
@@ -27,7 +28,7 @@ export const attachFilesToCreated = (id: UUID, files: File[]) => {
 
   return withNotification(
     withAuthorization(
-      methods.put<FormData, FilesUpload>(`${API_BASE}/created/${id}/file`, formData)
+      methods.put<FilesUpload, FormData>(`${BASE_URL}/created/${id}/file`, formData)
     ),
     response => response.data?.e || null
   );

@@ -1,3 +1,5 @@
+export type Methods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+
 export interface Message {
   type: 'success' | 'error' | 'warning';
   text: string;
