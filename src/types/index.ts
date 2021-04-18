@@ -46,41 +46,47 @@ export interface Status {
   name: string;
 }
 
-export interface Creator {
-  id: UUID;
-  username: string;
-  name: string | null;
-}
-
-export interface Executor {
-  id: UUID;
-  username: string;
-  name: string | null;
-}
-
 export interface Parent {
   id: UUID;
   status: Status;
+  files: FileDescriptor[];
 }
 
-export interface TaskInfo {
+export interface Task {
   id: UUID;
   title: string;
   description: string | null;
-  creator: Creator;
   dueDate: string;
 }
 
-export interface DetailedTaskInfo extends TaskInfo {
+export interface TaskInfo extends Task {
+  creator: User;
+}
+
+export interface DetailedTask extends Task {
   markdown: string | null;
   files: FileDescriptor[];
-  parent?: Parent;
   createdAt: string;
+}
+
+export interface DetailedReceivedTask extends DetailedTask {
+  parent: Parent;
+}
+
+export interface DetailedCreatedTask extends DetailedTask {
+  taskInstances: DetailedTaskInstance[];
 }
 
 export type TaskInstance = {
   id: UUID;
   task: TaskInfo;
+};
+
+export type DetailedTaskInstance = {
+  id: UUID;
+  status: Status;
+  files: FileDescriptor[];
+  executor: User;
 };
 
 export interface FileDescriptor {

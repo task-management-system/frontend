@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import AutocompleteFormField, {
   AutocompleteFormFieldProps,
 } from 'components/formik/AutocompleteFormField';
-import { Executor } from 'types';
+import { User } from 'types';
 import { getUsers } from 'api/v1';
 
 const ExecutorsAutocomplete: React.FC<
   Omit<
-    AutocompleteFormFieldProps<Executor>,
+    AutocompleteFormFieldProps<User>,
     'options' | 'getOptionLabel' | 'getOptionSelected' | 'multiple'
   >
 > = props => {
-  const [executors, setExecutors] = useState<Executor[]>([]);
+  const [executors, setExecutors] = useState<User[]>([]);
 
   useEffect(() => {
     getUsers().then(response => {

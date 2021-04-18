@@ -1,7 +1,7 @@
 import { methods } from 'api/core';
 import { withAuthorization, withNotification } from 'api/utils';
 import { VERSION_URL } from './constants';
-import { TaskInfo, DetailedTaskInfo, UUID } from 'types';
+import { TaskInfo, DetailedReceivedTask, DetailedCreatedTask, UUID } from 'types';
 import { CreateTask, FilesUpload } from 'types/api/v1';
 
 const BASE_URL = `${VERSION_URL}/task`;
@@ -15,10 +15,34 @@ export const createTask = (data: CreateTask) =>
   );
 
 export const getReceivedTask = (id: UUID) =>
-  withNotification(withAuthorization(methods.get<DetailedTaskInfo>(`${BASE_URL}/received/${id}`)));
+  withNotification(
+    withAuthorization(methods.get<DetailedReceivedTask>(`${BASE_URL}/received/${id}`))
+  );
 
 export const getCreatedTask = (id: UUID) =>
-  withNotification(withAuthorization(methods.get<DetailedTaskInfo>(`${BASE_URL}/created/${id}`)));
+  withNotification(
+    withAuthorization(methods.get<DetailedCreatedTask>(`${BASE_URL}/created/${id}`))
+  );
+
+export const downloadFileFromReceivedTask = (taskId: UUID, fileId: UUID) => {
+  const params = new URLSearchParams({
+    id: fileId,
+  });
+
+  return withNotification(
+    withAuthorization(methods.get(`${BASE_URL}/received/${taskId}/file?${params}`))
+  );
+};
+
+export const downloadFileFromCreatedTask = (taskId: UUID, fileId: UUID) => {
+  const params = new URLSearchParams({
+    id: fileId,
+  });
+
+  return withNotification(
+    withAuthorization(methods.get(`${BASE_URL}/created/${taskId}/file?${params}`))
+  );
+};
 
 export const attachFilesToCreated = (id: UUID, files: File[]) => {
   const formData = new FormData();

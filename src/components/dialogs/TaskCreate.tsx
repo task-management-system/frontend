@@ -24,7 +24,7 @@ import { currentDate, parseDateString } from 'utils/date';
 import { REQUIRED_FIELD } from 'constants/fields';
 import { createTask, attachFilesToCreated } from 'api/v1';
 import CreateTaskStage from 'enums/CreateTask';
-import { Executor } from 'types';
+import { User } from 'types';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
 
 interface TaskCreateProps {
@@ -35,7 +35,7 @@ interface TaskCreateProps {
 interface TaskCreateForm {
   title: string;
   description: string;
-  executors: Executor[];
+  executors: User[];
   markdown: string;
   dueDate: Date | null;
   files: File[];
