@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
 import ThemedPopover from 'components/themed/ThemedPopover';
 import NormalButton from 'components/themed/NormalButton';
-import { removeToken } from 'api/utils';
 import { reset } from 'redux/actions/common';
-import { Dispatch } from 'types/redux';
+import { removeToken } from 'api/utils';
 
 interface ProfileMenuProps {
   children: (handleOpen: (event: React.MouseEvent<HTMLButtonElement>) => void) => React.ReactNode;
@@ -69,7 +69,7 @@ const ProfileMenu: React.FC<ProfileMenuProps & ConnectedProfileMenuProps> = ({
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  reset: () => dispatch(reset()),
+  ...bindActionCreators({ reset }, dispatch),
 });
 
 const connector = connect(null, mapDispatchToProps);

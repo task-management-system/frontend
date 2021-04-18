@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { Paper, Tabs, Tab, makeStyles } from '@material-ui/core';
 import { NewReleases, Details, Block, Done, DataUsage } from '@material-ui/icons';
 import ThemedTab from 'components/themed/ThemedTab';
 import { setGroup, setStatus, resetStatus } from 'redux/actions/tabs';
 import { RECEIVED, CREATED } from 'constants/tasks';
-import { State, Dispatch } from 'types/redux';
+import { State } from 'types/redux';
 
 const icons: { [key: number]: JSX.Element } = {
   1: <NewReleases />,
@@ -100,9 +101,7 @@ const mapStateToProps = (state: State) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setGroup: (payload: string) => dispatch(setGroup(payload)),
-  setStatus: (payload: number) => dispatch(setStatus(payload)),
-  resetStatus: () => dispatch(resetStatus()),
+  ...bindActionCreators({ setGroup, setStatus, resetStatus }, dispatch),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

@@ -1,4 +1,4 @@
-import { Store, CombinedState } from 'redux';
+import { Store, Dispatch, CombinedState } from 'redux';
 import { PersistPartial } from 'redux-persist/es/persistReducer';
 import { MetaData, Notifications, Cache, Tabs, Users } from './reducers';
 
@@ -15,7 +15,5 @@ export interface Action<T> {
 }
 
 export type PersistState = State & PersistPartial;
-
-export type Dispatch = <T>(payload: Action<T>) => Action<T>;
 
 export type AppStore = Store<PersistState, Action<any>> & { dispatch: Dispatch };

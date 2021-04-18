@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   Paper,
@@ -23,7 +24,6 @@ import { range } from 'utils';
 import usePromiseTrack from 'hooks/usePromiseTrack';
 import { getRoles, deleteRole } from 'api/v1';
 import { Role } from 'types';
-import { Dispatch } from 'types/redux';
 
 const useStyles = makeStyles(theme => ({
   row: {
@@ -131,7 +131,7 @@ const RolesTable: React.FC<ConnectedRolesTableProps> = ({ removeCache }) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  removeCache: (payload: string) => dispatch(removeCache(payload)),
+  ...bindActionCreators({ removeCache }, dispatch),
 });
 
 const connector = connect(null, mapDispatchToProps);

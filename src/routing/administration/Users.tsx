@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { Typography, Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
@@ -10,8 +11,7 @@ import usePromiseTrack from 'hooks/usePromiseTrack';
 import { setUsers, updateUser } from 'redux/actions/users';
 import { groupBy, range } from 'utils';
 import { getUsers } from 'api/v1';
-import { User } from 'types';
-import { State, Dispatch } from 'types/redux';
+import { State } from 'types/redux';
 
 type ChapterRefs = { [key: string]: React.RefObject<HTMLDivElement> };
 
@@ -115,8 +115,7 @@ const mapStateToProps = (state: State) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setUsers: (payload: User[]) => dispatch(setUsers(payload)),
-  updateUser: (payload: User) => dispatch(updateUser(payload)),
+  ...bindActionCreators({ setUsers, updateUser }, dispatch),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

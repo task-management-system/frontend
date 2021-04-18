@@ -1,4 +1,5 @@
 import React from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   Card,
@@ -19,8 +20,6 @@ import { REQUIRED_FIELD } from 'constants/fields';
 import { setUser, setPermissions, setStatuses } from 'redux/actions/metaData';
 import { authenticate, getPermissions, getStatuses } from 'api/v1';
 import { setToken } from 'api/utils';
-import { User, Permission, Status } from 'types';
-import { Dispatch } from 'types/redux';
 import { AuthWithUsername, AuthWithEmail } from 'types/api/v1';
 
 const useStyles = makeStyles(theme => ({
@@ -174,9 +173,7 @@ const Auth: React.FC<ConnectedAuthProps> = ({ setUser, setPermissions, setStatus
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setUser: (payload: User | null) => dispatch(setUser(payload)),
-  setPermissions: (payload: Permission[]) => dispatch(setPermissions(payload)),
-  setStatuses: (payload: Status[]) => dispatch(setStatuses(payload)),
+  ...bindActionCreators({ setUser, setPermissions, setStatuses }, dispatch),
 });
 
 const connector = connect(null, mapDispatchToProps);

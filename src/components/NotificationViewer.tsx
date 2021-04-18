@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { Snackbar } from '@material-ui/core';
 import {
@@ -10,7 +11,7 @@ import {
 import { Alert } from '@material-ui/lab';
 import DetailedSnackbar from 'components/DetailedSnackbar';
 import { removeNotification } from 'redux/actions/notifications';
-import { State, Dispatch } from 'types/redux';
+import { State } from 'types/redux';
 
 const iconMapping = {
   success: <CheckCircleOutlined fontSize="inherit" />,
@@ -82,7 +83,7 @@ const mapStateToProps = (state: State) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  removeNotification: (payload: string) => dispatch(removeNotification(payload)),
+  ...bindActionCreators({ removeNotification }, dispatch),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

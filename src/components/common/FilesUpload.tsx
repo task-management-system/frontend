@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { AddBox } from '@material-ui/icons';
 import FileButton from 'components/themed/FileButton';
 import FilesList from './FilesList';
 import { ACCEPT_FILES, MAX_FILE_SIZE } from 'constants/files';
 import { addNotification } from 'redux/actions/notifications';
-import { FileDescriptor, Notification, UUID } from 'types';
-import { Dispatch } from 'types/redux';
+import { FileDescriptor, UUID } from 'types';
 import { createNotification } from 'utils/notification';
 
 interface FilesUploadProps {
@@ -120,7 +120,7 @@ const FilesUpload: React.FC<FilesUploadProps & ConnectedFilesUploadProps> = ({
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  addNotification: (payload: Notification) => dispatch(addNotification(payload)),
+  ...bindActionCreators({ addNotification }, dispatch),
 });
 
 const connector = connect(null, mapDispatchToProps);
