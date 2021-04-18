@@ -47,7 +47,7 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
           roleId: values.role?.id || user.role.id,
         })
           .then(response => {
-            helpers.setStatus(false);
+            helpers.setSubmitting(false);
 
             if (response.data !== null) {
               onChange(response.data);
@@ -56,7 +56,7 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
             handleClose();
           })
           .catch(() => {
-            helpers.setStatus(false);
+            helpers.setSubmitting(false);
           });
       }
     },

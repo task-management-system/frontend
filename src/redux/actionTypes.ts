@@ -8,5 +8,6 @@ export const SET_CACHE = 'SET_CACHE';
 export const REMOVE_CACHE = 'REMOVE_CACHE';
 export const SET_GROUP = 'SET_GROUP';
 export const SET_STATUS = 'SET_STATUS';
+export const RESET_STATUS = 'RESET_STATUS';
 export const SET_USERS = 'SET_USERS';
 export const UPDATE_USER = 'UPDATE_USER';

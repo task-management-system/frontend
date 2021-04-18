@@ -15,14 +15,13 @@ import FullPage from 'components/common/FullPage';
 import FormField from 'components/formik/FormField';
 import PasswordField from 'components/common/PasswordField';
 import NormalButton from 'components/themed/NormalButton';
+import { REQUIRED_FIELD } from 'constants/fields';
 import { setUser, setPermissions, setStatuses } from 'redux/actions/metaData';
-import { setStatus } from 'redux/actions/tabs';
 import { authenticate, getPermissions, getStatuses } from 'api/v1';
 import { setToken } from 'api/utils';
 import { User, Permission, Status } from 'types';
 import { Dispatch } from 'types/redux';
 import { AuthWithUsername, AuthWithEmail } from 'types/api/v1';
-import { REQUIRED_FIELD } from 'constants/fields';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -79,12 +78,7 @@ const validationSchema = yup.object().shape({
   password: yup.string().min(8, 'Минимальная длина 8').required(REQUIRED_FIELD),
 });
 
-const Auth: React.FC<ConnectedAuthProps> = ({
-  setUser,
-  setPermissions,
-  setStatuses,
-  setStatus,
-}) => {
+const Auth: React.FC<ConnectedAuthProps> = ({ setUser, setPermissions, setStatuses }) => {
   const classes = useStyles();
 
   const sendData = async (values: AuthForm, helpers: FormikHelpers<AuthForm>) => {
@@ -103,7 +97,6 @@ const Auth: React.FC<ConnectedAuthProps> = ({
       setPermissions(permissions.data || []);
       if (statuses.data !== null && statuses.data.length > 0) {
         setStatuses(statuses.data);
-        setStatus(statuses.data[0].id);
       }
     }
 
@@ -184,7 +177,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setUser: (payload: User | null) => dispatch(setUser(payload)),
   setPermissions: (payload: Permission[]) => dispatch(setPermissions(payload)),
   setStatuses: (payload: Status[]) => dispatch(setStatuses(payload)),
-  setStatus: (payload: number) => dispatch(setStatus(payload)),
 });
 
 const connector = connect(null, mapDispatchToProps);

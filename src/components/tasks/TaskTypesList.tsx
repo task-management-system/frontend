@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Paper, Tabs, Tab, makeStyles } from '@material-ui/core';
 import { NewReleases, Details, Block, Done, DataUsage } from '@material-ui/icons';
 import ThemedTab from 'components/themed/ThemedTab';
-import { setGroup, setStatus } from 'redux/actions/tabs';
+import { setGroup, setStatus, resetStatus } from 'redux/actions/tabs';
 import { RECEIVED, CREATED } from 'constants/tasks';
 import { State, Dispatch } from 'types/redux';
 
@@ -23,18 +23,43 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+// ? Сделать лучше
+type Groups = typeof RECEIVED | typeof CREATED;
+
+type AvailableStatuses = Record<Groups, number[]>;
+
+const availableStatuses: AvailableStatuses = {
+  [RECEIVED]: [1, 2, 3, 4],
+  [CREATED]: [1, 2, 3, 4, 5],
+};
+
 const TaskTypesList: React.FC<ConnectedTaskTypesListProps> = ({
   statuses,
   group,
   status,
   setGroup,
   setStatus,
+  resetStatus,
 }) => {
   const classes = useStyles();
 
-  const handleGroupChange = (event: React.ChangeEvent<{}>, value: string) => setGroup(value);
+  useEffect(() => {
+    if (status === null) {
+      setStatus(statuses[0].id);
+    }
+  }, [statuses, status, setStatus]);
 
-  const handleStatusChange = (event: React.ChangeEvent<{}>, value: number) => setStatus(value);
+  const handleGroupChange = (event: React.ChangeEvent<{}>, value: Groups) => {
+    if (status !== null && !availableStatuses[value].includes(status)) {
+      resetStatus();
+    }
+
+    setGroup(value);
+  };
+
+  const handleStatusChange = (event: React.ChangeEvent<{}>, value: number) => {
+    setStatus(value);
+  };
 
   return (
     <Paper className={classes.root} square>
@@ -63,14 +88,21 @@ const TaskTypesList: React.FC<ConnectedTaskTypesListProps> = ({
   );
 };
 
-const mapStateToProps = (state: State) => ({
-  statuses: state.metaData.statuses,
-  ...state.tabs,
-});
+const mapStateToProps = (state: State) => {
+  const { statuses } = state.metaData;
+  const length = statuses.length;
+  const count = state.tabs.group === CREATED ? length : length - 1;
+
+  return {
+    statuses: statuses.slice(0, count),
+    ...state.tabs,
+  };
+};
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setGroup: (payload: string) => dispatch(setGroup(payload)),
   setStatus: (payload: number) => dispatch(setStatus(payload)),
+  resetStatus: () => dispatch(resetStatus()),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

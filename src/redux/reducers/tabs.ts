@@ -1,4 +1,4 @@
-import { SET_GROUP, SET_STATUS } from 'redux/actionTypes';
+import { SET_GROUP, SET_STATUS, RESET_STATUS } from 'redux/actionTypes';
 import { Tabs, TabsAction } from 'types/redux/reducers';
 import { RECEIVED } from 'constants/tasks';
 
@@ -15,6 +15,7 @@ const tabsReducer = (state: Tabs = initialState, action: TabsAction): Tabs => {
         group: action.payload,
       };
     case SET_STATUS:
+    case RESET_STATUS:
       return {
         ...state,
         status: action.payload,
