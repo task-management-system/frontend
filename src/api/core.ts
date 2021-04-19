@@ -39,17 +39,25 @@ const prepareInit = <T>(method: Methods, headers: Headers, payload?: T) => {
 };
 
 const collectResponse = async <T>(response: Response): Promise<CollectedResponse<T>> => {
-  const data = (await response.json()) as BasicResponse<T>;
   const { ok, status, statusText } = response;
+  const details = { ok, status, statusText };
 
-  return {
-    ...data,
-    details: {
-      ok,
-      status,
-      statusText,
-    },
-  };
+  if (response.headers.get('Content-Type')?.startsWith('application/json')) {
+    const data = (await response.json()) as BasicResponse<T>;
+
+    return {
+      ...data,
+      details,
+    };
+  } else {
+    const data = await response.blob();
+
+    return {
+      data: (data as unknown) as T,
+      message: null,
+      details,
+    };
+  }
 };
 
 export const collectPaginationParams = (pagination: Pagination) =>

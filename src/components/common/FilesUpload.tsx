@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
-import { AddBox } from '@material-ui/icons';
-import FileButton from 'components/themed/FileButton';
 import FilesList from './FilesList';
-import { ACCEPT_FILES, MAX_FILE_SIZE } from 'constants/files';
 import { addNotification } from 'redux/actions/notifications';
 import { FileDescriptor, UUID } from 'types';
 import { createNotification } from 'utils/notification';
+import UploadControl from './UploadControl';
 
 interface FilesUploadProps {
   className?: string;
   readOnly?: boolean;
-  onChange?: (files: File[]) => void;
+  onAdd?: (files: File[]) => void;
+  onRemove?: (id: UUID, remote: boolean) => void;
 }
 
 const createImprint = (file: File) => {
@@ -33,87 +32,61 @@ const getFiles = (descriptors: FileDescriptor[]) =>
 const FilesUpload: React.FC<FilesUploadProps & ConnectedFilesUploadProps> = ({
   className,
   readOnly = false,
-  onChange,
+  onAdd,
+  onRemove,
   addNotification,
 }) => {
   const [files, setFiles] = useState<FileDescriptor[]>([]);
-  const input = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (typeof onChange === 'function') {
-      onChange(getFiles(files));
+    if (typeof onAdd === 'function') {
+      onAdd(getFiles(files));
     }
   }, [files]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const removeItem = useCallback((id: UUID) => {
-    setFiles(files => files.filter(file => file.id !== id));
-  }, []);
-
-  const handleAdd = () => input.current?.click();
-
-  const handleChange = () => {
-    if (input.current?.files) {
-      const collectedFiles: FileDescriptor[] = [];
-      const currentFiles = new Set(files.map(file => file.id));
-      const warnings = [];
-
-      for (let index = 0; index < input.current.files.length; index++) {
-        const file = input.current.files.item(index);
-        if (file !== null) {
-          if (file.size <= MAX_FILE_SIZE) {
-            const imprint = createImprint(file);
-
-            if (!currentFiles.has(imprint)) {
-              collectedFiles.push({
-                id: imprint,
-                name: file.name,
-                size: file.size,
-                data: file,
-              });
-            } else {
-              warnings.push({
-                name: file.name,
-                cause: 'Файл уже добавлен в очередь',
-              });
-            }
-          } else {
-            warnings.push({
-              name: file.name,
-              cause: 'Файл является слишком большим для загрузки',
-            });
-          }
-        }
+  const removeItem = useCallback(
+    (id: UUID) => {
+      if (typeof onRemove === 'function') {
+        onRemove(id, files.find(file => file.id === id)?.data === undefined);
       }
 
-      if (warnings.length > 0) {
-        addNotification(createNotification('warning', 'Не удалось добавить файл(-ы)', warnings));
-      }
-      setFiles(files => [...files, ...collectedFiles]);
+      setFiles(files => files.filter(file => file.id !== id));
+    },
+    [files, onRemove]
+  );
 
-      input.current.value = '';
+  const handleChange = (addedFiles: File[]) => {
+    const collectedFiles: FileDescriptor[] = [];
+    const currentFiles = new Set(files.map(file => file.id));
+    const warnings = [];
+
+    for (const file of addedFiles) {
+      const imprint = createImprint(file);
+
+      if (!currentFiles.has(imprint)) {
+        collectedFiles.push({
+          id: imprint,
+          name: file.name,
+          size: file.size,
+          data: file,
+        });
+      } else {
+        warnings.push({
+          name: file.name,
+          cause: 'Файл уже добавлен в очередь',
+        });
+      }
     }
+
+    if (warnings.length > 0) {
+      addNotification(createNotification('warning', 'Не удалось добавить файл(-ы)', warnings));
+    }
+    setFiles(files => [...files, ...collectedFiles]);
   };
 
   return (
     <div className={className}>
-      <input
-        type="file"
-        accept={ACCEPT_FILES}
-        onChange={handleChange}
-        disabled={readOnly}
-        multiple
-        hidden
-        ref={input}
-      />
-      <FileButton
-        color="primary"
-        startIcon={<AddBox />}
-        disabled={readOnly}
-        onClick={handleAdd}
-        fullWidth
-      >
-        Добавить файлы
-      </FileButton>
+      <UploadControl disabled={readOnly} onChange={handleChange} />
       <FilesList files={files} removeItem={!readOnly ? removeItem : undefined} />
     </div>
   );

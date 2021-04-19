@@ -10,6 +10,9 @@ export type NullableProperties<T, Keys extends keyof T = keyof T> =
     [K in Keys]-?: Nullable<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
   }[Keys];
 
+export type PartialProperties<T, K extends keyof T = keyof T> = Pick<T, Exclude<keyof T, K>> &
+  Partial<Pick<T, K>>;
+
 export type Nullable<T> = {
   [K in keyof T]: T[K] | null;
 };

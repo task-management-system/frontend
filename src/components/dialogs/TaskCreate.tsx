@@ -213,7 +213,7 @@ const TaskCreate: React.FC<TaskCreateProps> = ({ onCreate, children }) => {
                     <ScrollableArea>
                       <FilesUpload
                         readOnly={stage !== CreateTaskStage.None || isSubmitting}
-                        onChange={files => setFieldValue('files', files)}
+                        onAdd={files => setFieldValue('files', files)}
                       />
                     </ScrollableArea>
                   </Wrapper>

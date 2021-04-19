@@ -86,22 +86,27 @@ const Auth: React.FC<ConnectedAuthProps> = ({ setUser, setPermissions, setStatus
     const data = !values.useEmail
       ? ({ username: values.username, password: values.password } as AuthWithUsername)
       : ({ email: values.email, password: values.password } as AuthWithEmail);
-    const response = await authenticate(data);
-    const token = response.data?.token ?? null;
-    await setToken(token);
 
-    if (token !== null) {
-      const [permissions, statuses] = await Promise.all([getPermissions(), getStatuses()]);
+    try {
+      const response = await authenticate(data);
+      const token = response.data?.token ?? null;
+      await setToken(token);
 
-      setPermissions(permissions.data || []);
-      if (statuses.data !== null && statuses.data.length > 0) {
-        setStatuses(statuses.data);
+      if (token !== null) {
+        const [permissions, statuses] = await Promise.all([getPermissions(), getStatuses()]);
+
+        setPermissions(permissions.data || []);
+        if (statuses.data !== null && statuses.data.length > 0) {
+          setStatuses(statuses.data);
+        }
       }
+
+      helpers.setSubmitting(false);
+
+      setUser(response.data?.user ?? null);
+    } catch (error) {
+      helpers.setSubmitting(false);
     }
-
-    helpers.setSubmitting(false);
-
-    setUser(response.data?.user ?? null);
   };
 
   return (

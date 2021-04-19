@@ -4,6 +4,7 @@ import { Typography, makeStyles } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import FileButton from 'components/themed/FileButton';
 import download from 'utils/download';
+import { getFile } from 'api/v1';
 import { FileDescriptor } from 'types';
 
 interface FileViewProps {
@@ -45,6 +46,12 @@ const FileView: React.FC<FileViewProps> = ({ descriptor, file, removable = false
   const handleDownload = useCallback(() => {
     if (file !== undefined) {
       download(descriptor.name, file);
+    } else {
+      getFile(descriptor.id).then(response => {
+        if (response.data !== null) {
+          download(descriptor.name, response.data);
+        }
+      });
     }
   }, [descriptor, file]);
 

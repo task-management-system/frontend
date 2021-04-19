@@ -24,27 +24,7 @@ export const getCreatedTask = (id: UUID) =>
     withAuthorization(methods.get<DetailedCreatedTask>(`${BASE_URL}/created/${id}`))
   );
 
-export const downloadFileFromReceivedTask = (taskId: UUID, fileId: UUID) => {
-  const params = new URLSearchParams({
-    id: fileId,
-  });
-
-  return withNotification(
-    withAuthorization(methods.get(`${BASE_URL}/received/${taskId}/file?${params}`))
-  );
-};
-
-export const downloadFileFromCreatedTask = (taskId: UUID, fileId: UUID) => {
-  const params = new URLSearchParams({
-    id: fileId,
-  });
-
-  return withNotification(
-    withAuthorization(methods.get(`${BASE_URL}/created/${taskId}/file?${params}`))
-  );
-};
-
-export const attachFilesToCreated = (id: UUID, files: File[]) => {
+const attachFiles = (path: string, id: UUID, files: File[]) => {
   const formData = new FormData();
   for (const file of files) {
     formData.append('files', file, file.name);
@@ -52,8 +32,19 @@ export const attachFilesToCreated = (id: UUID, files: File[]) => {
 
   return withNotification(
     withAuthorization(
-      methods.put<FilesUpload, FormData>(`${BASE_URL}/created/${id}/file`, formData)
+      methods.put<FilesUpload, FormData>(`${BASE_URL}/${path}/${id}/file`, formData)
     ),
-    response => response.data?.e || null
+    response => response.data?.error || null
   );
 };
+
+export const attachFilesToReceived = (id: UUID, files: File[]) =>
+  attachFiles('received', id, files);
+
+export const attachFilesToCreated = (id: UUID, files: File[]) => attachFiles('created', id, files);
+
+export const getFile = (id: UUID) =>
+  withNotification(withAuthorization(methods.get<Blob>(`${BASE_URL}/file/${id}`)));
+
+export const deleteFile = (id: UUID) =>
+  withNotification(withAuthorization(methods.delete(`${BASE_URL}/file/${id}`)));

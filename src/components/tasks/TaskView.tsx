@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Typography, Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import ScrollableArea from 'components/common/ScrollableArea';
 import MarkdownView from 'components/MarkdownView';
-import FilesUpload from 'components/common/FilesUpload';
 import FilesList from 'components/common/FilesList';
 import DateView from 'components/common/DateView';
 import NormalButton from 'components/themed/NormalButton';
-import { DetailedTask, UUID } from 'types';
+import { DetailedReceivedTask, DetailedCreatedTask, UUID } from 'types';
+import { PartialProperties } from 'types/common';
 import { CollectedResponse } from 'types/api';
+import { attachFilesToReceived, deleteFile } from 'api/v1';
+import UploadControl from 'components/common/UploadControl';
+
+type TaskViewEntry = PartialProperties<DetailedReceivedTask, 'parent'> &
+  PartialProperties<DetailedCreatedTask, 'taskInstances'>;
 
 interface TaskViewProps {
   id: UUID;
-  loadTask: (id: UUID) => Promise<CollectedResponse<DetailedTask>>;
+  loadTask: (id: UUID) => Promise<CollectedResponse<TaskViewEntry>>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -57,7 +62,7 @@ const useStyles = makeStyles(theme => ({
 
 const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
   const classes = useStyles();
-  const [data, setData] = useState<DetailedTask | null>(null);
+  const [data, setData] = useState<TaskViewEntry | null>(null);
 
   useEffect(() => {
     loadTask(id).then(response => {
@@ -65,7 +70,32 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
         setData(response.data);
       }
     });
-  }, [loadTask, id]);
+  }, [id, loadTask]);
+
+  const handleAddFiles = useCallback(
+    files => {
+      attachFilesToReceived(id, files).then(response => {
+        if (response.data !== null) {
+          setData(data => ({
+            ...data!,
+            files: [...data!.files, ...response.data!.success],
+          }));
+        }
+      });
+    },
+    [id]
+  );
+
+  const handleRemoveFile = useCallback(id => {
+    deleteFile(id).then(response => {
+      if (response.details.ok) {
+        setData(data => ({
+          ...data!,
+          files: data!.files.filter(file => file.id !== id),
+        }));
+      }
+    });
+  }, []);
 
   return data !== null ? (
     <div className={classes.root}>
@@ -78,14 +108,34 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
           </div>
         )}
         <ScrollableArea className={classes.wrapper}>
-          <div className={classes.container}>
-            <Typography className={classes.stickyHeading}>Ваши файлы</Typography>
-            <FilesUpload />
-          </div>
-          <div className={classes.container}>
-            <Typography className={classes.stickyHeading}>Файлы задачи</Typography>
-            <FilesList files={data.files} />
-          </div>
+          {data.parent !== undefined ? (
+            <>
+              <UploadControl onChange={handleAddFiles} />
+              <div className={classes.container}>
+                <Typography className={classes.stickyHeading}>Ваши файлы</Typography>
+                <FilesList files={data.files} removeItem={handleRemoveFile} />
+              </div>
+              <div className={classes.container}>
+                <Typography className={classes.stickyHeading}>Файлы задачи</Typography>
+                <FilesList files={data.parent.files} />
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={classes.container}>
+                <Typography className={classes.stickyHeading}>Файлы задачи</Typography>
+                <FilesList files={data.files} />
+              </div>
+              {data.taskInstances?.map(taskInstance => (
+                <div className={classes.container} key={taskInstance.id}>
+                  <Typography className={classes.stickyHeading}>
+                    Файлы {taskInstance.executor.name || taskInstance.executor.username}
+                  </Typography>
+                  <FilesList files={taskInstance.files} />
+                </div>
+              ))}
+            </>
+          )}
         </ScrollableArea>
       </div>
       <div className={classes.footer}>

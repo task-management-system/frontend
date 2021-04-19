@@ -48,6 +48,6 @@ export interface FailedFileUpload {
 export type SuccessFileUpload = Omit<FileDescriptor, 'data'>;
 
 export interface FilesUpload {
-  e: FailedFileUpload[];
-  s: SuccessFileUpload[];
+  success: SuccessFileUpload[];
+  error: FailedFileUpload[];
 }
