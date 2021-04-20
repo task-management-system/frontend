@@ -1,10 +1,10 @@
 import React from 'react';
 import { List, ListItem, Typography, Checkbox } from '@material-ui/core';
-import { Variant } from '@material-ui/core/styles/createTypography';
 import Wrapper from 'components/common/Wrapper';
 import ScrollableArea from 'components/common/ScrollableArea';
 import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
+import { Components } from 'react-markdown/src/ast-to-react';
 
 interface MarkdownViewProps {
   className?: string;
@@ -12,35 +12,28 @@ interface MarkdownViewProps {
   children: string;
 }
 
-interface Renderer {
-  children: React.ReactNode;
-}
-
-type HeadingRenderer = Renderer & { level: 1 | 2 | 3 | 4 | 5 | 6 };
-type ParagraphRenderer = Renderer;
-type LinkRenderer = Renderer & { href: string };
-type ListRenderer = Renderer & { ordered: boolean };
-type ListItemRenderer = Renderer & { ordered: boolean; checked?: boolean; index: number };
-
 const plugins = [gfm];
 
-const renderers = {
-  heading: ({ children, level }: HeadingRenderer) => (
-    <Typography variant={`h${level}` as Variant}>{children}</Typography>
-  ),
-  paragraph: ({ children }: ParagraphRenderer) => <Typography>{children}</Typography>,
-  link: ({ children, href }: LinkRenderer) => (
-    <a href={href} rel="noopener noreferrer" target="_blank">
-      {children}
-    </a>
-  ),
-  list: ({ children, ordered }: ListRenderer) => (
-    <List component={ordered ? 'ol' : 'ul'} dense>
+const components: Components = {
+  h1: ({ children }) => <Typography variant="h1">{children}</Typography>,
+  h2: ({ children }) => <Typography variant="h2">{children}</Typography>,
+  h3: ({ children }) => <Typography variant="h3">{children}</Typography>,
+  h4: ({ children }) => <Typography variant="h4">{children}</Typography>,
+  h5: ({ children }) => <Typography variant="h5">{children}</Typography>,
+  h6: ({ children }) => <Typography variant="h6">{children}</Typography>,
+  p: ({ children }) => <Typography>{children}</Typography>,
+  ul: ({ children }) => (
+    <List component="ul" dense>
       {children}
     </List>
   ),
-  // prettier-ignore
-  listItem: ({ children, ordered, checked, index }: ListItemRenderer) => (
+  ol: ({ children }) => (
+    <List component="ol" dense>
+      {children}
+    </List>
+  ),
+  //  prettier-ignore
+  li: ({ children, ordered, checked, index }) => (
     <ListItem>
       {ordered && <>{index + 1}.</>} {checked !== null && checked !== undefined && (
         <Checkbox checked={checked} size="small" readOnly />
@@ -52,7 +45,7 @@ const renderers = {
 const MarkdownView: React.FC<MarkdownViewProps> = ({ className, outlined = false, children }) => (
   <Wrapper className={className} outlined={outlined}>
     <ScrollableArea>
-      <ReactMarkdown plugins={plugins} renderers={renderers}>
+      <ReactMarkdown plugins={plugins} components={components}>
         {children}
       </ReactMarkdown>
     </ScrollableArea>
