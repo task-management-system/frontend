@@ -1,5 +1,5 @@
 import { methods } from 'api/core';
-import { withNotification, withAuthorization } from '../utils';
+import { extractRequest, withNotification, withAuthorization } from '../utils';
 import { VERSION_URL } from './constants';
 import { User, UUID } from 'types';
 import { WithId, TransferUser, ChangePassword } from 'types/api/v1';
@@ -11,8 +11,8 @@ export const lock = (id: UUID) => {
     id,
   });
 
-  return withNotification(
-    withAuthorization(methods.patch<User, null>(`${BASE_URL}/lock?${params}`))
+  return extractRequest(
+    withNotification(withAuthorization(methods.patch<User, null>(`${BASE_URL}/lock?${params}`)))
   );
 };
 
@@ -21,8 +21,8 @@ export const unlock = (id: UUID) => {
     id,
   });
 
-  return withNotification(
-    withAuthorization(methods.patch<User, null>(`${BASE_URL}/unlock?${params}`))
+  return extractRequest(
+    withNotification(withAuthorization(methods.patch<User, null>(`${BASE_URL}/unlock?${params}`)))
   );
 };
 
@@ -31,15 +31,22 @@ export const getUser = (id: UUID) => {
     id,
   });
 
-  return withNotification(withAuthorization(methods.get<User>(`${BASE_URL}?${params}`)));
+  return extractRequest(
+    withNotification(withAuthorization(methods.get<User>(`${BASE_URL}?${params}`)))
+  );
 };
 
 export const updateUser = (data: WithId & TransferUser) =>
-  withNotification(withAuthorization(methods.patch<User, TransferUser>(BASE_URL, data)));
-
-export const changePassword = (data: WithId & ChangePassword) =>
-  withNotification(
-    withAuthorization(methods.patch<null, ChangePassword>(`${BASE_URL}/change-password`, data))
+  extractRequest(
+    withNotification(withAuthorization(methods.patch<User, TransferUser>(BASE_URL, data)))
   );
 
-export const getCurrentUser = () => withAuthorization(methods.get<User>(`${BASE_URL}/current`));
+export const changePassword = (data: WithId & ChangePassword) =>
+  extractRequest(
+    withNotification(
+      withAuthorization(methods.patch<null, ChangePassword>(`${BASE_URL}/change-password`, data))
+    )
+  );
+
+export const getCurrentUser = () =>
+  extractRequest(withNotification(withAuthorization(methods.get<User>(`${BASE_URL}/current`))));

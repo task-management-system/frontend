@@ -8,7 +8,7 @@ import DateView from 'components/common/DateView';
 import NormalButton from 'components/themed/NormalButton';
 import { DetailedReceivedTask, DetailedCreatedTask, UUID } from 'types';
 import { PartialProperties } from 'types/common';
-import { CollectedResponse } from 'types/api';
+import { RequestWithCancel } from 'types/api';
 import { attachFilesToReceived, deleteFile } from 'api/v1';
 import UploadControl from 'components/common/UploadControl';
 
@@ -17,7 +17,7 @@ type TaskViewEntry = PartialProperties<DetailedReceivedTask, 'parent'> &
 
 interface TaskViewProps {
   id: UUID;
-  loadTask: (id: UUID) => Promise<CollectedResponse<TaskViewEntry>>;
+  loadTask: (id: UUID) => RequestWithCancel<TaskViewEntry>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -65,11 +65,17 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
   const [data, setData] = useState<TaskViewEntry | null>(null);
 
   useEffect(() => {
-    loadTask(id).then(response => {
+    const [request, abort] = loadTask(id);
+
+    request.then(response => {
       if (response.details.ok) {
         setData(response.data);
       }
     });
+
+    return () => {
+      abort();
+    };
   }, [id, loadTask]);
 
   const handleAddFiles = useCallback(

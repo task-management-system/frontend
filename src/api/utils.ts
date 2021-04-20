@@ -5,7 +5,7 @@ import { reset } from 'redux/actions/common';
 import { addNotification } from 'redux/actions/notifications';
 import { setCache } from 'redux/actions/cache';
 import { NotificationDetails } from 'types';
-import { CollectedResponse } from 'types/api';
+import { RequestWithCancel, CollectedResponse } from 'types/api';
 
 export const removeToken = async () => {
   await localForage.removeItem('token');
@@ -21,9 +21,10 @@ export const setToken = async (token: string | null) => {
   return await localForage.setItem('token', token);
 };
 
-export const withAuthorization = <T>(
-  handler: Promise<CollectedResponse<T>>
-): Promise<CollectedResponse<T>> =>
+export const withAuthorization = <T>([
+  handler,
+  abort,
+]: RequestWithCancel<T>): RequestWithCancel<T> => [
   handler.then(response => {
     if (!response.details.ok && response.details.status === 401) {
       store.dispatch(reset());
@@ -32,12 +33,14 @@ export const withAuthorization = <T>(
     }
 
     return response;
-  });
+  }),
+  abort,
+];
 
 export const withNotification = <T>(
-  handler: Promise<CollectedResponse<T>>,
+  [handler, abort]: RequestWithCancel<T>,
   detailsExtractor: (response: CollectedResponse<T>) => NotificationDetails | null = () => null
-): Promise<CollectedResponse<T>> =>
+): RequestWithCancel<T> => [
   handler
     .then(response => {
       if (response.message !== null) {
@@ -55,6 +58,10 @@ export const withNotification = <T>(
       return Promise.resolve(response);
     })
     .catch((error: CollectedResponse<T> | any) => {
+      if (error?.name === 'AbortError') {
+        return Promise.reject();
+      }
+
       if (typeof error.message === 'object' && 'type' in error.message && 'text' in error.message) {
         store.dispatch(
           addNotification(
@@ -66,7 +73,9 @@ export const withNotification = <T>(
       }
 
       return Promise.reject(error);
-    });
+    }),
+  abort,
+];
 
 export const withCache = <X extends any[], T>(
   name: string,
@@ -102,3 +111,5 @@ export const withCache = <X extends any[], T>(
     }
   };
 };
+
+export const extractRequest = <T>([handler, abort]: RequestWithCancel<T>) => handler;

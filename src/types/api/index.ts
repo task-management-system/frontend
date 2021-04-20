@@ -1,3 +1,5 @@
+export type RequestWithCancel<T> = [Promise<CollectedResponse<T>>, () => void];
+
 export type Methods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 export interface Message {
