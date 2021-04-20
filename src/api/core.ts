@@ -67,64 +67,45 @@ export const collectPaginationParams = (pagination: Pagination) =>
     order: pagination.order || 'ASC',
   });
 
-const getMethod = async <T>(
+const requestWithoutPayload = async <T>(
+  method: Methods,
   url: string = '/',
   headers: Headers = new Headers()
 ): Promise<CollectedResponse<T>> => {
   await prepareHeaders(headers);
 
-  return fetch(`${API_URL}${url}`, prepareInit('GET', headers)).then(response =>
+  return fetch(`${API_URL}${url}`, prepareInit(method, headers)).then(response =>
     collectResponse(response)
   );
 };
 
-const postMethod = async <T, P>(
+const requestWithPayload = async <T, P>(
+  method: Methods,
   url: string = '/',
   payload?: P,
   headers: Headers = new Headers()
 ): Promise<CollectedResponse<T>> => {
   await prepareHeaders(headers, payload);
 
-  return fetch(`${API_URL}${url}`, prepareInit('POST', headers, payload)).then(response =>
+  return fetch(`${API_URL}${url}`, prepareInit(method, headers, payload)).then(response =>
     collectResponse(response)
   );
 };
 
-const putMethod = async <T, P>(
-  url: string = '/',
-  payload?: P,
-  headers: Headers = new Headers()
-): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(headers, payload);
+const getMethod = <T>(url?: string, headers?: Headers) =>
+  requestWithoutPayload<T>('GET', url, headers);
 
-  return fetch(`${API_URL}${url}`, prepareInit('PUT', headers, payload)).then(response =>
-    collectResponse(response)
-  );
-};
+const postMethod = <T, P>(url?: string, payload?: P, headers?: Headers) =>
+  requestWithPayload<T, P>('POST', url, payload, headers);
 
-const patchMethod = async <T, P>(
-  url: string = '/',
-  payload?: P,
-  headers: Headers = new Headers()
-): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(headers, payload);
+const putMethod = <T, P>(url?: string, payload?: P, headers?: Headers) =>
+  requestWithPayload<T, P>('PUT', url, payload, headers);
 
-  return fetch(`${API_URL}${url}`, prepareInit('PATCH', headers, payload)).then(response =>
-    collectResponse(response)
-  );
-};
+const patchMethod = <T, P>(url?: string, payload?: P, headers?: Headers) =>
+  requestWithPayload<T, P>('PATCH', url, payload, headers);
 
-const deleteMethod = async <T, P>(
-  url: string = '/',
-  payload?: P,
-  headers: Headers = new Headers()
-): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(headers, payload);
-
-  return fetch(`${API_URL}${url}`, prepareInit('DELETE', headers, payload)).then(response =>
-    collectResponse(response)
-  );
-};
+const deleteMethod = <T, P>(url?: string, payload?: P, headers?: Headers) =>
+  requestWithPayload<T, P>('DELETE', url, payload, headers);
 
 export const methods = {
   get: getMethod,

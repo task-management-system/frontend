@@ -10,9 +10,11 @@ import { State } from 'types/redux';
 
 const useStyles = makeStyles(theme => ({
   root: {
+    height: '100%',
     gap: theme.spacing(2),
     display: 'grid',
     gridAutoRows: 'max-content',
+    overflowY: 'scroll',
   },
   tab: {
     padding: 0,
