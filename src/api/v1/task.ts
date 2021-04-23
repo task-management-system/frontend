@@ -24,6 +24,22 @@ export const getCreatedTask = (id: UUID) =>
     withAuthorization(methods.get<DetailedCreatedTask>(`${BASE_URL}/created/${id}`))
   );
 
+const actionTask = (id: UUID, action: string) => {
+  const params = new URLSearchParams({
+    id,
+  });
+
+  return withNotification(
+    withAuthorization(methods.patch(`${BASE_URL}/action/${action}?${params}`))
+  );
+};
+
+export const cancelTask = (id: UUID) => actionTask(id, 'cancel');
+
+export const closeTask = (id: UUID) => actionTask(id, 'close');
+
+export const deleteTask = (id: UUID) => actionTask(id, 'delete');
+
 const attachFiles = (path: string, id: UUID, files: File[]) => {
   const formData = new FormData();
   for (const file of files) {

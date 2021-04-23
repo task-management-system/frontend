@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Typography, Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import ScrollableArea from 'components/common/ScrollableArea';
 import MarkdownView from 'components/MarkdownView';
+import UploadControl from 'components/common/UploadControl';
 import FilesList from 'components/common/FilesList';
 import DateView from 'components/common/DateView';
 import NormalButton from 'components/themed/NormalButton';
+import { TaskStatus } from 'enums/TaskStatus';
+import { noop } from 'utils';
+import { attachFilesToReceived, cancelTask, closeTask, deleteFile } from 'api/v1';
 import { DetailedReceivedTask, DetailedCreatedTask, UUID } from 'types';
 import { PartialProperties } from 'types/common';
 import { CollectedResponse } from 'types/api';
-import { attachFilesToReceived, deleteFile } from 'api/v1';
-import UploadControl from 'components/common/UploadControl';
 
 type TaskViewEntry = PartialProperties<DetailedReceivedTask, 'parent'> &
   PartialProperties<DetailedCreatedTask, 'taskInstances'>;
@@ -18,6 +20,7 @@ type TaskViewEntry = PartialProperties<DetailedReceivedTask, 'parent'> &
 interface TaskViewProps {
   id: UUID;
   loadTask: (id: UUID) => Promise<CollectedResponse<TaskViewEntry>>;
+  reloadTasks?: () => void;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -53,6 +56,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
   actions: {
+    minHeight: 32,
     gap: theme.spacing(1.5),
     display: 'grid',
     gridAutoFlow: 'column',
@@ -60,7 +64,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
+enum TaskAction {
+  Upload,
+  Cancel,
+  Close,
+  Delete,
+}
+
+const TaskView: React.FC<TaskViewProps> = ({ id, loadTask, reloadTasks = noop }) => {
   const classes = useStyles();
   const [data, setData] = useState<TaskViewEntry | null>(null);
 
@@ -97,6 +108,42 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
     });
   }, []);
 
+  const handleCancelClick = useCallback(() => {
+    cancelTask(id).then(response => {
+      if (response.details.ok) {
+        reloadTasks();
+      }
+    });
+  }, [id, reloadTasks]);
+
+  const handleCloseClick = useCallback(() => {
+    closeTask(id).then(response => {
+      if (response.details.ok) {
+        reloadTasks();
+      }
+    });
+  }, [id, reloadTasks]);
+
+  const actions = useMemo(
+    () =>
+      data !== null
+        ? {
+            [TaskAction.Upload]: [TaskStatus.New, TaskStatus.InWork].includes(data.status.id),
+            [TaskAction.Cancel]:
+              [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) &&
+              data.parent !== undefined,
+            [TaskAction.Close]:
+              [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) &&
+              data.parent !== undefined,
+          }
+        : {
+            [TaskAction.Upload]: false,
+            [TaskAction.Cancel]: false,
+            [TaskAction.Close]: false,
+          },
+    [data]
+  );
+
   return data !== null ? (
     <div className={classes.root}>
       <div className={classes.columns}>
@@ -110,10 +157,13 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
         <ScrollableArea className={classes.wrapper}>
           {data.parent !== undefined ? (
             <>
-              <UploadControl onChange={handleAddFiles} />
+              {actions[TaskAction.Upload] && <UploadControl onChange={handleAddFiles} />}
               <div className={classes.container}>
                 <Typography className={classes.stickyHeading}>Ваши файлы</Typography>
-                <FilesList files={data.files} removeItem={handleRemoveFile} />
+                <FilesList
+                  files={data.files}
+                  removeItem={TaskAction.Upload ? handleRemoveFile : undefined}
+                />
               </div>
               <div className={classes.container}>
                 <Typography className={classes.stickyHeading}>Файлы задачи</Typography>
@@ -126,14 +176,17 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
                 <Typography className={classes.stickyHeading}>Файлы задачи</Typography>
                 <FilesList files={data.files} />
               </div>
-              {data.taskInstances?.map(taskInstance => (
-                <div className={classes.container} key={taskInstance.id}>
-                  <Typography className={classes.stickyHeading}>
-                    Файлы {taskInstance.executor.name || taskInstance.executor.username}
-                  </Typography>
-                  <FilesList files={taskInstance.files} />
-                </div>
-              ))}
+              {data.taskInstances?.map(
+                taskInstance =>
+                  taskInstance.files.length > 0 && (
+                    <div className={classes.container} key={taskInstance.id}>
+                      <Typography className={classes.stickyHeading}>
+                        Файлы {taskInstance.executor.name || taskInstance.executor.username}
+                      </Typography>
+                      <FilesList files={taskInstance.files} />
+                    </div>
+                  )
+              )}
             </>
           )}
         </ScrollableArea>
@@ -145,11 +198,20 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
           </Typography>
         </Fade>
         <div className={classes.actions}>
-          <Fade in>
-            <NormalButton color="primary" variant="contained">
-              Action
-            </NormalButton>
-          </Fade>
+          {actions[TaskAction.Cancel] && (
+            <Fade in>
+              <NormalButton color="primary" variant="contained" onClick={handleCancelClick}>
+                Отменить
+              </NormalButton>
+            </Fade>
+          )}
+          {actions[TaskAction.Close] && (
+            <Fade in>
+              <NormalButton color="primary" variant="contained" onClick={handleCloseClick}>
+                Завершить
+              </NormalButton>
+            </Fade>
+          )}
         </div>
       </div>
     </div>

@@ -6,14 +6,15 @@ import { NewReleases, Details, Block, Done, DataUsage } from '@material-ui/icons
 import ThemedTab from 'components/themed/ThemedTab';
 import { setGroup, setStatus, resetStatus } from 'redux/actions/tabs';
 import { RECEIVED, CREATED } from 'constants/tasks';
+import { TaskStatus } from 'enums/TaskStatus';
 import { State } from 'types/redux';
 
-const icons: { [key: number]: JSX.Element } = {
-  1: <NewReleases />,
-  2: <Details />,
-  3: <Block />,
-  4: <Done />,
-  5: <DataUsage />,
+const icons: Record<TaskStatus, JSX.Element> = {
+  [TaskStatus.New]: <NewReleases />,
+  [TaskStatus.InWork]: <Details />,
+  [TaskStatus.Canceled]: <Block />,
+  [TaskStatus.Done]: <Done />,
+  [TaskStatus.Prepared]: <DataUsage />,
 };
 
 const useStyles = makeStyles(theme => ({
@@ -24,14 +25,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-// ? Сделать лучше
 type Groups = typeof RECEIVED | typeof CREATED;
 
 type AvailableStatuses = Record<Groups, number[]>;
 
 const availableStatuses: AvailableStatuses = {
-  [RECEIVED]: [1, 2, 3, 4],
-  [CREATED]: [1, 2, 3, 4, 5],
+  [RECEIVED]: [TaskStatus.New, TaskStatus.InWork, TaskStatus.Canceled, TaskStatus.Done],
+  [CREATED]: [
+    TaskStatus.New,
+    TaskStatus.InWork,
+    TaskStatus.Canceled,
+    TaskStatus.Done,
+    TaskStatus.Prepared,
+  ],
 };
 
 const TaskTypesList: React.FC<ConnectedTaskTypesListProps> = ({

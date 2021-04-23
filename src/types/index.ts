@@ -1,3 +1,5 @@
+import { TaskStatus } from 'enums/TaskStatus';
+
 export type UUID = string;
 
 export interface Role {
@@ -42,7 +44,7 @@ export interface Notification {
 }
 
 export interface Status {
-  id: number;
+  id: TaskStatus;
   name: string;
 }
 
@@ -66,6 +68,7 @@ export interface TaskInfo extends Task {
 export interface DetailedTask extends Task {
   markdown: string | null;
   files: FileDescriptor[];
+  status: Status;
   createdAt: string;
 }
 
