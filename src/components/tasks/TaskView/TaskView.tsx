@@ -6,16 +6,14 @@ import MarkdownView from 'components/MarkdownView';
 import UploadControl from 'components/common/UploadControl';
 import FilesList from 'components/common/FilesList';
 import DateView from 'components/common/DateView';
-import NormalButton from 'components/themed/NormalButton';
+import TaskActions from './TaskActions';
 import { TaskStatus } from 'enums/TaskStatus';
+import { TaskAction } from 'enums/TaskAction';
 import { noop } from 'utils';
-import { attachFilesToReceived, cancelTask, closeTask, deleteFile } from 'api/v1';
-import { DetailedReceivedTask, DetailedCreatedTask, UUID } from 'types';
-import { PartialProperties } from 'types/common';
+import { attachFilesToReceived, deleteFile } from 'api/v1';
+import { UUID } from 'types';
 import { CollectedResponse } from 'types/api';
-
-type TaskViewEntry = PartialProperties<DetailedReceivedTask, 'parent'> &
-  PartialProperties<DetailedCreatedTask, 'taskInstances'>;
+import { TaskViewEntry, ActionCondition } from 'types/components/task';
 
 interface TaskViewProps {
   id: UUID;
@@ -51,12 +49,12 @@ const useStyles = makeStyles(theme => ({
     zIndex: 1,
   },
   footer: {
+    minHeight: 32,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   actions: {
-    minHeight: 32,
     gap: theme.spacing(1.5),
     display: 'grid',
     gridAutoFlow: 'column',
@@ -64,12 +62,23 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-enum TaskAction {
-  Upload,
-  Cancel,
-  Close,
-  Delete,
-}
+const actionConditions: Record<TaskAction, ActionCondition[]> = {
+  [TaskAction.Upload]: [
+    data => data?.status.id === TaskStatus.New || data?.status.id === TaskStatus.InWork,
+  ],
+  [TaskAction.Cancel]: [
+    data => data?.status.id === TaskStatus.New || data?.status.id === TaskStatus.InWork,
+    data => data?.parent !== undefined,
+  ],
+  [TaskAction.Close]: [
+    data => data?.status.id === TaskStatus.New || data?.status.id === TaskStatus.InWork,
+    data => data?.parent !== undefined,
+  ],
+  [TaskAction.Delete]: [
+    data => data?.status.id === TaskStatus.New,
+    data => data?.taskInstances !== undefined,
+  ],
+};
 
 const TaskView: React.FC<TaskViewProps> = ({ id, loadTask, reloadTasks = noop }) => {
   const classes = useStyles();
@@ -108,39 +117,14 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask, reloadTasks = noop })
     });
   }, []);
 
-  const handleCancelClick = useCallback(() => {
-    cancelTask(id).then(response => {
-      if (response.details.ok) {
-        reloadTasks();
-      }
-    });
-  }, [id, reloadTasks]);
-
-  const handleCloseClick = useCallback(() => {
-    closeTask(id).then(response => {
-      if (response.details.ok) {
-        reloadTasks();
-      }
-    });
-  }, [id, reloadTasks]);
-
   const actions = useMemo(
     () =>
-      data !== null
-        ? {
-            [TaskAction.Upload]: [TaskStatus.New, TaskStatus.InWork].includes(data.status.id),
-            [TaskAction.Cancel]:
-              [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) &&
-              data.parent !== undefined,
-            [TaskAction.Close]:
-              [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) &&
-              data.parent !== undefined,
-          }
-        : {
-            [TaskAction.Upload]: false,
-            [TaskAction.Cancel]: false,
-            [TaskAction.Close]: false,
-          },
+      Object.fromEntries(
+        Object.entries(actionConditions).map(([key, conditions]) => [
+          key,
+          conditions.every(condition => condition(data)),
+        ])
+      ) as Record<TaskAction, ReturnType<ActionCondition>>,
     [data]
   );
 
@@ -197,22 +181,12 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask, reloadTasks = noop })
             Создана: <DateView>{data.createdAt}</DateView>
           </Typography>
         </Fade>
-        <div className={classes.actions}>
-          {actions[TaskAction.Cancel] && (
-            <Fade in>
-              <NormalButton color="primary" variant="contained" onClick={handleCancelClick}>
-                Отменить
-              </NormalButton>
-            </Fade>
-          )}
-          {actions[TaskAction.Close] && (
-            <Fade in>
-              <NormalButton color="primary" variant="contained" onClick={handleCloseClick}>
-                Завершить
-              </NormalButton>
-            </Fade>
-          )}
-        </div>
+        <TaskActions
+          className={classes.actions}
+          id={data.id}
+          actions={actions}
+          reload={reloadTasks}
+        />
       </div>
     </div>
   ) : (

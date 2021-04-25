@@ -7,7 +7,7 @@ import {
 } from 'components/themed/Accordion';
 import TaskList from './TaskList';
 import TaskItem from '../TaskItem';
-import TaskView from '../TaskView';
+import { TaskView } from '../TaskView';
 import { getReceivedTasks, getReceivedTask } from 'api/v1';
 import { State } from 'types/redux';
 
