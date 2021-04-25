@@ -14,20 +14,17 @@ import NormalButton from 'components/themed/NormalButton';
 import FormField from 'components/formik/FormField';
 import FormCheckbox from 'components/formik/FormCheckbox';
 import { REQUIRED_FIELD } from 'constants/fields';
+import { calculatePower } from 'utils/permissions';
 import { updateRole } from 'api/v1';
-import { Role, Permission } from 'types';
+import { Role } from 'types';
 import { State } from 'types/redux';
 import { DialogChildrenHelpers } from 'types/components/dialogs';
+import { RoleForm } from 'types/components/formik/role';
 
 interface RoleEditProps {
   role: Role;
   onChange: (payload: Role) => void;
   children: (helpers: DialogChildrenHelpers) => React.ReactNode;
-}
-
-interface RoleEditForm {
-  meaning: string;
-  permissions: string[];
 }
 
 const useStyles = makeStyles(theme => ({
@@ -42,15 +39,6 @@ const validationSchema = yup.object().shape({
   meaning: yup.string().required(REQUIRED_FIELD),
 });
 
-const calculatePower = (keys: string[], permissions: Permission[]): number =>
-  permissions.reduce((accumulator, permission) => {
-    if (keys.includes(permission.name)) {
-      accumulator |= permission.power;
-    }
-
-    return accumulator;
-  }, 0);
-
 const RoleEdit: React.FC<RoleEditProps> = ({ children, role, onChange }) => {
   const classes = useStyles();
   const permissions = useSelector((state: State) => state.metaData.permissions || []);
@@ -60,7 +48,7 @@ const RoleEdit: React.FC<RoleEditProps> = ({ children, role, onChange }) => {
 
   const handleClose = () => setOpen(false);
 
-  const initialValues: RoleEditForm = useMemo(
+  const initialValues: RoleForm = useMemo(
     () => ({
       meaning: role.meaning,
       permissions: permissions
@@ -72,9 +60,7 @@ const RoleEdit: React.FC<RoleEditProps> = ({ children, role, onChange }) => {
     [role, permissions]
   );
 
-  const handleSubmit = (values: RoleEditForm, helpers: FormikHelpers<RoleEditForm>) => {
-    helpers.setSubmitting(true);
-
+  const handleSubmit = (values: RoleForm, helpers: FormikHelpers<RoleForm>) => {
     updateRole({
       id: role.id,
       meaning: values.meaning || role.meaning,

@@ -41,3 +41,12 @@ export const haveAnyPermission = (
 
   return permissionsPower.some(requiredPower => (power & requiredPower) > 0);
 };
+
+export const calculatePower = (keys: string[], permissions: Permission[]): number =>
+  permissions.reduce((accumulator, permission) => {
+    if (keys.includes(permission.name)) {
+      accumulator |= permission.power;
+    }
+
+    return accumulator;
+  }, 0);

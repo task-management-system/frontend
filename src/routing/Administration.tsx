@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Typography, makeStyles } from '@material-ui/core';
-import AdministrationMenu from 'components/AdministrationMenu/AdministrationMenu';
+import { AdministrationMenu } from 'components/AdministrationMenu';
 import Container from 'components/common/Container';
 import Loading from 'components/Loading';
 import NoMatch from './NoMatch';
@@ -11,6 +11,7 @@ const Users = React.lazy(() => import('./administration/Users'));
 const AddUser = React.lazy(() => import('./administration/add-user/AddUser'));
 const Structure = React.lazy(() => import('./administration/Structure'));
 const Roles = React.lazy(() => import('./administration/Roles'));
+const AddRole = React.lazy(() => import('./administration/add-role/AddRole'));
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -55,6 +56,11 @@ const Administration: React.FC = () => {
         <Route path="/administration/roles">
           <React.Suspense fallback={<Loading />}>
             <Roles />
+          </React.Suspense>
+        </Route>
+        <Route path="/administration/add-role">
+          <React.Suspense fallback={<Loading />}>
+            <AddRole />
           </React.Suspense>
         </Route>
         <Route path="*">

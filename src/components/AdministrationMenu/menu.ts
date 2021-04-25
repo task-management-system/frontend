@@ -45,7 +45,7 @@ const menu = [
   // new MenuItem('Структура', '/administration/structure').addIcon(Apartment),
   new Menu('Роли', [
     new MenuItem('Список ролей', '/administration/roles'),
-    new MenuItem('Добавить роли', '/administration/roles'),
+    new MenuItem('Добавить роли', '/administration/add-role'),
   ])
     .setExpanded(true)
     .addIcon(AccountBox),
