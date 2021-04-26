@@ -5,7 +5,7 @@ import ScrollableArea from 'components/common/ScrollableArea';
 import MarkdownView from 'components/MarkdownView';
 import UploadControl from 'components/common/UploadControl';
 import FilesList from 'components/common/FilesList';
-import DateView from 'components/common/DateView';
+import DateView from 'components/common/date/DateView';
 import TaskActions from './TaskActions';
 import { TaskStatus } from 'enums/TaskStatus';
 import { TaskAction } from 'enums/TaskAction';

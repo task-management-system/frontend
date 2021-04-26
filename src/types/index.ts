@@ -98,3 +98,24 @@ export interface FileDescriptor {
   size: number;
   data?: File;
 }
+
+export interface TaskStatistics {
+  new: number;
+  inWork: number;
+  canceled: number;
+  closed: number;
+}
+
+export interface DiskStatistics {
+  available: number;
+  used: number;
+}
+
+export type AllStatistics = {
+  task: {
+    all: TaskStatistics;
+    actual: TaskStatistics;
+  };
+  disk: DiskStatistics;
+  createdAt: number;
+};

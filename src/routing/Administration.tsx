@@ -1,9 +1,10 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Typography, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { AdministrationMenu } from 'components/AdministrationMenu';
 import Container from 'components/common/Container';
 import Loading from 'components/Loading';
+import Statistics from './Statistics';
 import NoMatch from './NoMatch';
 
 const User = React.lazy(() => import('./User'));
@@ -30,7 +31,7 @@ const Administration: React.FC = () => {
       <Switch>
         <Route path="/administration" exact>
           <Container>
-            <Typography variant="h3">Administration</Typography>
+            <Statistics />
           </Container>
         </Route>
         <Route path="/administration/users">
