@@ -6,4 +6,4 @@ export * from './statuses';
 export * from './user';
 export * from './tasks';
 export * from './task';
-export * from './statistic';
+export * from './statistics';

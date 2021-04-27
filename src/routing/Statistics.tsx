@@ -8,7 +8,7 @@ import PieChart from 'components/chart/PieChart';
 import { CountMetric, FilesizeMetric } from 'components/chart/CenteredMetric';
 import filesize from 'filesize';
 import usePromiseTrack from 'hooks/usePromiseTrack';
-import { getStatistic } from 'api/v1';
+import { getStatistics } from 'api/v1';
 import { AllStatistics, TaskStatistics, DiskStatistics } from 'types';
 
 const useStyles = makeStyles(theme => ({
@@ -83,35 +83,35 @@ const mapper = <T, K extends keyof T = keyof T>(
 
 const Statistics: React.FC = () => {
   const classes = useStyles();
-  const [statistic, setStatistic] = useState<AllStatistics | null>(null);
-  const [inProgress, trackedGetStatistic] = usePromiseTrack(getStatistic);
+  const [statistics, setStatistics] = useState<AllStatistics | null>(null);
+  const [inProgress, trackedGetStatistics] = usePromiseTrack(getStatistics);
 
   useEffect(() => {
-    getStatistic().then(response => {
-      setStatistic(response.data || null);
+    getStatistics().then(response => {
+      setStatistics(response.data || null);
     });
   }, []);
 
   const handleReloadClick = useCallback(() => {
-    trackedGetStatistic().then(response => {
-      if (response.data !== null && response.data.createdAt !== statistic?.createdAt) {
-        setStatistic(response.data);
+    trackedGetStatistics().then(response => {
+      if (response.data !== null && response.data.createdAt !== statistics?.createdAt) {
+        setStatistics(response.data);
       }
     });
-  }, [statistic, trackedGetStatistic]);
+  }, [statistics, trackedGetStatistics]);
 
   const mapped = useMemo(() => {
-    if (statistic !== null) {
+    if (statistics !== null) {
       return {
         task: {
-          all: mapper(statistic.task.all, TASK_MAPPING, TASK_COLORS).filter(
+          all: mapper(statistics.task.all, TASK_MAPPING, TASK_COLORS).filter(
             entry => entry.value > 0
           ),
-          actual: mapper(statistic.task.actual, TASK_MAPPING, TASK_COLORS).filter(
+          actual: mapper(statistics.task.actual, TASK_MAPPING, TASK_COLORS).filter(
             entry => entry.value > 0
           ),
         },
-        disk: mapper(statistic.disk, DISK_MAPPING, DISK_COLORS).filter(entry => entry.value > 0),
+        disk: mapper(statistics.disk, DISK_MAPPING, DISK_COLORS).filter(entry => entry.value > 0),
       };
     }
 
@@ -122,9 +122,9 @@ const Statistics: React.FC = () => {
       },
       disk: [],
     };
-  }, [statistic]);
+  }, [statistics]);
 
-  if (statistic === null) {
+  if (statistics === null) {
     return (
       <div className={classes.root}>
         <div className={classes.info}>
@@ -166,7 +166,7 @@ const Statistics: React.FC = () => {
       <Fade in>
         <div className={classes.info}>
           <Typography variant="body2" color="textSecondary">
-            Данные от <DateTimeView>{statistic.createdAt}</DateTimeView>
+            Данные от <DateTimeView>{statistics.createdAt}</DateTimeView>
           </Typography>
           <IconButton size="small" disabled={inProgress} onClick={handleReloadClick}>
             <Cached />
