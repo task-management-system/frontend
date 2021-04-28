@@ -11,6 +11,7 @@
 - Yup
 - Local Forage
 - Material UI
+- Nivo
 - FontSource Roboto
 - TypeScript
 - HTML

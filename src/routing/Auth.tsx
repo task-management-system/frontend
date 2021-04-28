@@ -118,7 +118,7 @@ const Auth: React.FC<ConnectedAuthProps> = ({ setUser, setPermissions, setStatus
           validateOnBlur
           onSubmit={sendData}
         >
-          {({ values, handleChange, handleSubmit, submitForm, isSubmitting }) => (
+          {({ values, handleChange, submitForm, isSubmitting }) => (
             <Form>
               <CardContent className={classes.body}>
                 {!values.useEmail ? (

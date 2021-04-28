@@ -79,6 +79,7 @@ const UserInfo: React.FC<UserInfoProps & ConnectedUserInfoProps> = ({
                   value={editing ? form.values.username : user.username}
                   editing={editing}
                   onChange={form.handleChange}
+                  disabled={!permissions.update}
                 />
               </Fade>
             ) : (
@@ -121,6 +122,7 @@ const UserInfo: React.FC<UserInfoProps & ConnectedUserInfoProps> = ({
                   value={editing ? form.values.role || null : user.role}
                   editing={editing}
                   onChange={form.setFieldValue}
+                  disabled={!permissions.update}
                 />
               </Fade>
             ) : (

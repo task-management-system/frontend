@@ -8,6 +8,7 @@ interface RoleParamViewProps {
   name: string;
   value: Role | null;
   editing: boolean;
+  disabled?: boolean;
   onChange: (name: string, value: any) => void;
 }
 

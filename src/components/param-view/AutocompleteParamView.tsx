@@ -7,6 +7,7 @@ import AutocompleteField, {
 
 interface AutocompleteParamViewProps<T> {
   editing: boolean;
+  disabled?: boolean;
   render?: (value: T | null) => React.ReactNode;
 }
 
@@ -18,6 +19,7 @@ const AutocompleteParamView = <T,>({
   getOptionLabel,
   getOptionSelected,
   editing,
+  disabled = false,
   render = value => value,
   onChange,
 }: React.PropsWithChildren<AutocompleteParamViewProps<T> & AutocompleteFieldSingleProps<T>>) => {
@@ -34,6 +36,7 @@ const AutocompleteParamView = <T,>({
         getOptionSelected={getOptionSelected}
         onChange={onChange}
         multiple={false}
+        disabled={disabled}
       />
     );
   } else {

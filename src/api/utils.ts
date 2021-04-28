@@ -24,8 +24,9 @@ export const setToken = async (token: string | null) => {
 export const withAuthorization = <T>(
   handler: Promise<CollectedResponse<T>>
 ): Promise<CollectedResponse<T>> =>
-  handler.then(response => {
+  handler.then(async response => {
     if (!response.details.ok && response.details.status === 401) {
+      await removeToken();
       store.dispatch(reset());
 
       return Promise.reject(response);

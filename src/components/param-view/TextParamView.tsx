@@ -7,6 +7,7 @@ interface TextParamViewProps {
   name: string;
   value?: string;
   editing: boolean;
+  disabled?: boolean;
   render?: (value: string | undefined) => React.ReactNode;
   onChange: (event: React.ChangeEvent<any>) => void;
 }
@@ -16,6 +17,7 @@ const TextParamView: React.FC<TextParamViewProps> = ({
   name,
   value,
   editing,
+  disabled = false,
   render = value => value,
   onChange,
 }) => {
@@ -29,6 +31,7 @@ const TextParamView: React.FC<TextParamViewProps> = ({
         value={value || ''}
         variant="outlined"
         size="small"
+        disabled={disabled}
         onChange={onChange}
         autoComplete="off"
       />
