@@ -1,23 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import clsx from 'clsx';
 import { Typography, Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import ScrollableArea from 'components/common/ScrollableArea';
 import MarkdownView from 'components/MarkdownView';
-import FilesList from 'components/common/FilesList';
-import DateView from 'components/common/DateView';
-import NormalButton from 'components/themed/NormalButton';
-import { DetailedReceivedTask, DetailedCreatedTask, UUID } from 'types';
-import { PartialProperties } from 'types/common';
-import { RequestWithCancel } from 'types/api';
-import { attachFilesToReceived, deleteFile } from 'api/v1';
 import UploadControl from 'components/common/UploadControl';
-
-type TaskViewEntry = PartialProperties<DetailedReceivedTask, 'parent'> &
-  PartialProperties<DetailedCreatedTask, 'taskInstances'>;
+import FilesList from 'components/common/FilesList';
+import DateView from 'components/common/date/DateView';
+import ExecutorsList from './ExecutorsList';
+import TaskActions from './TaskActions';
+import { TaskStatus } from 'enums/TaskStatus';
+import { TaskAction } from 'enums/TaskAction';
+import { noop } from 'utils';
+import { attachFilesToReceived, deleteFile } from 'api/v1';
+import { UUID } from 'types';
+import { RequestWithCancel } from 'types/api';
+import { TaskViewEntry, ActionCondition } from 'types/components/task';
 
 interface TaskViewProps {
   id: UUID;
   loadTask: (id: UUID) => RequestWithCancel<TaskViewEntry>;
+  reloadTasks?: () => void;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -30,11 +33,16 @@ const useStyles = makeStyles(theme => ({
   columns: {
     gap: theme.spacing(1.5),
     display: 'grid',
-    gridTemplateColumns: '1fr 280px',
+    gridAutoFlow: 'column',
+    gridAutoColumns: '1fr 280px 280px',
     overflow: 'hidden',
   },
   wrapper: {
     height: 256,
+  },
+  scrollable: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   container: {
     '&:not(:last-child)': {
@@ -48,6 +56,7 @@ const useStyles = makeStyles(theme => ({
     zIndex: 1,
   },
   footer: {
+    minHeight: 32,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -60,7 +69,25 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
+const actionConditions: Record<TaskAction, ActionCondition[]> = {
+  [TaskAction.Upload]: [
+    data => (data !== null ? [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) : false),
+  ],
+  [TaskAction.Cancel]: [
+    data => (data !== null ? [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) : false),
+    data => (data !== null ? data.parent !== undefined : false),
+  ],
+  [TaskAction.Close]: [
+    data => (data !== null ? [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) : false),
+    data => (data !== null ? data.parent !== undefined : false),
+  ],
+  [TaskAction.Delete]: [
+    data => (data !== null ? data.status.id === TaskStatus.New : false),
+    data => (data !== null ? data.taskInstances !== undefined : false),
+  ],
+};
+
+const TaskView: React.FC<TaskViewProps> = ({ id, loadTask, reloadTasks = noop }) => {
   const classes = useStyles();
   const [data, setData] = useState<TaskViewEntry | null>(null);
 
@@ -103,6 +130,17 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
     });
   }, []);
 
+  const actions = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(actionConditions).map(([key, conditions]) => [
+          key,
+          conditions.every(condition => condition(data)),
+        ])
+      ) as Record<TaskAction, ReturnType<ActionCondition>>,
+    [data]
+  );
+
   return data !== null ? (
     <div className={classes.root}>
       <div className={classes.columns}>
@@ -116,10 +154,13 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
         <ScrollableArea className={classes.wrapper}>
           {data.parent !== undefined ? (
             <>
-              <UploadControl onChange={handleAddFiles} />
+              {actions[TaskAction.Upload] && <UploadControl onChange={handleAddFiles} />}
               <div className={classes.container}>
                 <Typography className={classes.stickyHeading}>Ваши файлы</Typography>
-                <FilesList files={data.files} removeItem={handleRemoveFile} />
+                <FilesList
+                  files={data.files}
+                  removeItem={TaskAction.Upload ? handleRemoveFile : undefined}
+                />
               </div>
               <div className={classes.container}>
                 <Typography className={classes.stickyHeading}>Файлы задачи</Typography>
@@ -132,17 +173,28 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
                 <Typography className={classes.stickyHeading}>Файлы задачи</Typography>
                 <FilesList files={data.files} />
               </div>
-              {data.taskInstances?.map(taskInstance => (
-                <div className={classes.container} key={taskInstance.id}>
-                  <Typography className={classes.stickyHeading}>
-                    Файлы {taskInstance.executor.name || taskInstance.executor.username}
-                  </Typography>
-                  <FilesList files={taskInstance.files} />
-                </div>
-              ))}
+              {data.taskInstances?.map(
+                taskInstance =>
+                  taskInstance.files.length > 0 && (
+                    <div className={classes.container} key={taskInstance.id}>
+                      <Typography className={classes.stickyHeading}>
+                        Файлы {taskInstance.executor.name || taskInstance.executor.username}
+                      </Typography>
+                      <FilesList files={taskInstance.files} />
+                    </div>
+                  )
+              )}
             </>
           )}
         </ScrollableArea>
+        {data.taskInstances !== undefined && (
+          <div className={clsx(classes.wrapper, classes.scrollable)}>
+            <Typography>Исполнители</Typography>
+            <ScrollableArea className={classes.scrollable}>
+              <ExecutorsList taskInstances={data.taskInstances} />
+            </ScrollableArea>
+          </div>
+        )}
       </div>
       <div className={classes.footer}>
         <Fade in>
@@ -150,13 +202,12 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask }) => {
             Создана: <DateView>{data.createdAt}</DateView>
           </Typography>
         </Fade>
-        <div className={classes.actions}>
-          <Fade in>
-            <NormalButton color="primary" variant="contained">
-              Action
-            </NormalButton>
-          </Fade>
-        </div>
+        <TaskActions
+          className={classes.actions}
+          id={data.id}
+          actions={actions}
+          reload={reloadTasks}
+        />
       </div>
     </div>
   ) : (

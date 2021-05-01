@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  tms-nginx:
+    container_name: tms-nginx
+    build: .
+    ports:
+      - 80:80
+    networks:
+      - tms-network
+
+networks:
+  tms-network:
+    external: true

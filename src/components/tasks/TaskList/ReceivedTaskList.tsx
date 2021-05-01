@@ -7,7 +7,7 @@ import {
 } from 'components/themed/Accordion';
 import TaskList from './TaskList';
 import TaskItem from '../TaskItem';
-import TaskView from '../TaskView';
+import { TaskView } from '../TaskView';
 import { getReceivedTasks, getReceivedTask } from 'api/v1';
 import { State } from 'types/redux';
 
@@ -26,7 +26,7 @@ const ReceivedTaskList: React.FC<ConnectedReceivedTaskListProps> = ({ group, sta
   return (
     <TaskList
       getTasks={getReceivedTasks}
-      renderItem={item => (
+      renderItem={(item, refresh) => (
         <TaskAccordion
           expanded={expanded.includes(item.id)}
           elevation={0}
@@ -38,7 +38,7 @@ const ReceivedTaskList: React.FC<ConnectedReceivedTaskListProps> = ({ group, sta
             <TaskItem task={item.task} />
           </TaskAccordionSummary>
           <TaskAccordionDetails>
-            <TaskView id={item.id} loadTask={getReceivedTask} />
+            <TaskView id={item.id} loadTask={getReceivedTask} reloadTasks={refresh} />
           </TaskAccordionDetails>
         </TaskAccordion>
       )}

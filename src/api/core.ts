@@ -9,14 +9,14 @@ import {
 
 const API_URL = '/api';
 
-const prepareHeaders = async <T>(headers: Headers, payload?: T): Promise<void> => {
+const prepareHeaders = async <T>(method: Methods, headers: Headers, payload?: T): Promise<void> => {
   const token = await getToken();
 
   if (token !== null) {
     headers.append('Authorization', `Bearer ${token}`);
   }
 
-  if (!headers.has('Content-Type')) {
+  if (method !== 'GET' && !headers.has('Content-Type')) {
     if (!(payload instanceof FormData)) {
       headers.append('Content-Type', 'application/json');
     }
@@ -80,7 +80,7 @@ const requestWithoutPayload = <T>(
 ): RequestWithCancel<T> => {
   const controller = new AbortController();
   const request: Promise<CollectedResponse<T>> = new Promise(async (resolve, reject) => {
-    await prepareHeaders(headers);
+    await prepareHeaders(method, headers);
 
     try {
       const response = await fetch(`${API_URL}${url}`, {
@@ -106,7 +106,7 @@ const requestWithPayload = <T, P>(
 ): RequestWithCancel<T> => {
   const controller = new AbortController();
   const request: Promise<CollectedResponse<T>> = new Promise(async (resolve, reject) => {
-    await prepareHeaders(headers, payload);
+    await prepareHeaders(method, headers, payload);
 
     try {
       const response = await fetch(`${API_URL}${url}`, {

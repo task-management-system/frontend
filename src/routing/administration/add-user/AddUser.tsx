@@ -44,12 +44,15 @@ const AddUser: React.FC = () => {
       roleId: user.role!.id,
     }));
 
-    helpers.setSubmitting(true);
-
-    createUsers(users).then(() => {
-      helpers.setSubmitting(false);
-      helpers.resetForm();
-    });
+    createUsers(users)
+      .then(response => {
+        if (response.details.ok) {
+          helpers.resetForm();
+        }
+      })
+      .finally(() => {
+        helpers.setSubmitting(false);
+      });
   };
 
   return (
@@ -60,7 +63,7 @@ const AddUser: React.FC = () => {
         onSubmit={handleSubmit}
         validateOnMount
       >
-        {({ values, errors, isSubmitting, submitForm }) => (
+        {({ values, isValid, isSubmitting, submitForm }) => (
           <FieldArray name="users">
             {arrayHelpers => (
               <div className={classes.grid}>
@@ -110,6 +113,7 @@ const AddUser: React.FC = () => {
                       <FlatButton
                         color="primary"
                         variant="contained"
+                        disabled={isSubmitting}
                         onClick={() => arrayHelpers.remove(index)}
                         disableElevation
                       >
@@ -134,9 +138,7 @@ const AddUser: React.FC = () => {
                     variant="outlined"
                     size="large"
                     startIcon={<Check />}
-                    disabled={
-                      isSubmitting || values.users.length === 0 || (errors.users?.length || 0) > 0
-                    }
+                    disabled={isSubmitting || !isValid || values.users.length === 0}
                     onClick={submitForm}
                   >
                     {values.users.length === 1 ? 'Создать пользователя' : 'Создать пользователей'}

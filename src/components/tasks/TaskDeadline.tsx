@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Typography, makeStyles } from '@material-ui/core';
 import { red, orange } from '@material-ui/core/colors';
-import DateView from 'components/common/DateView';
+import DateView from 'components/common/date/DateView';
 import { currentDate } from 'utils/date';
 import { differenceInDays } from 'date-fns';
 

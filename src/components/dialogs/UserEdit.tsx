@@ -49,11 +49,11 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
           .then(response => {
             helpers.setSubmitting(false);
 
+            handleClose();
+
             if (response.data !== null) {
               onChange(response.data);
             }
-
-            handleClose();
           })
           .catch(() => {
             helpers.setSubmitting(false);
@@ -78,17 +78,24 @@ const UserEdit: React.FC<UserEditProps> = ({ children, user, onChange }) => {
       {children({ handleOpen, handleClose })}
       <Dialog maxWidth="md" open={open} onClose={handleClose} fullWidth>
         <DialogTitle>{user?.username}</DialogTitle>
-        <DialogContent className={classes.content}>
-          <UserInfo user={user} form={formik} editing={true} />
-        </DialogContent>
-        <DialogActions>
-          <NormalButton color="primary" disabled={formik.isSubmitting} onClick={handleClose}>
-            Отмена
-          </NormalButton>
-          <NormalButton color="primary" disabled={formik.isSubmitting} onClick={formik.submitForm}>
-            Сохранить
-          </NormalButton>
-        </DialogActions>
+        <form action="#" onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
+          <DialogContent className={classes.content}>
+            <UserInfo user={user} form={formik} editing={true} />
+          </DialogContent>
+          <DialogActions>
+            <NormalButton color="primary" disabled={formik.isSubmitting} onClick={handleClose}>
+              Отмена
+            </NormalButton>
+            <NormalButton
+              type="submit"
+              color="primary"
+              disabled={formik.isSubmitting}
+              onClick={formik.submitForm}
+            >
+              Сохранить
+            </NormalButton>
+          </DialogActions>
+        </form>
       </Dialog>
     </>
   );

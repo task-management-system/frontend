@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, makeStyles } from '@material-ui/core';
-import { Formik, FormikHelpers } from 'formik';
+import { Formik, Form, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 import FormField from 'components/formik/FormField';
 import NormalButton from 'components/themed/NormalButton';
@@ -81,7 +81,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ children, userId }) => 
           validateOnBlur
         >
           {({ submitForm, dirty, isValid, isSubmitting }) => (
-            <>
+            <Form>
               <DialogContent className={classes.form}>
                 <FormField
                   component={PasswordField}
@@ -110,6 +110,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ children, userId }) => 
                   Отмена
                 </NormalButton>
                 <NormalButton
+                  type="submit"
                   color="primary"
                   disabled={isSubmitting || !isValid || !dirty}
                   onClick={submitForm}
@@ -117,7 +118,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ children, userId }) => 
                   Изменить
                 </NormalButton>
               </DialogActions>
-            </>
+            </Form>
           )}
         </Formik>
       </Dialog>

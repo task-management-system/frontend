@@ -6,6 +6,7 @@ import TaskListToolbar from '../TaskListToolbar';
 import { TaskItemSkeleton } from '../TaskItem';
 import { range } from 'utils';
 import usePromiseTrack from 'hooks/usePromiseTrack';
+import { TaskStatus } from 'enums/TaskStatus';
 import { CollectedResponse, Pagination as RequestPagination, Paged } from 'types/api';
 import { State } from 'types/redux';
 
@@ -14,7 +15,7 @@ interface TaskListProps<T> {
     statusId: number,
     pagination: RequestPagination
   ) => Promise<CollectedResponse<Paged<T[]>>>;
-  renderItem: (entry: T) => React.ReactElement<any, any>;
+  renderItem: (entry: T, refresh: () => void) => React.ReactElement<any, any>;
   showToolbar?: boolean;
 }
 
@@ -38,12 +39,12 @@ const useStyles = makeStyles(theme => ({
 
 const SIZE = 10;
 
-const notFoundMessages: Record<number, string> = {
-  1: 'У Вас нет новых задач',
-  2: 'У Вас нет задач в работе',
-  3: 'У Вас нет отмененных задач',
-  4: 'У Вас нет завершенных задач',
-  5: 'У Вас нет подготовленных задач',
+const notFoundMessages: Record<TaskStatus, string> = {
+  [TaskStatus.New]: 'У Вас нет новых задач',
+  [TaskStatus.InWork]: 'У Вас нет задач в работе',
+  [TaskStatus.Canceled]: 'У Вас нет отмененных задач',
+  [TaskStatus.Done]: 'У Вас нет завершенных задач',
+  [TaskStatus.Prepared]: 'У Вас нет подготовленных задач',
 };
 
 const TaskList = <T,>({
@@ -109,7 +110,7 @@ const TaskList = <T,>({
         ) : count > 0 ? (
           tasks.list.map((entry, index) => (
             <React.Fragment key={index}>
-              <Fade in={!inProgress}>{renderItem(entry)}</Fade>
+              <Fade in={!inProgress}>{renderItem(entry, loadTasks)}</Fade>
               {count - 1 > index && <Divider />}
             </React.Fragment>
           ))

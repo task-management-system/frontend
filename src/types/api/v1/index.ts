@@ -31,6 +31,11 @@ export interface ChangePassword {
   newPassword: string;
 }
 
+export interface CreateRole {
+  meaning: string;
+  power: number;
+}
+
 export interface CreateTask {
   title: string;
   description: string | null;
