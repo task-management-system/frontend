@@ -31,8 +31,8 @@ const actionTask = (id: UUID, action: string) => {
     id,
   });
 
-  return withNotification(
-    withAuthorization(methods.patch(`${BASE_URL}/action/${action}?${params}`))
+  return extractRequest(
+    withNotification(withAuthorization(methods.patch(`${BASE_URL}/action/${action}?${params}`)))
   );
 };
 

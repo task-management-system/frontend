@@ -10,7 +10,9 @@ export const getRoles = () =>
 export const loadRoles = withCache('roles', 30 * 60 * 1000, getRoles);
 
 export const createRole = (data: CreateRole) =>
-  withNotification(withAuthorization(methods.put<Role, CreateRole>(`${VERSION_URL}/role`, data)));
+  extractRequest(
+    withNotification(withAuthorization(methods.put<Role, CreateRole>(`${VERSION_URL}/role`, data)))
+  );
 
 export const updateRole = (data: Role) =>
   extractRequest(
