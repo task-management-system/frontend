@@ -3,14 +3,14 @@ import { Methods, CollectedResponse, BasicResponse, Pagination } from 'types/api
 
 const API_URL = '/api';
 
-const prepareHeaders = async <T>(headers: Headers, payload?: T): Promise<void> => {
+const prepareHeaders = async <T>(method: Methods, headers: Headers, payload?: T): Promise<void> => {
   const token = await getToken();
 
   if (token !== null) {
     headers.append('Authorization', `Bearer ${token}`);
   }
 
-  if (!headers.has('Content-Type')) {
+  if (method !== 'GET' && !headers.has('Content-Type')) {
     if (!(payload instanceof FormData)) {
       headers.append('Content-Type', 'application/json');
     }
@@ -72,7 +72,7 @@ const requestWithoutPayload = async <T>(
   url: string = '/',
   headers: Headers = new Headers()
 ): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(headers);
+  await prepareHeaders(method, headers);
 
   return fetch(`${API_URL}${url}`, prepareInit(method, headers)).then(response =>
     collectResponse(response)
@@ -85,7 +85,7 @@ const requestWithPayload = async <T, P>(
   payload?: P,
   headers: Headers = new Headers()
 ): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(headers, payload);
+  await prepareHeaders(method, headers, payload);
 
   return fetch(`${API_URL}${url}`, prepareInit(method, headers, payload)).then(response =>
     collectResponse(response)

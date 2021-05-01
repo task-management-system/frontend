@@ -13,6 +13,7 @@ import {
   IconButton,
   Typography,
   makeStyles,
+  withStyles,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import { Delete, Edit } from '@material-ui/icons';
@@ -35,6 +36,16 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
 }));
+
+const ThemedTableRow = withStyles(theme => ({
+  root: {
+    '&:last-child': {
+      '& > *': {
+        borderBottom: 'none',
+      },
+    },
+  },
+}))(TableRow);
 
 const RolesTable: React.FC<ConnectedRolesTableProps> = ({ removeCache }) => {
   const classes = useStyles();
@@ -73,7 +84,7 @@ const RolesTable: React.FC<ConnectedRolesTableProps> = ({ removeCache }) => {
           {!inProgress
             ? roles.map(role => (
                 <Fade in key={role.id}>
-                  <TableRow className={classes.row}>
+                  <ThemedTableRow className={classes.row}>
                     <TableCell>
                       <span className={classes.wrapper}>{role.meaning}</span>
                     </TableCell>
@@ -108,7 +119,7 @@ const RolesTable: React.FC<ConnectedRolesTableProps> = ({ removeCache }) => {
                         )}
                       </Confirm>
                     </TableCell>
-                  </TableRow>
+                  </ThemedTableRow>
                 </Fade>
               ))
             : range(10).map(index => (

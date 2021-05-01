@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import clsx from 'clsx';
 import { Typography, Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import ScrollableArea from 'components/common/ScrollableArea';
@@ -6,6 +7,7 @@ import MarkdownView from 'components/MarkdownView';
 import UploadControl from 'components/common/UploadControl';
 import FilesList from 'components/common/FilesList';
 import DateView from 'components/common/date/DateView';
+import ExecutorsList from './ExecutorsList';
 import TaskActions from './TaskActions';
 import { TaskStatus } from 'enums/TaskStatus';
 import { TaskAction } from 'enums/TaskAction';
@@ -31,11 +33,16 @@ const useStyles = makeStyles(theme => ({
   columns: {
     gap: theme.spacing(1.5),
     display: 'grid',
-    gridTemplateColumns: '1fr 280px',
+    gridAutoFlow: 'column',
+    gridAutoColumns: '1fr 280px 280px',
     overflow: 'hidden',
   },
   wrapper: {
     height: 256,
+  },
+  scrollable: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   container: {
     '&:not(:last-child)': {
@@ -64,19 +71,19 @@ const useStyles = makeStyles(theme => ({
 
 const actionConditions: Record<TaskAction, ActionCondition[]> = {
   [TaskAction.Upload]: [
-    data => data?.status.id === TaskStatus.New || data?.status.id === TaskStatus.InWork,
+    data => (data !== null ? [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) : false),
   ],
   [TaskAction.Cancel]: [
-    data => data?.status.id === TaskStatus.New || data?.status.id === TaskStatus.InWork,
-    data => data?.parent !== undefined,
+    data => (data !== null ? [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) : false),
+    data => (data !== null ? data.parent !== undefined : false),
   ],
   [TaskAction.Close]: [
-    data => data?.status.id === TaskStatus.New || data?.status.id === TaskStatus.InWork,
-    data => data?.parent !== undefined,
+    data => (data !== null ? [TaskStatus.New, TaskStatus.InWork].includes(data.status.id) : false),
+    data => (data !== null ? data.parent !== undefined : false),
   ],
   [TaskAction.Delete]: [
-    data => data?.status.id === TaskStatus.New,
-    data => data?.taskInstances !== undefined,
+    data => (data !== null ? data.status.id === TaskStatus.New : false),
+    data => (data !== null ? data.taskInstances !== undefined : false),
   ],
 };
 
@@ -174,6 +181,14 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask, reloadTasks = noop })
             </>
           )}
         </ScrollableArea>
+        {data.taskInstances !== undefined && (
+          <div className={clsx(classes.wrapper, classes.scrollable)}>
+            <Typography>Исполнители</Typography>
+            <ScrollableArea className={classes.scrollable}>
+              <ExecutorsList taskInstances={data.taskInstances} />
+            </ScrollableArea>
+          </div>
+        )}
       </div>
       <div className={classes.footer}>
         <Fade in>
