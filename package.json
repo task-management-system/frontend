@@ -18,7 +18,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/redux-logger": "^3.0.8",
     "clsx": "^1.1.1",
-    "date-fns": "^2.21.1",
+    "date-fns": "^2.21.2",
     "formik": "^2.2.6",
     "localforage": "^1.9.0",
     "react": "^17.0.2",
