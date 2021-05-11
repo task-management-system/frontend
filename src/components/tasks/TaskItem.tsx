@@ -35,7 +35,9 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'uppercase',
   },
   link: {
+    width: '100%',
     justifySelf: 'start',
+    overflow: 'hidden',
   },
   text: {
     whiteSpace: 'nowrap',

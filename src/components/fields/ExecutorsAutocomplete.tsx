@@ -23,7 +23,9 @@ const ExecutorsAutocomplete: React.FC<
     <AutocompleteFormField
       {...props}
       options={executors}
-      getOptionLabel={option => option.name || option.username}
+      getOptionLabel={option =>
+        option.name !== null ? `${option.username} (${option.name})` : option.username
+      }
       getOptionSelected={(option, value) => option.id === value.id}
       multiple
       filterSelectedOptions
