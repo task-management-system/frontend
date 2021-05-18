@@ -1,5 +1,5 @@
 import { methods } from 'api/core';
-import { withAuthorization, withNotification } from 'api/utils';
+import { extractRequest, withAuthorization, withNotification } from 'api/utils';
 import { VERSION_URL } from './constants';
 import { TaskInfo, DetailedReceivedTask, DetailedCreatedTask, UUID } from 'types';
 import { CreateTask, FilesUpload } from 'types/api/v1';
@@ -10,8 +10,10 @@ const BASE_URL = `${VERSION_URL}/task`;
 //   withNotification(withAuthorization(methods.put<CreateTask, null>(`${BASE_URL}/create`, data)));
 
 export const createTask = (data: CreateTask) =>
-  withNotification(
-    withAuthorization(methods.put<TaskInfo, CreateTask>(`${BASE_URL}/create`, data))
+  extractRequest(
+    withNotification(
+      withAuthorization(methods.put<TaskInfo, CreateTask>(`${BASE_URL}/create`, data))
+    )
   );
 
 export const getReceivedTask = (id: UUID) =>
@@ -29,8 +31,8 @@ const actionTask = (id: UUID, action: string) => {
     id,
   });
 
-  return withNotification(
-    withAuthorization(methods.patch(`${BASE_URL}/action/${action}?${params}`))
+  return extractRequest(
+    withNotification(withAuthorization(methods.patch(`${BASE_URL}/action/${action}?${params}`)))
   );
 };
 
@@ -46,11 +48,13 @@ const attachFiles = (path: string, id: UUID, files: File[]) => {
     formData.append('files', file, file.name);
   }
 
-  return withNotification(
-    withAuthorization(
-      methods.put<FilesUpload, FormData>(`${BASE_URL}/${path}/${id}/file`, formData)
-    ),
-    response => response.data?.error || null
+  return extractRequest(
+    withNotification(
+      withAuthorization(
+        methods.put<FilesUpload, FormData>(`${BASE_URL}/${path}/${id}/file`, formData)
+      ),
+      response => response.data?.error || null
+    )
   );
 };
 
@@ -60,7 +64,7 @@ export const attachFilesToReceived = (id: UUID, files: File[]) =>
 export const attachFilesToCreated = (id: UUID, files: File[]) => attachFiles('created', id, files);
 
 export const getFile = (id: UUID) =>
-  withNotification(withAuthorization(methods.get<Blob>(`${BASE_URL}/file/${id}`)));
+  extractRequest(withNotification(withAuthorization(methods.get<Blob>(`${BASE_URL}/file/${id}`))));
 
 export const deleteFile = (id: UUID) =>
-  withNotification(withAuthorization(methods.delete(`${BASE_URL}/file/${id}`)));
+  extractRequest(withNotification(withAuthorization(methods.delete(`${BASE_URL}/file/${id}`))));

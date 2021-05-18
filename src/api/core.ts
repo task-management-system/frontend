@@ -1,5 +1,11 @@
 import { getToken } from './utils';
-import { Methods, CollectedResponse, BasicResponse, Pagination } from 'types/api';
+import {
+  RequestWithCancel,
+  Methods,
+  CollectedResponse,
+  BasicResponse,
+  Pagination,
+} from 'types/api';
 
 const API_URL = '/api';
 
@@ -67,29 +73,55 @@ export const collectPaginationParams = (pagination: Pagination) =>
     order: pagination.order || 'ASC',
   });
 
-const requestWithoutPayload = async <T>(
+const requestWithoutPayload = <T>(
   method: Methods,
   url: string = '/',
   headers: Headers = new Headers()
-): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(method, headers);
+): RequestWithCancel<T> => {
+  const controller = new AbortController();
+  const request: Promise<CollectedResponse<T>> = new Promise(async (resolve, reject) => {
+    await prepareHeaders(method, headers);
 
-  return fetch(`${API_URL}${url}`, prepareInit(method, headers)).then(response =>
-    collectResponse(response)
-  );
+    try {
+      const response = await fetch(`${API_URL}${url}`, {
+        ...prepareInit(method, headers),
+        signal: controller.signal,
+      });
+      const data: CollectedResponse<T> = await collectResponse(response);
+
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+  return [request, () => controller.abort()];
 };
 
-const requestWithPayload = async <T, P>(
+const requestWithPayload = <T, P>(
   method: Methods,
   url: string = '/',
   payload?: P,
   headers: Headers = new Headers()
-): Promise<CollectedResponse<T>> => {
-  await prepareHeaders(method, headers, payload);
+): RequestWithCancel<T> => {
+  const controller = new AbortController();
+  const request: Promise<CollectedResponse<T>> = new Promise(async (resolve, reject) => {
+    await prepareHeaders(method, headers, payload);
 
-  return fetch(`${API_URL}${url}`, prepareInit(method, headers, payload)).then(response =>
-    collectResponse(response)
-  );
+    try {
+      const response = await fetch(`${API_URL}${url}`, {
+        ...prepareInit(method, headers, payload),
+        signal: controller.signal,
+      });
+      const data: CollectedResponse<T> = await collectResponse(response);
+
+      resolve(data);
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+  return [request, () => controller.abort()];
 };
 
 const getMethod = <T>(url?: string, headers?: Headers) =>
