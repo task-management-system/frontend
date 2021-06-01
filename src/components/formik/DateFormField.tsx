@@ -19,13 +19,17 @@ const DateFormField: React.FC<FieldProps & Omit<KeyboardDatePickerProps, ExcessP
 }) => {
   const [field, meta, helpers] = useField(name);
 
-  const Field = useCallback((props: TextFieldProps) => <Component size="small" {...props} />, [
-    Component,
-  ]);
+  const Field = useCallback(
+    (props: TextFieldProps) => <Component size="small" {...props} />,
+    [Component]
+  );
 
   const handleChange = (date: Date | null) => {
     helpers.setValue(date);
-    helpers.setTouched(true);
+
+    setTimeout(() => {
+      helpers.setTouched(true);
+    });
   };
 
   return (

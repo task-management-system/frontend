@@ -59,7 +59,7 @@ const collectResponse = async <T>(response: Response): Promise<CollectedResponse
     const data = await response.blob();
 
     return {
-      data: (data as unknown) as T,
+      data: data as unknown as T,
       message: null,
       details,
     };
