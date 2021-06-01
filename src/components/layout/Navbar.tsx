@@ -44,7 +44,7 @@ const mapStateToProps = ({ metaData }: State) => ({
   permissions: {
     administration: haveAnyPermission(
       metaData.user?.role.power,
-      ['Administrator'],
+      ['Administrator', 'ViewUser', 'InsertUser', 'UpdateUser', 'DeleteUser'],
       metaData.permissions
     ),
   },

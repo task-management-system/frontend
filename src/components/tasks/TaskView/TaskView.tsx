@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 import clsx from 'clsx';
 import { Typography, Fade, makeStyles } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
@@ -12,9 +13,11 @@ import TaskActions from './TaskActions';
 import { TaskStatus } from 'enums/TaskStatus';
 import { TaskAction } from 'enums/TaskAction';
 import { noop } from 'utils';
+import { haveAnyPermission } from 'utils/permissions';
 import { attachFilesToReceived, deleteFile } from 'api/v1';
 import { UUID } from 'types';
 import { RequestWithCancel } from 'types/api';
+import { State } from 'types/redux';
 import { TaskViewEntry, ActionCondition } from 'types/components/task';
 
 interface TaskViewProps {
@@ -84,10 +87,16 @@ const actionConditions: Record<TaskAction, ActionCondition[]> = {
   [TaskAction.Delete]: [
     data => (data !== null ? data.status.id === TaskStatus.New : false),
     data => (data !== null ? data.taskInstances !== undefined : false),
+    (data, permissions) => permissions.deleteTask || false,
   ],
 };
 
-const TaskView: React.FC<TaskViewProps> = ({ id, loadTask, reloadTasks = noop }) => {
+const TaskView: React.FC<TaskViewProps & ConnectedTaskViewProps> = ({
+  id,
+  loadTask,
+  reloadTasks = noop,
+  permissions,
+}) => {
   const classes = useStyles();
   const [data, setData] = useState<TaskViewEntry | null>(null);
 
@@ -135,10 +144,10 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask, reloadTasks = noop })
       Object.fromEntries(
         Object.entries(actionConditions).map(([key, conditions]) => [
           key,
-          conditions.every(condition => condition(data)),
+          conditions.every(condition => condition(data, permissions)),
         ])
       ) as Record<TaskAction, ReturnType<ActionCondition>>,
-    [data]
+    [data, permissions]
   );
 
   return data !== null ? (
@@ -229,4 +238,14 @@ const TaskView: React.FC<TaskViewProps> = ({ id, loadTask, reloadTasks = noop })
   );
 };
 
-export default TaskView;
+const mapStateToProps = ({ metaData }: State) => ({
+  permissions: {
+    deleteTask: haveAnyPermission(metaData.user?.role.power, ['DeleteTask'], metaData.permissions),
+  },
+});
+
+const connector = connect(mapStateToProps);
+
+type ConnectedTaskViewProps = ConnectedProps<typeof connector>;
+
+export default connector(TaskView);

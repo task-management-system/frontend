@@ -12,7 +12,6 @@ import { State } from 'types/redux';
 interface TaskListProps<T> {
   getTasks: (statusId: number, pagination: RequestPagination) => RequestWithCancel<Paged<T[]>>;
   renderItem: (entry: T, refresh: () => void) => React.ReactElement<any, any>;
-  showToolbar?: boolean;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -43,11 +42,7 @@ const notFoundMessages: Record<TaskStatus, string> = {
   [TaskStatus.Prepared]: 'У Вас нет подготовленных задач',
 };
 
-const TaskList = <T,>({
-  getTasks,
-  renderItem,
-  showToolbar = false,
-}: React.PropsWithChildren<TaskListProps<T>>) => {
+const TaskList = <T,>({ getTasks, renderItem }: React.PropsWithChildren<TaskListProps<T>>) => {
   const classes = useStyles();
   const status = useSelector((state: State) => state.tabs.status);
   const [loaded, setLoaded] = useState(false);
@@ -115,7 +110,7 @@ const TaskList = <T,>({
     <div className={classes.root}>
       <Paper className={classes.toolbar} square>
         <div className={classes.wrapper}>
-          {showToolbar && <TaskListToolbar loadTasks={loadTasks} />}
+          <TaskListToolbar loadTasks={loadTasks} />
         </div>
         <Pagination
           className={classes.wrapper}

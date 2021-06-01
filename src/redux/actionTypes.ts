@@ -1,5 +1,6 @@
 export const RESET_STORE = 'RESET_STORE';
 export const SET_USER = 'SET_USER';
+export const UPDATE_USER_ROLE = 'UPDATE_USER_ROLE';
 export const SET_PERMISSIONS = 'SET_PERMISSIONS';
 export const SET_STATUSES = 'SET_STATUSES';
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';

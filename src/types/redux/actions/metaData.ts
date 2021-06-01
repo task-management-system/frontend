@@ -1,9 +1,14 @@
-import { SET_USER, SET_PERMISSIONS, SET_STATUSES } from 'redux/actionTypes';
-import { User, Permission, Status } from 'types';
+import { SET_USER, UPDATE_USER_ROLE, SET_PERMISSIONS, SET_STATUSES } from 'redux/actionTypes';
+import { User, Role, Permission, Status } from 'types';
 
 export interface SetUserAction {
   type: typeof SET_USER;
   payload: User | null;
+}
+
+export interface UpdateUserRoleAction {
+  type: typeof UPDATE_USER_ROLE;
+  payload: Role;
 }
 
 export interface SetPermissionsAction {

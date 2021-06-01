@@ -26,7 +26,10 @@ const Home: React.FC = () => (
           <User />
         </React.Suspense>
       </PermittedRoute>
-      <PermittedRoute path="/administration/:module?" any={['Administrator']}>
+      <PermittedRoute
+        path="/administration/:module?"
+        any={['Administrator', 'ViewUser', 'InsertUser', 'UpdateUser', 'DeleteUser']}
+      >
         <React.Suspense fallback={<Loading />}>
           <Administration />
         </React.Suspense>

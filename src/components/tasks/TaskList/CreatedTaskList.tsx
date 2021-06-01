@@ -42,7 +42,6 @@ const CreatedTaskList: React.FC<ConnectedCreatedTaskListProps> = ({ group, statu
           </TaskAccordionDetails>
         </TaskAccordion>
       )}
-      showToolbar
     />
   );
 };

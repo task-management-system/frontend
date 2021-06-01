@@ -20,11 +20,13 @@ import { Delete, Edit } from '@material-ui/icons';
 import PermissionsList from 'components/PermissionsList';
 import RoleEdit from 'components/dialogs/RoleEdit';
 import Confirm from 'components/dialogs/Confirm';
+import { updateUserRole } from 'redux/actions/metaData';
 import { removeCache } from 'redux/actions/cache';
 import { range } from 'utils';
 import usePromiseTrack from 'hooks/usePromiseTrack';
 import { getRoles, deleteRole } from 'api/v1';
 import { Role } from 'types';
+import { State } from 'types/redux';
 
 const useStyles = makeStyles(theme => ({
   row: {
@@ -47,7 +49,11 @@ const ThemedTableRow = withStyles(theme => ({
   },
 }))(TableRow);
 
-const RolesTable: React.FC<ConnectedRolesTableProps> = ({ removeCache }) => {
+const RolesTable: React.FC<ConnectedRolesTableProps> = ({
+  userRole,
+  updateUserRole,
+  removeCache,
+}) => {
   const classes = useStyles();
   const [roles, setRoles] = useState<Role[]>([]);
   const [inProgress, trackedGetRoles] = usePromiseTrack(getRoles);
@@ -61,6 +67,9 @@ const RolesTable: React.FC<ConnectedRolesTableProps> = ({ removeCache }) => {
   const handleReload = (updatedRole: Role) => {
     removeCache('roles');
     setRoles(roles => roles.map(role => (role.id === updatedRole.id ? updatedRole : role)));
+    if (userRole?.id === updatedRole.id) {
+      updateUserRole(updatedRole);
+    }
   };
 
   const handleDelete = (id: number) => {
@@ -141,11 +150,15 @@ const RolesTable: React.FC<ConnectedRolesTableProps> = ({ removeCache }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  ...bindActionCreators({ removeCache }, dispatch),
+const mapStateToProps = ({ metaData }: State) => ({
+  userRole: metaData.user?.role,
 });
 
-const connector = connect(null, mapDispatchToProps);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  ...bindActionCreators({ updateUserRole, removeCache }, dispatch),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type ConnectedRolesTableProps = ConnectedProps<typeof connector>;
 

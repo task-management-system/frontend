@@ -1,5 +1,10 @@
 import { User, Permission, Status } from 'types';
-import { SetUserAction, SetPermissionsAction, SetStatusesAction } from '../actions/metaData';
+import {
+  SetUserAction,
+  UpdateUserRoleAction,
+  SetPermissionsAction,
+  SetStatusesAction,
+} from '../actions/metaData';
 
 export interface MetaData {
   user: User | null;
@@ -7,4 +12,8 @@ export interface MetaData {
   statuses: Status[];
 }
 
-export type MetaDataAction = SetUserAction | SetPermissionsAction | SetStatusesAction;
+export type MetaDataAction =
+  | SetUserAction
+  | UpdateUserRoleAction
+  | SetPermissionsAction
+  | SetStatusesAction;
